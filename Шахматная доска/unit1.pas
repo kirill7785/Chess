@@ -1978,7 +1978,7 @@ begin
                                      (j_2<>arrb[i_1].j) then
                                      begin
                                         white_eating.fig:=cpawn;
-                                        white_eating.i:=arrw[i_1].i;
+                                        white_eating.i:=arrb[i_1].i;
                                         white_eating.j:=j_2;
                                         DeleteFig(arrb[i_1].i,j_2); // Удаляем пешку при взятии на проходе.
                                      end;
