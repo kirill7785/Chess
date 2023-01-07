@@ -76,6 +76,7 @@ type
     cMove : Integer; // Чей ход белых или чёрных ?
     vacantmove : array[1..8,1..8] of Boolean; // Подсвечиваем клетки куда можно пойти по правилам Шахмат.
     vacantmove1 : array[1..8,1..8] of Boolean;
+    vacantmove_for_detect_game_over : array[1..8,1..8] of Boolean;
     white_previos_move, black_previos_move : Move; // Предыдущий ход забелых и за чёрных.
     arrw1 : array of Figure;  // Состояние доски на предыдущем ходу.
     arrb1 : array of Figure;
@@ -115,6 +116,7 @@ type
    function BlackKing_Check(Sender : TObject) : Boolean; // Чёрный король под Шахом ?
    procedure DrawBlackAttack(Sender : TObject);
    procedure DrawWhiteAttack(Sender : TObject);
+   procedure Fill_vacant_move_for_detect_game_over(Sender : TObject); // Полный список ходов всех фигур для детектирования окончания партии.
    function MatorPat(Sender : TObject) : Boolean; // Возвращает true если некуда идти.
   end;
 
@@ -374,14 +376,18 @@ end;
 
 
 function TForm1.MatorPat(Sender : TObject) : Boolean; // Возвращает true если некуда идти.
-//var
-  //  i,j : Integer;
-    //flag : Boolean;
+var
+    i,j : Integer;
+    flag : Boolean;
 begin
-  { flag:=false;
+
+  // Заполняем все поля куда можно пойти.
+  Fill_vacant_move_for_detect_game_over(Sender);
+
+  flag:=false;
    for i:=1 to 8 do
    for j:=1 to 8 do
-   if (vacantmove[i,j]) then flag:=true;
+   if (vacantmove_for_detect_game_over[i,j]) then flag:=true;
 
    if (flag) then
    begin
@@ -391,12 +397,11 @@ begin
    begin
       Result:=true; // Некуда идти
 
-   end;}
+   end;
     // Чтобы правильно детектировать что некуда ходить нужно
     // перебрать все фигуры а не только ту по которой пользователь
     // Щёлкнул мышкой.
-    // метод не работает 06.01.2023.
-    Result:=false;
+    //Result:=false;
 end;
 
 
@@ -1734,6 +1739,1498 @@ end;
 
 end;
 
+
+procedure TForm1.Fill_vacant_move_for_detect_game_over(Sender : TObject); // Полный список ходов всех фигур для детектирования окончания партии.
+const n=8;
+var i,j, i_1, i_2, j_2, i_3 : Integer;
+
+begin
+   for i:=1 to n do
+       for j:=1 to n do
+           vacantmove_for_detect_game_over[i][j]:=false;
+
+
+                 // откуда
+                 if (cMove=cwhite) then
+                 begin
+                    for i_1:=0 to High(arrw) do
+                    begin
+                       if (arrw[i_1].fig<>cemptyfig) then
+                       begin
+
+                          i:=arrw[i_1].i;
+                          j:=arrw[i_1].j;
+
+                          // 1. Сделать предлагаемый виртуальный ход за белых.
+                          // 2. Проверить находится ли белый король после этого хода под шахом.
+                          // 3. Если шаха нет то ход допустим.
+
+                          if (arrw[i_1].fig=cpawn) then
+                          begin
+                             if (WhotisPole(i-1,j)=cempty) then
+                             begin
+                                 CopyList();
+                                    if (WhotisPoledetector(i-1,j)=cblack) then DeleteFigdetector(i-1,j);  // скушали фигурку.
+                                    arrwdetector[i_1].i:=i-1;
+                                    arrwdetector[i_1].j:=j;
+                                    GenerateBlackAttack();
+                                    if (not(WhiteKing_Check(Sender))) then
+                                    begin
+                                       vacantmove_for_detect_game_over[i-1][j]:=true;
+                                    end;
+                             end;
+                             if (i=7) and (WhotisPole(i-2,j)=cempty) then
+                             begin
+                                CopyList();
+                                    if (WhotisPoledetector(i-2,j)=cblack) then DeleteFigdetector(i-2,j);  // скушали фигурку.
+                                    arrwdetector[i_1].i:=i-2;
+                                    arrwdetector[i_1].j:=j;
+                                    GenerateBlackAttack();
+                                    if (not(WhiteKing_Check(Sender))) then
+                                    begin
+                                        vacantmove_for_detect_game_over[i-2][j]:=true;
+                                    end;
+                             end;
+                             // пешка ест наискосок.
+                             if ((j>1)and(WhotisPole(i-1,j-1)=cblack)) then
+                             begin
+                                 CopyList();
+                                    if (WhotisPoledetector(i-1,j-1)=cblack) then DeleteFigdetector(i-1,j-1);  // скушали фигурку.
+                                    arrwdetector[i_1].i:=i-1;
+                                    arrwdetector[i_1].j:=j-1;
+                                    GenerateBlackAttack();
+                                    if (not(WhiteKing_Check(Sender))) then
+                                    begin
+                                       vacantmove_for_detect_game_over[i-1][j-1]:=true;
+                                   end;
+                             end;
+                             if ((j<8)and(WhotisPole(i-1,j+1)=cblack)) then
+                             begin
+                                CopyList();
+                                    if (WhotisPoledetector(i-1,j+1)=cblack) then DeleteFigdetector(i-1,j+1);  // скушали фигурку.
+                                    arrwdetector[i_1].i:=i-1;
+                                    arrwdetector[i_1].j:=j+1;
+                                    GenerateBlackAttack();
+                                    if (not(WhiteKing_Check(Sender))) then
+                                    begin
+                                       vacantmove_for_detect_game_over[i-1][j+1]:=true;
+                                    end;
+                             end;
+
+                             // Взятие на проходе
+                             if ((black_previos_move.fig=cpawn)and
+                             (black_previos_move.from.i=2) and
+                             (black_previos_move.to_.i=4) and
+                             (((j>1)and(black_previos_move.from.j=j-1))or
+                             ((j<8)and(black_previos_move.from.j=j+1))) and
+                             (i=4)) then
+                             begin
+                                if ((j>1)and(black_previos_move.from.j=j-1)) then
+                                begin
+                                 CopyList();
+                                    if (WhotisPoledetector(i-1,j-1)=cblack) then DeleteFigdetector(i-1,j-1);  // скушали фигурку.
+                                    arrwdetector[i_1].i:=i-1;
+                                    arrwdetector[i_1].j:=j-1;
+                                    GenerateBlackAttack();
+                                    if (not(WhiteKing_Check(Sender))) then
+                                    begin
+                                       vacantmove_for_detect_game_over[i-1][j-1]:=true;
+                                   end;
+                                end
+                                else
+                                begin
+                                   CopyList();
+                                    if (WhotisPoledetector(i-1,j+1)=cblack) then DeleteFigdetector(i-1,j+1);  // скушали фигурку.
+                                    arrwdetector[i_1].i:=i-1;
+                                    arrwdetector[i_1].j:=j+1;
+                                    GenerateBlackAttack();
+                                    if (not(WhiteKing_Check(Sender))) then
+                                    begin
+                                       vacantmove_for_detect_game_over[i-1][j+1]:=true;
+                                   end;
+                                end;
+                             end;
+                          end;
+                          if (arrw[i_1].fig=cknight) then
+                          begin
+                             if (i+2<=8)and(j+1<=8)and(WhotisPole(i+2,j+1)<>cwhite) then
+                             begin
+                                 CopyList();
+                                 if (WhotisPoledetector(i+2,j+1)=cblack) then DeleteFigdetector(i+2,j+1);  // скушали фигурку.
+                                 arrwdetector[i_1].i:=i+2;
+                                 arrwdetector[i_1].j:=j+1;
+                                 GenerateBlackAttack();
+                                 if (not(WhiteKing_Check(Sender))) then
+                                 begin
+                                    vacantmove_for_detect_game_over[i+2][j+1]:=true;
+                                 end;
+                             end;
+                             if (i+1<=8)and(j+2<=8)and(WhotisPole(i+1,j+2)<>cwhite) then
+                             begin
+                                CopyList();
+                                 if (WhotisPoledetector(i+1,j+2)=cblack) then DeleteFigdetector(i+1,j+2);  // скушали фигурку.
+                                 arrwdetector[i_1].i:=i+1;
+                                 arrwdetector[i_1].j:=j+2;
+                                 GenerateBlackAttack();
+                                 if (not(WhiteKing_Check(Sender))) then
+                                 begin
+                                    vacantmove_for_detect_game_over[i+1][j+2]:=true;
+                                end;
+                             end;
+                             if (i-2>=1)and(j-1>=1)and(WhotisPole(i-2,j-1)<>cwhite) then
+                             begin
+                                 CopyList();
+                                 if (WhotisPoledetector(i-2,j-1)=cblack) then
+                                 begin
+                                     DeleteFigdetector(i-2,j-1);  // скушали фигурку.
+                                 end;
+                                 arrwdetector[i_1].i:=i-2;
+                                 arrwdetector[i_1].j:=j-1;
+                                 GenerateBlackAttack();
+                                 //DrawBlackAttack(Sender);
+                                 if (not(WhiteKing_Check(Sender))) then
+                                 begin
+                                    vacantmove_for_detect_game_over[i-2][j-1]:=true;
+                                 end;
+                             end;
+                             if (i-1>=1)and(j-2>=1)and(WhotisPole(i-1,j-2)<>cwhite) then
+                             begin
+                                 CopyList();
+                                  if (WhotisPoledetector(i-1,j-2)=cblack) then DeleteFigdetector(i-1,j-2);  // скушали фигурку.
+                                 arrwdetector[i_1].i:=i-1;
+                                 arrwdetector[i_1].j:=j-2;
+                                 GenerateBlackAttack();
+                                 if (not(WhiteKing_Check(Sender))) then
+                                 begin
+                                    vacantmove_for_detect_game_over[i-1][j-2]:=true;
+                                 end;
+                             end;
+                             if (i+2<=8)and(j-1>=1)and(WhotisPole(i+2,j-1)<>cwhite) then
+                             begin
+                                 CopyList();
+                                  if (WhotisPoledetector(i+2,j-1)=cblack) then DeleteFigdetector(i+2,j-1);  // скушали фигурку.
+                                 arrwdetector[i_1].i:=i+2;
+                                 arrwdetector[i_1].j:=j-1;
+                                 GenerateBlackAttack();
+                                 if (not(WhiteKing_Check(Sender))) then
+                                 begin
+                                    vacantmove_for_detect_game_over[i+2][j-1]:=true;
+                                 end;
+                             end;
+                             if (i+1<=8)and(j-2>=1)and(WhotisPole(i+1,j-2)<>cwhite) then
+                             begin
+                                 CopyList();
+                                  if (WhotisPoledetector(i+1,j-2)=cblack) then DeleteFigdetector(i+1,j-2);  // скушали фигурку.
+                                 arrwdetector[i_1].i:=i+1;
+                                 arrwdetector[i_1].j:=j-2;
+                                 GenerateBlackAttack();
+                                 if (not(WhiteKing_Check(Sender))) then
+                                 begin
+                                    vacantmove_for_detect_game_over[i+1][j-2]:=true;
+                                 end;
+                             end;
+                             if (i-2>=1)and(j+1<=8)and(WhotisPole(i-2,j+1)<>cwhite) then
+                             begin
+                                CopyList();
+                                 if (WhotisPoledetector(i-2,j+1)=cblack) then DeleteFigdetector(i-2,j+1);  // скушали фигурку.
+                                 arrwdetector[i_1].i:=i-2;
+                                 arrwdetector[i_1].j:=j+1;
+                                 GenerateBlackAttack();
+                                 if (not(WhiteKing_Check(Sender))) then
+                                 begin
+                                    vacantmove_for_detect_game_over[i-2][j+1]:=true;
+                                 end;
+                             end;
+                             if (i-1>=1)and(j+2<=8)and(WhotisPole(i-1,j+2)<>cwhite) then
+                             begin
+                                 CopyList();
+                                  if (WhotisPoledetector(i-1,j+2)=cblack) then DeleteFigdetector(i-1,j+2);  // скушали фигурку.
+                                 arrwdetector[i_1].i:=i-1;
+                                 arrwdetector[i_1].j:=j+2;
+                                 GenerateBlackAttack();
+                                 if (not(WhiteKing_Check(Sender))) then
+                                 begin
+                                    vacantmove_for_detect_game_over[i-1][j+2]:=true;
+                                 end;
+                             end;
+                          end;
+                          if (arrw[i_1].fig=crook) then
+                          begin
+                             i_3:=j;
+                             if (i_3<8) then
+                             begin
+                                while (i_3+1<=8) and (WhotisPole(i,i_3+1)<>cwhite) do
+                                begin
+                                   inc(i_3);
+                                   CopyList();
+                                   if (WhotisPoledetector(i,i_3)=cblack) then DeleteFigdetector(i,i_3);  // скушали фигурку.
+                                   arrwdetector[i_1].i:=i;
+                                   arrwdetector[i_1].j:=i_3;
+                                   GenerateBlackAttack();
+                                   if (not(WhiteKing_Check(Sender))) then
+                                   begin
+                                      vacantmove_for_detect_game_over[i,i_3]:=true;
+                                   end;
+                                   if (WhotisPole(i,i_3)=cblack) then break;
+                                end;
+                             end;
+                              i_3:=j;
+                             if (i_3>1) then
+                             begin
+                                while (i_3-1>=1) and (WhotisPole(i,i_3-1)<>cwhite) do
+                                begin
+                                   dec(i_3);
+                                    CopyList();
+                                    if (WhotisPoledetector(i,i_3)=cblack) then DeleteFigdetector(i,i_3);  // скушали фигурку.
+                                    arrwdetector[i_1].i:=i;
+                                    arrwdetector[i_1].j:=i_3;
+                                    GenerateBlackAttack();
+                                    if (not(WhiteKing_Check(Sender))) then
+                                    begin
+                                       vacantmove_for_detect_game_over[i,i_3]:=true;
+                                    end;
+                                   if (WhotisPole(i,i_3)=cblack) then break;
+                                end;
+                             end;
+                             i_3:=i;
+                             if (i_3<8) then
+                             begin
+                                while (i_3+1<=8) and (WhotisPole(i_3+1,j)<>cwhite) do
+                                begin
+                                   inc(i_3);
+                                   CopyList();
+                                    if (WhotisPoledetector(i_3,j)=cblack) then DeleteFigdetector(i_3,j);  // скушали фигурку.
+                                    arrwdetector[i_1].i:=i_3;
+                                    arrwdetector[i_1].j:=j;
+                                    GenerateBlackAttack();
+                                    if (not(WhiteKing_Check(Sender))) then
+                                    begin
+                                       vacantmove_for_detect_game_over[i_3,j]:=true;
+                                    end;
+                                   if (WhotisPole(i_3,j)=cblack) then break;
+                                end;
+                             end;
+                               i_3:=i;
+                             if (i_3>1) then
+                             begin
+                                while (i_3-1>=1) and (WhotisPole(i_3-1,j)<>cwhite) do
+                                begin
+                                   dec(i_3);
+                                   CopyList();
+                                    if (WhotisPoledetector(i_3,j)=cblack) then DeleteFigdetector(i_3,j);  // скушали фигурку.
+                                    arrwdetector[i_1].i:=i_3;
+                                    arrwdetector[i_1].j:=j;
+                                    GenerateBlackAttack();
+                                    if (not(WhiteKing_Check(Sender))) then
+                                    begin
+                                       vacantmove_for_detect_game_over[i_3,j]:=true;
+                                    end;
+                                   if (WhotisPole(i_3,j)=cblack) then break;
+                                end;
+                             end;
+                          end;
+                           if (arrw[i_1].fig=cbishop) then
+                          begin
+                             i_2:=i;
+                             j_2:=j;
+                             if (i_2<8)and(j_2<8) then
+                             begin
+                                while (i_2+1<=8)and(j_2+1<=8) and (WhotisPole(i_2+1,j_2+1)<>cwhite) do
+                                begin
+                                   inc(i_2);
+                                   inc(j_2);
+                                    CopyList();
+                                   if (WhotisPoledetector(i_2,j_2)=cblack) then DeleteFigdetector(i_2,j_2);  // скушали фигурку.
+                                   arrwdetector[i_1].i:=i_2;
+                                   arrwdetector[i_1].j:=j_2;
+                                   GenerateBlackAttack();
+                                   if (not(WhiteKing_Check(Sender))) then
+                                   begin
+                                      vacantmove_for_detect_game_over[i_2,j_2]:=true;
+                                   end;
+                                   if (WhotisPole(i_2,j_2)=cblack) then break;
+                                end;
+                             end;
+                             i_2:=i;
+                             j_2:=j;
+                             if (i_2>1)and(j_2>1) then
+                             begin
+                                while (i_2-1>=1)and(j_2-1>=1) and (WhotisPole(i_2-1,j_2-1)<>cwhite) do
+                                begin
+                                   dec(i_2);
+                                   dec(j_2);
+                                    CopyList();
+                                   if (WhotisPoledetector(i_2,j_2)=cblack) then DeleteFigdetector(i_2,j_2);  // скушали фигурку.
+                                   arrwdetector[i_1].i:=i_2;
+                                   arrwdetector[i_1].j:=j_2;
+                                   GenerateBlackAttack();
+                                   if (not(WhiteKing_Check(Sender))) then
+                                   begin
+                                      vacantmove_for_detect_game_over[i_2,j_2]:=true;
+                                   end;
+                                   if (WhotisPole(i_2,j_2)=cblack) then break;
+                                end;
+                             end;
+                             i_2:=i;
+                             j_2:=j;
+                             if (i_2>1)and(j_2<8) then
+                             begin
+                                while (i_2-1>=1) and (j_2+1<=8) and (WhotisPole(i_2-1,j_2+1)<>cwhite) do
+                                begin
+                                   dec(i_2);
+                                   inc(j_2);
+                                    CopyList();
+                                   if (WhotisPoledetector(i_2,j_2)=cblack) then DeleteFigdetector(i_2,j_2);  // скушали фигурку.
+                                   arrwdetector[i_1].i:=i_2;
+                                   arrwdetector[i_1].j:=j_2;
+                                   GenerateBlackAttack();
+                                   if (not(WhiteKing_Check(Sender))) then
+                                   begin
+                                      vacantmove_for_detect_game_over[i_2,j_2]:=true;
+                                   end;
+                                   if (WhotisPole(i_2,j_2)=cblack) then break;
+                                end;
+                             end;
+                             i_2:=i;
+                             j_2:=j;
+                             if (i_2<8)and(j_2>1) then
+                             begin
+                                while (i_2+1<=8)and(j_2-1>=1) and (WhotisPole(i_2+1,j_2-1)<>cwhite) do
+                                begin
+                                   inc(i_2);
+                                   dec(j_2);
+                                    CopyList();
+                                   if (WhotisPoledetector(i_2,j_2)=cblack) then DeleteFigdetector(i_2,j_2);  // скушали фигурку.
+                                   arrwdetector[i_1].i:=i_2;
+                                   arrwdetector[i_1].j:=j_2;
+                                   GenerateBlackAttack();
+                                   if (not(WhiteKing_Check(Sender))) then
+                                   begin
+                                      vacantmove_for_detect_game_over[i_2,j_2]:=true;
+                                   end;
+                                   if (WhotisPole(i_2,j_2)=cblack) then break;
+                                end;
+                             end;
+                          end;
+                          if (arrw[i_1].fig=cqueen) then
+                          begin
+                             // Королева - сочетание ладьи и слона.
+                             i_3:=j;
+                             if (i_3<8) then
+                             begin
+                                while (i_3+1<=8) and (WhotisPole(i,i_3+1)<>cwhite) do
+                                begin
+                                   inc(i_3);
+                                    CopyList();
+                                   if (WhotisPoledetector(i,i_3)=cblack) then DeleteFigdetector(i,i_3);  // скушали фигурку.
+                                   arrwdetector[i_1].i:=i;
+                                   arrwdetector[i_1].j:=i_3;
+                                   GenerateBlackAttack();
+                                   if (not(WhiteKing_Check(Sender))) then
+                                   begin
+                                      vacantmove_for_detect_game_over[i,i_3]:=true;
+                                   end;
+                                   if (WhotisPole(i,i_3)=cblack) then break;
+                                end;
+                             end;
+                              i_3:=j;
+                             if (i_3>1) then
+                             begin
+                                while (i_3-1>=1) and (WhotisPole(i,i_3-1)<>cwhite) do
+                                begin
+                                   dec(i_3);
+                                    CopyList();
+                                   if (WhotisPoledetector(i,i_3)=cblack) then DeleteFigdetector(i,i_3);  // скушали фигурку.
+                                   arrwdetector[i_1].i:=i;
+                                   arrwdetector[i_1].j:=i_3;
+                                   GenerateBlackAttack();
+                                   if (not(WhiteKing_Check(Sender))) then
+                                   begin
+                                      vacantmove_for_detect_game_over[i,i_3]:=true;
+                                   end;
+                                   if (WhotisPole(i,i_3)=cblack) then break;
+                                end;
+                             end;
+                             i_3:=i;
+                             if (i_3<8) then
+                             begin
+                                while (i_3+1<=8) and (WhotisPole(i_3+1,j)<>cwhite) do
+                                begin
+                                   inc(i_3);
+                                   CopyList();
+                                    if (WhotisPoledetector(i_3,j)=cblack) then DeleteFigdetector(i_3,j);  // скушали фигурку.
+                                    arrwdetector[i_1].i:=i_3;
+                                    arrwdetector[i_1].j:=j;
+                                    GenerateBlackAttack();
+                                    if (not(WhiteKing_Check(Sender))) then
+                                    begin
+                                       vacantmove_for_detect_game_over[i_3,j]:=true;
+                                    end;
+                                   if (WhotisPole(i_3,j)=cblack) then break;
+                                end;
+                             end;
+                               i_3:=i;
+                             if (i_3>1) then
+                             begin
+                                while (i_3-1>=1) and (WhotisPole(i_3-1,j)<>cwhite) do
+                                begin
+                                   dec(i_3);
+                                    CopyList();
+                                    if (WhotisPoledetector(i_3,j)=cblack) then DeleteFigdetector(i_3,j);  // скушали фигурку.
+                                    arrwdetector[i_1].i:=i_3;
+                                    arrwdetector[i_1].j:=j;
+                                    GenerateBlackAttack();
+                                    if (not(WhiteKing_Check(Sender))) then
+                                    begin
+                                       vacantmove_for_detect_game_over[i_3,j]:=true;
+                                    end;
+                                   if (WhotisPole(i_3,j)=cblack) then break;
+                                end;
+                             end;
+
+                             i_2:=i;
+                             j_2:=j;
+                             if (i_2<8)and(j_2<8) then
+                             begin
+                                while (i_2+1<=8)and(j_2+1<=8) and (WhotisPole(i_2+1,j_2+1)<>cwhite) do
+                                begin
+                                   inc(i_2);
+                                   inc(j_2);
+                                    CopyList();
+                                   if (WhotisPoledetector(i_2,j_2)=cblack) then DeleteFigdetector(i_2,j_2);  // скушали фигурку.
+                                   arrwdetector[i_1].i:=i_2;
+                                   arrwdetector[i_1].j:=j_2;
+                                   GenerateBlackAttack();
+                                   if (not(WhiteKing_Check(Sender))) then
+                                   begin
+                                      vacantmove_for_detect_game_over[i_2,j_2]:=true;
+                                   end;
+                                   if (WhotisPole(i_2,j_2)=cblack) then break;
+                                end;
+                             end;
+                             i_2:=i;
+                             j_2:=j;
+                             if (i_2>1)and(j_2>1) then
+                             begin
+                                while (i_2-1>=1)and(j_2-1>=1) and (WhotisPole(i_2-1,j_2-1)<>cwhite) do
+                                begin
+                                   dec(i_2);
+                                   dec(j_2);
+                                    CopyList();
+                                   if (WhotisPoledetector(i_2,j_2)=cblack) then DeleteFigdetector(i_2,j_2);  // скушали фигурку.
+                                   arrwdetector[i_1].i:=i_2;
+                                   arrwdetector[i_1].j:=j_2;
+                                   GenerateBlackAttack();
+                                   if (not(WhiteKing_Check(Sender))) then
+                                   begin
+                                      vacantmove_for_detect_game_over[i_2,j_2]:=true;
+                                   end;
+                                   if (WhotisPole(i_2,j_2)=cblack) then break;
+                                end;
+                             end;
+                             i_2:=i;
+                             j_2:=j;
+                             if (i_2>1)and(j_2<8) then
+                             begin
+                                while (i_2-1>=1) and (j_2+1<=8) and (WhotisPole(i_2-1,j_2+1)<>cwhite) do
+                                begin
+                                   dec(i_2);
+                                   inc(j_2);
+                                    CopyList();
+                                   if (WhotisPoledetector(i_2,j_2)=cblack) then DeleteFigdetector(i_2,j_2);  // скушали фигурку.
+                                   arrwdetector[i_1].i:=i_2;
+                                   arrwdetector[i_1].j:=j_2;
+                                   GenerateBlackAttack();
+                                   if (not(WhiteKing_Check(Sender))) then
+                                   begin
+                                      vacantmove_for_detect_game_over[i_2,j_2]:=true;
+                                   end;
+                                   if (WhotisPole(i_2,j_2)=cblack) then break;
+                                end;
+                             end;
+                             i_2:=i;
+                             j_2:=j;
+                             if (i_2<8)and(j_2>1) then
+                             begin
+                                while (i_2+1<=8)and(j_2-1>=1) and (WhotisPole(i_2+1,j_2-1)<>cwhite) do
+                                begin
+                                   inc(i_2);
+                                   dec(j_2);
+                                    CopyList();
+                                   if (WhotisPoledetector(i_2,j_2)=cblack) then DeleteFigdetector(i_2,j_2);  // скушали фигурку.
+                                   arrwdetector[i_1].i:=i_2;
+                                   arrwdetector[i_1].j:=j_2;
+                                   GenerateBlackAttack();
+                                   if (not(WhiteKing_Check(Sender))) then
+                                   begin
+                                      vacantmove_for_detect_game_over[i_2,j_2]:=true;
+                                   end;
+                                   if (WhotisPole(i_2,j_2)=cblack) then break;
+                                end;
+                             end;
+                          end;
+
+                          if (arrw[i_1].fig=cking) then
+                          begin
+                             // Ходы Короля
+                             i_2:=i;
+                             j_2:=j;
+                             if (i_2<8)and(j_2<8) then
+                             begin
+                                if (i_2+1<=8)and(j_2+1<=8) and (WhotisPole(i_2+1,j_2+1)<>cwhite) then
+                                begin
+                                   inc(i_2);
+                                   inc(j_2);
+                                    CopyList();
+                                   if (WhotisPoledetector(i_2,j_2)=cblack) then DeleteFigdetector(i_2,j_2);  // скушали фигурку.
+                                   arrwdetector[i_1].i:=i_2;
+                                   arrwdetector[i_1].j:=j_2;
+                                   GenerateBlackAttack();
+                                   if (not(WhiteKing_Check(Sender))) then
+                                   begin
+                                      vacantmove_for_detect_game_over[i_2,j_2]:=true;
+                                   end;
+                                end;
+                             end;
+                             i_2:=i;
+                             j_2:=j;
+                             if (i_2>1)and(j_2<8) then
+                             begin
+                                if (i_2-1>=1)and(j_2+1<=8) and (WhotisPole(i_2-1,j_2+1)<>cwhite) then
+                                begin
+                                   dec(i_2);
+                                   inc(j_2);
+                                    CopyList();
+                                   if (WhotisPoledetector(i_2,j_2)=cblack) then DeleteFigdetector(i_2,j_2);  // скушали фигурку.
+                                   arrwdetector[i_1].i:=i_2;
+                                   arrwdetector[i_1].j:=j_2;
+                                   GenerateBlackAttack();
+                                   if (not(WhiteKing_Check(Sender))) then
+                                   begin
+                                      vacantmove_for_detect_game_over[i_2,j_2]:=true;
+                                   end;
+                                end;
+                             end;
+                             i_2:=i;
+                             j_2:=j;
+                             if (j_2<8) then
+                             begin
+                                if (j_2+1<=8) and (WhotisPole(i_2,j_2+1)<>cwhite) then
+                                begin
+                                   inc(j_2);
+                                   CopyList();
+                                   if (WhotisPoledetector(i_2,j_2)=cblack) then DeleteFigdetector(i_2,j_2);  // скушали фигурку.
+                                   arrwdetector[i_1].i:=i_2;
+                                   arrwdetector[i_1].j:=j_2;
+                                   GenerateBlackAttack();
+                                   if (not(WhiteKing_Check(Sender))) then
+                                   begin
+                                      vacantmove_for_detect_game_over[i_2,j_2]:=true;
+                                   end;
+                                end;
+                             end;
+
+                             i_2:=i;
+                             j_2:=j;
+                             if (i_2<8)and(j_2>1) then
+                             begin
+                                if (i_2+1<=8)and(j_2-1>=1) and (WhotisPole(i_2+1,j_2-1)<>cwhite) then
+                                begin
+                                   inc(i_2);
+                                   dec(j_2);
+                                    CopyList();
+                                   if (WhotisPoledetector(i_2,j_2)=cblack) then DeleteFigdetector(i_2,j_2);  // скушали фигурку.
+                                   arrwdetector[i_1].i:=i_2;
+                                   arrwdetector[i_1].j:=j_2;
+                                   GenerateBlackAttack();
+                                   if (not(WhiteKing_Check(Sender))) then
+                                   begin
+                                      vacantmove_for_detect_game_over[i_2,j_2]:=true;
+                                   end;
+                                end;
+                             end;
+                             i_2:=i;
+                             j_2:=j;
+                             if (i_2>1)and(j_2>1) then
+                             begin
+                                if (i_2-1>=1)and(j_2-1>=1) and (WhotisPole(i_2-1,j_2-1)<>cwhite) then
+                                begin
+                                   dec(i_2);
+                                   dec(j_2);
+                                    CopyList();
+                                   if (WhotisPoledetector(i_2,j_2)=cblack) then DeleteFigdetector(i_2,j_2);  // скушали фигурку.
+                                   arrwdetector[i_1].i:=i_2;
+                                   arrwdetector[i_1].j:=j_2;
+                                   GenerateBlackAttack();
+                                   if (not(WhiteKing_Check(Sender))) then
+                                   begin
+                                      vacantmove_for_detect_game_over[i_2,j_2]:=true;
+                                   end;
+                                end;
+                             end;
+                             i_2:=i;
+                             j_2:=j;
+                             if (j_2>1) then
+                             begin
+                                if (j_2-1>=1) and (WhotisPole(i_2,j_2-1)<>cwhite) then
+                                begin
+                                   dec(j_2);
+                                    CopyList();
+                                   if (WhotisPoledetector(i_2,j_2)=cblack) then DeleteFigdetector(i_2,j_2);  // скушали фигурку.
+                                   arrwdetector[i_1].i:=i_2;
+                                   arrwdetector[i_1].j:=j_2;
+                                   GenerateBlackAttack();
+                                   if (not(WhiteKing_Check(Sender))) then
+                                   begin
+                                      vacantmove_for_detect_game_over[i_2,j_2]:=true;
+                                   end;
+                                end;
+                             end;
+                             i_2:=i;
+                             j_2:=j;
+                             if (i_2<8) then
+                             begin
+                                if (i_2+1<=8)and (WhotisPole(i_2+1,j_2)<>cwhite) then
+                                begin
+                                   inc(i_2);
+                                    CopyList();
+                                   if (WhotisPoledetector(i_2,j_2)=cblack) then DeleteFigdetector(i_2,j_2);  // скушали фигурку.
+                                   arrwdetector[i_1].i:=i_2;
+                                   arrwdetector[i_1].j:=j_2;
+                                   GenerateBlackAttack();
+                                   if (not(WhiteKing_Check(Sender))) then
+                                   begin
+                                      vacantmove_for_detect_game_over[i_2,j_2]:=true;
+                                   end;
+                                end;
+                             end;
+                             i_2:=i;
+                             j_2:=j;
+                             if (i_2>1) then
+                             begin
+                                if (i_2-1>=1)and (WhotisPole(i_2-1,j_2)<>cwhite) then
+                                begin
+                                   dec(i_2);
+                                    CopyList();
+                                   if (WhotisPoledetector(i_2,j_2)=cblack) then DeleteFigdetector(i_2,j_2);  // скушали фигурку.
+                                   arrwdetector[i_1].i:=i_2;
+                                   arrwdetector[i_1].j:=j_2;
+                                   GenerateBlackAttack();
+                                   if (not(WhiteKing_Check(Sender))) then
+                                   begin
+                                      vacantmove_for_detect_game_over[i_2,j_2]:=true;
+                                   end;
+                                end;
+                             end;
+
+                             // Рокировка в короткую сторону
+                             if ((WhotisPole(8,6)=cempty)and
+                             (WhotisPole(8,7)=cempty)and
+                             (WhotisPole(8,8)=cwhite)and
+                             (WhotisPole(8,5)=cwhite)and
+                             (WhotisFig(8,8)=crook)and
+                             (WhotisFig(8,5)=cking)) then
+                             begin
+                                 i_2:=i;
+                                 j_2:=j;
+                                 if (j_2+2<=8) then
+                                 begin
+                                    CopyList();
+                                    GenerateBlackAttack();
+                                    if ((black_attack[8,6])or(black_attack[8,7])or
+                                    (black_attack[8,5])or did_the_white_right_rook_move
+                                    or did_the_white_king_move) then
+                                    begin
+                                       // рокировка невозможна.
+                                       // если поле, пройденное королём во время рокировки, находится под боем противника;
+                                       //если король перед началом рокировки находится под шахом или после её осуществления попадает под шах;
+                                       // ходила правая ладья или уже ходил король.
+                                    end
+                                    else
+                                    begin
+                                       vacantmove_for_detect_game_over[i_2,j_2+2]:=true;
+                                    end;
+                                 end;
+                             end;
+
+                             // Рокировка в длинную сторону
+                             if ((WhotisPole(8,2)=cempty)and
+                             (WhotisPole(8,3)=cempty)and
+                             (WhotisPole(8,4)=cempty)and
+                             (WhotisPole(8,1)=cwhite)and
+                             (WhotisPole(8,5)=cwhite)and
+                             (WhotisFig(8,1)=crook)and
+                             (WhotisFig(8,5)=cking)) then
+                             begin
+                                 i_2:=i;
+                                 j_2:=j;
+                                 if (j_2-2>=1) then
+                                 begin
+                                    CopyList();
+                                    GenerateBlackAttack();
+                                    if ((black_attack[8,3])or(black_attack[8,4])or
+                                    (black_attack[8,5])or did_the_white_left_rook_move
+                                    or did_the_white_king_move) then
+                                    begin
+                                       // рокировка невозможна.
+                                       // если поле, пройденное королём во время рокировки, находится под боем противника;
+                                       //если король перед началом рокировки находится под шахом или после её осуществления попадает под шах;
+                                       // ходила левая ладья или уже ходил король.
+                                    end
+                                    else
+                                    begin
+                                       vacantmove_for_detect_game_over[i_2,j_2-2]:=true;
+                                    end;
+                                 end;
+                             end;
+
+                          end;
+
+                       end;
+                    end;
+                 end;
+
+                 if (cMove=cblack) then
+                 begin
+                    for i_1:=0 to High(arrb) do
+                    begin
+                       if (arrb[i_1].fig<>cemptyfig) then
+                       begin
+
+                          i:=arrb[i_1].i;
+                          j:=arrb[i_1].j;
+
+
+                          if (arrb[i_1].fig=cpawn) then
+                          begin
+                             if (WhotisPole(i+1,j)=cempty) then
+                             begin
+                                CopyList();
+                                   if (WhotisPoledetector(i+1,j)=cwhite) then DeleteFigdetector(i+1,j);  // скушали фигурку.
+                                   arrbdetector[i_1].i:=i+1;
+                                   arrbdetector[i_1].j:=j;
+                                   GenerateWhiteAttack();
+                                   if (not(BlackKing_Check(Sender))) then
+                                   begin
+                                       vacantmove_for_detect_game_over[i+1][j]:=true;
+                                   end;
+                             end;
+                             if (i=2) and (WhotisPole(i+2,j)=cempty) then
+                             begin
+                                CopyList();
+                                   if (WhotisPoledetector(i+2,j)=cwhite) then DeleteFigdetector(i+2,j);  // скушали фигурку.
+                                   arrbdetector[i_1].i:=i+2;
+                                   arrbdetector[i_1].j:=j;
+                                   GenerateWhiteAttack();
+                                   if (not(BlackKing_Check(Sender))) then
+                                   begin
+                                      vacantmove_for_detect_game_over[i+2][j]:=true;
+                                   end;
+                             end;
+                              // пешка ест наискосок.
+                             if ((j>1)and(WhotisPole(i+1,j-1)=cwhite)) then
+                             begin
+                                CopyList();
+                                if (WhotisPoledetector(i+1,j-1)=cwhite) then DeleteFigdetector(i+1,j-1);  // скушали фигурку.
+                                arrbdetector[i_1].i:=i+1;
+                                arrbdetector[i_1].j:=j-1;
+                                GenerateWhiteAttack();
+                                if (not(BlackKing_Check(Sender))) then
+                                begin
+                                   vacantmove_for_detect_game_over[i+1][j-1]:=true;
+                                end;
+                             end;
+                             if ((j<8)and(WhotisPole(i+1,j+1)=cwhite)) then
+                             begin
+                                CopyList();
+                                   if (WhotisPoledetector(i+1,j+1)=cwhite) then DeleteFigdetector(i+1,j+1);  // скушали фигурку.
+                                   arrbdetector[i_1].i:=i+1;
+                                   arrbdetector[i_1].j:=j+1;
+                                   GenerateWhiteAttack();
+                                   if (not(BlackKing_Check(Sender))) then
+                                   begin
+                                   vacantmove_for_detect_game_over[i+1][j+1]:=true;
+                                end;
+                             end;
+
+
+                             // Взятие на проходе
+                             if ((white_previos_move.fig=cpawn)and
+                             (white_previos_move.from.i=7) and
+                             (white_previos_move.to_.i=5) and
+                             (((j>1)and(white_previos_move.from.j=j-1))or
+                             ((j<8)and(white_previos_move.from.j=j+1))) and
+                             (i=5)) then
+                             begin
+                                if ((j>1)and(white_previos_move.from.j=j-1)) then
+                                begin
+                                   CopyList();
+                                   if (WhotisPoledetector(i+1,j-1)=cwhite) then DeleteFigdetector(i+1,j-1);  // скушали фигурку.
+                                   arrbdetector[i_1].i:=i+1;
+                                   arrbdetector[i_1].j:=j-1;
+                                   GenerateWhiteAttack();
+                                   if (not(BlackKing_Check(Sender))) then
+                                   begin
+                                      vacantmove_for_detect_game_over[i+1][j-1]:=true;
+                                   end;
+                                end
+                                else
+                                begin
+                                   CopyList();
+                                   if (WhotisPoledetector(i+1,j+1)=cwhite) then DeleteFigdetector(i+1,j+1);  // скушали фигурку.
+                                   arrbdetector[i_1].i:=i+1;
+                                   arrbdetector[i_1].j:=j+1;
+                                   GenerateWhiteAttack();
+                                   if (not(BlackKing_Check(Sender))) then
+                                   begin
+                                       vacantmove_for_detect_game_over[i+1][j+1]:=true;
+                                   end;
+                                end;
+                             end;
+                          end;
+                          if (arrb[i_1].fig=cknight) then
+                          begin
+                             if (i+2<=8)and(j+1<=8)and(WhotisPole(i+2,j+1)<>cblack) then
+                             begin
+                                 CopyList();
+                                   if (WhotisPoledetector(i+2,j+1)=cwhite) then DeleteFigdetector(i+2,j+1);  // скушали фигурку.
+                                   arrbdetector[i_1].i:=i+2;
+                                   arrbdetector[i_1].j:=j+1;
+                                   GenerateWhiteAttack();
+                                   if (not(BlackKing_Check(Sender))) then
+                                   begin
+                                      vacantmove_for_detect_game_over[i+2][j+1]:=true;
+                                   end;
+                             end;
+                             if (i+1<=8)and(j+2<=8)and(WhotisPole(i+1,j+2)<>cblack) then
+                             begin
+                                CopyList();
+                                   if (WhotisPoledetector(i+1,j+2)=cwhite) then DeleteFigdetector(i+1,j+2);  // скушали фигурку.
+                                   arrbdetector[i_1].i:=i+1;
+                                   arrbdetector[i_1].j:=j+2;
+                                   GenerateWhiteAttack();
+                                   if (not(BlackKing_Check(Sender))) then
+                                   begin
+                                      vacantmove_for_detect_game_over[i+1][j+2]:=true;
+                                   end;
+                             end;
+                             if (i-2>=1)and(j-1>=1)and(WhotisPole(i-2,j-1)<>cblack) then
+                             begin
+                                CopyList();
+                                   if (WhotisPoledetector(i-2,j-1)=cwhite) then DeleteFigdetector(i-2,j-1);  // скушали фигурку.
+                                   arrbdetector[i_1].i:=i-2;
+                                   arrbdetector[i_1].j:=j-1;
+                                   GenerateWhiteAttack();
+                                   if (not(BlackKing_Check(Sender))) then
+                                   begin
+                                      vacantmove_for_detect_game_over[i-2][j-1]:=true;
+                                   end;
+                             end;
+                             if (i-1>=1)and(j-2>=1)and(WhotisPole(i-1,j-2)<>cblack) then
+                             begin
+                                   CopyList();
+                                   if (WhotisPoledetector(i-1,j-2)=cwhite) then DeleteFigdetector(i-1,j-2);  // скушали фигурку.
+                                   arrbdetector[i_1].i:=i-1;
+                                   arrbdetector[i_1].j:=j-2;
+                                   GenerateWhiteAttack();
+                                   if (not(BlackKing_Check(Sender))) then
+                                   begin
+                                      vacantmove_for_detect_game_over[i-1][j-2]:=true;
+                                   end;
+                             end;
+                             if (i+2<=8)and(j-1>=1)and(WhotisPole(i+2,j-1)<>cblack) then
+                             begin
+                                CopyList();
+                                   if (WhotisPoledetector(i+2,j-1)=cwhite) then DeleteFigdetector(i+2,j-1);  // скушали фигурку.
+                                   arrbdetector[i_1].i:=i+2;
+                                   arrbdetector[i_1].j:=j-1;
+                                   GenerateWhiteAttack();
+                                   if (not(BlackKing_Check(Sender))) then
+                                   begin
+                                      vacantmove_for_detect_game_over[i+2][j-1]:=true;
+                                   end;
+                             end;
+                             if (i+1<=8)and(j-2>=1)and(WhotisPole(i+1,j-2)<>cblack) then
+                             begin
+                                CopyList();
+                                   if (WhotisPoledetector(i+1,j-2)=cwhite) then DeleteFigdetector(i+1,j-2);  // скушали фигурку.
+                                   arrbdetector[i_1].i:=i+1;
+                                   arrbdetector[i_1].j:=j-2;
+                                   GenerateWhiteAttack();
+                                   if (not(BlackKing_Check(Sender))) then
+                                   begin
+                                      vacantmove_for_detect_game_over[i+1][j-2]:=true;
+                                   end;
+                             end;
+                             if (i-2>=1)and(j+1<=8)and(WhotisPole(i-2,j+1)<>cblack) then
+                             begin
+                                CopyList();
+                                   if (WhotisPoledetector(i-2,j+1)=cwhite) then DeleteFigdetector(i-2,j+1);  // скушали фигурку.
+                                   arrbdetector[i_1].i:=i-2;
+                                   arrbdetector[i_1].j:=j+1;
+                                   GenerateWhiteAttack();
+                                   if (not(BlackKing_Check(Sender))) then
+                                   begin
+                                       vacantmove_for_detect_game_over[i-2][j+1]:=true;
+                                   end;
+                             end;
+                             if (i-1>=1)and(j+2<=8)and(WhotisPole(i-1,j+2)<>cblack) then
+                             begin
+                                CopyList();
+                                   if (WhotisPoledetector(i-1,j+2)=cwhite) then DeleteFigdetector(i-1,j+2);  // скушали фигурку.
+                                   arrbdetector[i_1].i:=i-1;
+                                   arrbdetector[i_1].j:=j+2;
+                                   GenerateWhiteAttack();
+                                   if (not(BlackKing_Check(Sender))) then
+                                   begin
+                                      vacantmove_for_detect_game_over[i-1][j+2]:=true;
+                                   end;
+                             end;
+                          end;
+                          if (arrb[i_1].fig=crook) then
+                          begin
+                             i_3:=j;
+                             if (i_3<8) then
+                             begin
+                                while (i_3+1<=8) and (WhotisPole(i,i_3+1)<>cblack) do
+                                begin
+                                   inc(i_3);
+                                    CopyList();
+                                   if (WhotisPoledetector(i,i_3)=cwhite) then DeleteFigdetector(i,i_3);  // скушали фигурку.
+                                   arrbdetector[i_1].i:=i;
+                                   arrbdetector[i_1].j:=i_3;
+                                   GenerateWhiteAttack();
+                                   if (not(BlackKing_Check(Sender))) then
+                                   begin
+                                   vacantmove_for_detect_game_over[i,i_3]:=true;
+
+                                   end;
+                                   if (WhotisPole(i,i_3)=cwhite) then break;
+                                end;
+                             end;
+                              i_3:=j;
+                             if (i_3>1) then
+                             begin
+                                while (i_3-1>=1) and (WhotisPole(i,i_3-1)<>cblack) do
+                                begin
+                                   dec(i_3);
+                                    CopyList();
+                                   if (WhotisPoledetector(i,i_3)=cwhite) then DeleteFigdetector(i,i_3);  // скушали фигурку.
+                                   arrbdetector[i_1].i:=i;
+                                   arrbdetector[i_1].j:=i_3;
+                                   GenerateWhiteAttack();
+                                   if (not(BlackKing_Check(Sender))) then
+                                   begin
+                                   vacantmove_for_detect_game_over[i,i_3]:=true;
+
+                                   end;
+                                   if (WhotisPole(i,i_3)=cwhite) then break;
+                                end;
+                             end;
+                             i_3:=i;
+                             if (i_3<8) then
+                             begin
+                                while (i_3+1<=8) and (WhotisPole(i_3+1,j)<>cblack) do
+                                begin
+                                   inc(i_3);
+                                    CopyList();
+                                   if (WhotisPoledetector(i_3,j)=cwhite) then DeleteFigdetector(i_3,j);  // скушали фигурку.
+                                   arrbdetector[i_1].i:=i_3;
+                                   arrbdetector[i_1].j:=j;
+                                   GenerateWhiteAttack();
+                                   if (not(BlackKing_Check(Sender))) then
+                                   begin
+                                      vacantmove_for_detect_game_over[i_3,j]:=true;
+                                   end;
+                                   if (WhotisPole(i_3,j)=cwhite) then break;
+                                end;
+                             end;
+                               i_3:=i;
+                             if (i_3>1) then
+                             begin
+                                while (i_3-1>=1) and (WhotisPole(i_3-1,j)<>cblack) do
+                                begin
+                                   dec(i_3);
+                                     CopyList();
+                                   if (WhotisPoledetector(i_3,j)=cwhite) then DeleteFigdetector(i_3,j);  // скушали фигурку.
+                                   arrbdetector[i_1].i:=i_3;
+                                   arrbdetector[i_1].j:=j;
+                                   GenerateWhiteAttack();
+                                   if (not(BlackKing_Check(Sender))) then
+                                   begin
+                                      vacantmove_for_detect_game_over[i_3,j]:=true;
+                                   end;
+                                   if (WhotisPole(i_3,j)=cwhite) then break;
+                                end;
+                             end;
+                          end;
+                           if (arrb[i_1].fig=cbishop) then
+                          begin
+                             i_2:=i;
+                             j_2:=j;
+                             if (i_2<8)and(j_2<8) then
+                             begin
+                                while (i_2+1<=8)and(j_2+1<=8) and (WhotisPole(i_2+1,j_2+1)<>cblack) do
+                                begin
+                                   inc(i_2);
+                                   inc(j_2);
+                                    CopyList();
+                                   if (WhotisPoledetector(i_2,j_2)=cwhite) then DeleteFigdetector(i_2,j_2);  // скушали фигурку.
+                                   arrbdetector[i_1].i:=i_2;
+                                   arrbdetector[i_1].j:=j_2;
+                                   GenerateWhiteAttack();
+                                   if (not(BlackKing_Check(Sender))) then
+                                   begin
+                                      vacantmove_for_detect_game_over[i_2,j_2]:=true;
+                                   end;
+                                   if (WhotisPole(i_2,j_2)=cwhite) then break;
+                                end;
+                             end;
+                             i_2:=i;
+                             j_2:=j;
+                             if (i_2>1)and(j_2>1) then
+                             begin
+                                while (i_2-1>=1)and(j_2-1>=1) and (WhotisPole(i_2-1,j_2-1)<>cblack) do
+                                begin
+                                   dec(i_2);
+                                   dec(j_2);
+                                      CopyList();
+                                   if (WhotisPoledetector(i_2,j_2)=cwhite) then DeleteFigdetector(i_2,j_2);  // скушали фигурку.
+                                   arrbdetector[i_1].i:=i_2;
+                                   arrbdetector[i_1].j:=j_2;
+                                   GenerateWhiteAttack();
+                                   if (not(BlackKing_Check(Sender))) then
+                                   begin
+                                      vacantmove_for_detect_game_over[i_2,j_2]:=true;
+                                   end;
+                                   if (WhotisPole(i_2,j_2)=cwhite) then break;
+                                end;
+                             end;
+                             i_2:=i;
+                             j_2:=j;
+                             if (i_2>1)and(j_2<8) then
+                             begin
+                                while (i_2-1>=1) and (j_2+1<=8) and (WhotisPole(i_2-1,j_2+1)<>cblack) do
+                                begin
+                                   dec(i_2);
+                                   inc(j_2);
+                                      CopyList();
+                                   if (WhotisPoledetector(i_2,j_2)=cwhite) then DeleteFigdetector(i_2,j_2);  // скушали фигурку.
+                                   arrbdetector[i_1].i:=i_2;
+                                   arrbdetector[i_1].j:=j_2;
+                                   GenerateWhiteAttack();
+                                   if (not(BlackKing_Check(Sender))) then
+                                   begin
+                                      vacantmove_for_detect_game_over[i_2,j_2]:=true;
+                                   end;
+                                   if (WhotisPole(i_2,j_2)=cwhite) then break;
+                                end;
+                             end;
+                             i_2:=i;
+                             j_2:=j;
+                             if (i_2<8)and(j_2>1) then
+                             begin
+                                while (i_2+1<=8)and(j_2-1>=1) and (WhotisPole(i_2+1,j_2-1)<>cblack) do
+                                begin
+                                   inc(i_2);
+                                   dec(j_2);
+                                      CopyList();
+                                   if (WhotisPoledetector(i_2,j_2)=cwhite) then DeleteFigdetector(i_2,j_2);  // скушали фигурку.
+                                   arrbdetector[i_1].i:=i_2;
+                                   arrbdetector[i_1].j:=j_2;
+                                   GenerateWhiteAttack();
+                                   if (not(BlackKing_Check(Sender))) then
+                                   begin
+                                      vacantmove_for_detect_game_over[i_2,j_2]:=true;
+                                   end;
+                                   if (WhotisPole(i_2,j_2)=cwhite) then break;
+                                end;
+                             end;
+                          end;
+                          if (arrb[i_1].fig=cqueen) then
+                          begin
+                             // Королева - сочетание ладьи и слона.
+                             i_3:=j;
+                             if (i_3<8) then
+                             begin
+                                while (i_3+1<=8) and (WhotisPole(i,i_3+1)<>cblack) do
+                                begin
+                                   inc(i_3);
+                                    CopyList();
+                                   if (WhotisPoledetector(i,i_3)=cwhite) then DeleteFigdetector(i,i_3);  // скушали фигурку.
+                                   arrbdetector[i_1].i:=i;
+                                   arrbdetector[i_1].j:=i_3;
+                                   GenerateWhiteAttack();
+                                   if (not(BlackKing_Check(Sender))) then
+                                   begin
+                                   vacantmove_for_detect_game_over[i,i_3]:=true;
+
+                                   end;
+                                   if (WhotisPole(i,i_3)=cwhite) then break;
+                                end;
+                             end;
+                              i_3:=j;
+                             if (i_3>1) then
+                             begin
+                                while (i_3-1>=1) and (WhotisPole(i,i_3-1)<>cblack) do
+                                begin
+                                   dec(i_3);
+                                    CopyList();
+                                   if (WhotisPoledetector(i,i_3)=cwhite) then DeleteFigdetector(i,i_3);  // скушали фигурку.
+                                   arrbdetector[i_1].i:=i;
+                                   arrbdetector[i_1].j:=i_3;
+                                   GenerateWhiteAttack();
+                                   if (not(BlackKing_Check(Sender))) then
+                                   begin
+                                   vacantmove_for_detect_game_over[i,i_3]:=true;
+
+                                   end;
+                                   if (WhotisPole(i,i_3)=cwhite) then break;
+                                end;
+                             end;
+                             i_3:=i;
+                             if (i_3<8) then
+                             begin
+                                while (i_3+1<=8) and (WhotisPole(i_3+1,j)<>cblack) do
+                                begin
+                                   inc(i_3);
+                                     CopyList();
+                                   if (WhotisPoledetector(i_3,j)=cwhite) then DeleteFigdetector(i_3,j);  // скушали фигурку.
+                                   arrbdetector[i_1].i:=i_3;
+                                   arrbdetector[i_1].j:=j;
+                                   GenerateWhiteAttack();
+                                   if (not(BlackKing_Check(Sender))) then
+                                   begin
+                                      vacantmove_for_detect_game_over[i_3,j]:=true;
+                                   end;
+                                   if (WhotisPole(i_3,j)=cwhite) then break;
+                                end;
+                             end;
+                               i_3:=i;
+                             if (i_3>1) then
+                             begin
+                                while (i_3-1>=1) and (WhotisPole(i_3-1,j)<>cblack) do
+                                begin
+                                   dec(i_3);
+                                    CopyList();
+                                   if (WhotisPoledetector(i_3,j)=cwhite) then DeleteFigdetector(i_3,j);  // скушали фигурку.
+                                   arrbdetector[i_1].i:=i_3;
+                                   arrbdetector[i_1].j:=j;
+                                   GenerateWhiteAttack();
+                                   if (not(BlackKing_Check(Sender))) then
+                                   begin
+                                      vacantmove_for_detect_game_over[i_3,j]:=true;
+                                   end;
+                                   if (WhotisPole(i_3,j)=cwhite) then break;
+                                end;
+                             end;
+
+                             i_2:=i;
+                             j_2:=j;
+                             if (i_2<8)and(j_2<8) then
+                             begin
+                                while (i_2+1<=8)and(j_2+1<=8) and (WhotisPole(i_2+1,j_2+1)<>cblack) do
+                                begin
+                                   inc(i_2);
+                                   inc(j_2);
+                                    CopyList();
+                                   if (WhotisPoledetector(i_2,j_2)=cwhite) then DeleteFigdetector(i_2,j_2);  // скушали фигурку.
+                                   arrbdetector[i_1].i:=i_2;
+                                   arrbdetector[i_1].j:=j_2;
+                                   GenerateWhiteAttack();
+                                   if (not(BlackKing_Check(Sender))) then
+                                   begin
+                                      vacantmove_for_detect_game_over[i_2,j_2]:=true;
+                                   end;
+                                   if (WhotisPole(i_2,j_2)=cwhite) then break;
+                                end;
+                             end;
+                             i_2:=i;
+                             j_2:=j;
+                             if (i_2>1)and(j_2>1) then
+                             begin
+                                while (i_2-1>=1)and(j_2-1>=1) and (WhotisPole(i_2-1,j_2-1)<>cblack) do
+                                begin
+                                   dec(i_2);
+                                   dec(j_2);
+                                    CopyList();
+                                   if (WhotisPoledetector(i_2,j_2)=cwhite) then DeleteFigdetector(i_2,j_2);  // скушали фигурку.
+                                   arrbdetector[i_1].i:=i_2;
+                                   arrbdetector[i_1].j:=j_2;
+                                   GenerateWhiteAttack();
+                                   if (not(BlackKing_Check(Sender))) then
+                                   begin
+                                      vacantmove_for_detect_game_over[i_2,j_2]:=true;
+                                   end;
+                                   if (WhotisPole(i_2,j_2)=cwhite) then break;
+                                end;
+                             end;
+                             i_2:=i;
+                             j_2:=j;
+                             if (i_2>1)and(j_2<8) then
+                             begin
+                                while (i_2-1>=1) and (j_2+1<=8) and (WhotisPole(i_2-1,j_2+1)<>cblack) do
+                                begin
+                                   dec(i_2);
+                                   inc(j_2);
+                                    CopyList();
+                                   if (WhotisPoledetector(i_2,j_2)=cwhite) then DeleteFigdetector(i_2,j_2);  // скушали фигурку.
+                                   arrbdetector[i_1].i:=i_2;
+                                   arrbdetector[i_1].j:=j_2;
+                                   GenerateWhiteAttack();
+                                   if (not(BlackKing_Check(Sender))) then
+                                   begin
+                                      vacantmove_for_detect_game_over[i_2,j_2]:=true;
+                                   end;
+                                   if (WhotisPole(i_2,j_2)=cwhite) then break;
+                                end;
+                             end;
+                             i_2:=i;
+                             j_2:=j;
+                             if (i_2<8)and(j_2>1) then
+                             begin
+                                while (i_2+1<=8)and(j_2-1>=1) and (WhotisPole(i_2+1,j_2-1)<>cblack) do
+                                begin
+                                   inc(i_2);
+                                   dec(j_2);
+                                    CopyList();
+                                   if (WhotisPoledetector(i_2,j_2)=cwhite) then DeleteFigdetector(i_2,j_2);  // скушали фигурку.
+                                   arrbdetector[i_1].i:=i_2;
+                                   arrbdetector[i_1].j:=j_2;
+                                   GenerateWhiteAttack();
+                                   if (not(BlackKing_Check(Sender))) then
+                                   begin
+                                      vacantmove_for_detect_game_over[i_2,j_2]:=true;
+                                   end;
+                                   if (WhotisPole(i_2,j_2)=cwhite) then break;
+                                end;
+                             end;
+                          end;
+
+                          if (arrb[i_1].fig=cking) then
+                          begin
+                             // Ходы Короля
+                             i_2:=i;
+                             j_2:=j;
+                             if (i_2<8)and(j_2<8) then
+                             begin
+                                if (i_2+1<=8)and(j_2+1<=8) and (WhotisPole(i_2+1,j_2+1)<>cblack) then
+                                begin
+                                   inc(i_2);
+                                   inc(j_2);
+                                    CopyList();
+                                   if (WhotisPoledetector(i_2,j_2)=cwhite) then DeleteFigdetector(i_2,j_2);  // скушали фигурку.
+                                   arrbdetector[i_1].i:=i_2;
+                                   arrbdetector[i_1].j:=j_2;
+                                   GenerateWhiteAttack();
+                                   if (not(BlackKing_Check(Sender))) then
+                                   begin
+                                      vacantmove_for_detect_game_over[i_2,j_2]:=true;
+                                   end;
+                                end;
+                             end;
+                             i_2:=i;
+                             j_2:=j;
+                             if (i_2>1)and(j_2<8) then
+                             begin
+                                if (i_2-1>=1)and(j_2+1<=8) and (WhotisPole(i_2-1,j_2+1)<>cblack) then
+                                begin
+                                   dec(i_2);
+                                   inc(j_2);
+                                    CopyList();
+                                   if (WhotisPoledetector(i_2,j_2)=cwhite) then DeleteFigdetector(i_2,j_2);  // скушали фигурку.
+                                   arrbdetector[i_1].i:=i_2;
+                                   arrbdetector[i_1].j:=j_2;
+                                   GenerateWhiteAttack();
+                                   if (not(BlackKing_Check(Sender))) then
+                                   begin
+                                      vacantmove_for_detect_game_over[i_2,j_2]:=true;
+                                   end;
+                                end;
+                             end;
+                             i_2:=i;
+                             j_2:=j;
+                             if (j_2<8) then
+                             begin
+                                if (j_2+1<=8) and (WhotisPole(i_2,j_2+1)<>cblack) then
+                                begin
+                                   inc(j_2);
+                                    CopyList();
+                                   if (WhotisPoledetector(i_2,j_2)=cwhite) then DeleteFigdetector(i_2,j_2);  // скушали фигурку.
+                                   arrbdetector[i_1].i:=i_2;
+                                   arrbdetector[i_1].j:=j_2;
+                                   GenerateWhiteAttack();
+                                   if (not(BlackKing_Check(Sender))) then
+                                   begin
+                                      vacantmove_for_detect_game_over[i_2,j_2]:=true;
+                                   end;
+                                end;
+                             end;
+
+                             i_2:=i;
+                             j_2:=j;
+                             if (i_2<8)and(j_2>1) then
+                             begin
+                                if (i_2+1<=8)and(j_2-1>=1) and (WhotisPole(i_2+1,j_2-1)<>cblack) then
+                                begin
+                                   inc(i_2);
+                                   dec(j_2);
+                                    CopyList();
+                                   if (WhotisPoledetector(i_2,j_2)=cwhite) then DeleteFigdetector(i_2,j_2);  // скушали фигурку.
+                                   arrbdetector[i_1].i:=i_2;
+                                   arrbdetector[i_1].j:=j_2;
+                                   GenerateWhiteAttack();
+                                   if (not(BlackKing_Check(Sender))) then
+                                   begin
+                                      vacantmove_for_detect_game_over[i_2,j_2]:=true;
+                                   end;
+                                end;
+                             end;
+                             i_2:=i;
+                             j_2:=j;
+                             if (i_2>1)and(j_2>1) then
+                             begin
+                                if (i_2-1>=1)and(j_2-1>=1) and (WhotisPole(i_2-1,j_2-1)<>cblack) then
+                                begin
+                                   dec(i_2);
+                                   dec(j_2);
+                                    CopyList();
+                                   if (WhotisPoledetector(i_2,j_2)=cwhite) then DeleteFigdetector(i_2,j_2);  // скушали фигурку.
+                                   arrbdetector[i_1].i:=i_2;
+                                   arrbdetector[i_1].j:=j_2;
+                                   GenerateWhiteAttack();
+                                   if (not(BlackKing_Check(Sender))) then
+                                   begin
+                                      vacantmove_for_detect_game_over[i_2,j_2]:=true;
+                                   end;
+                                end;
+                             end;
+                             i_2:=i;
+                             j_2:=j;
+                             if (j_2>1) then
+                             begin
+                                if (j_2-1>=1) and (WhotisPole(i_2,j_2-1)<>cblack) then
+                                begin
+                                   dec(j_2);
+                                    CopyList();
+                                   if (WhotisPoledetector(i_2,j_2)=cwhite) then DeleteFigdetector(i_2,j_2);  // скушали фигурку.
+                                   arrbdetector[i_1].i:=i_2;
+                                   arrbdetector[i_1].j:=j_2;
+                                   GenerateWhiteAttack();
+                                   if (not(BlackKing_Check(Sender))) then
+                                   begin
+                                      vacantmove_for_detect_game_over[i_2,j_2]:=true;
+                                   end;
+                                end;
+                             end;
+                             i_2:=i;
+                             j_2:=j;
+                             if (i_2<8) then
+                             begin
+                                if (i_2+1<=8)and (WhotisPole(i_2+1,j_2)<>cblack) then
+                                begin
+                                   inc(i_2);
+                                    CopyList();
+                                   if (WhotisPoledetector(i_2,j_2)=cwhite) then DeleteFigdetector(i_2,j_2);  // скушали фигурку.
+                                   arrbdetector[i_1].i:=i_2;
+                                   arrbdetector[i_1].j:=j_2;
+                                   GenerateWhiteAttack();
+                                   if (not(BlackKing_Check(Sender))) then
+                                   begin
+                                      vacantmove_for_detect_game_over[i_2,j_2]:=true;
+                                   end;
+                                end;
+                             end;
+                             i_2:=i;
+                             j_2:=j;
+                             if (i_2>1) then
+                             begin
+                                if (i_2-1>=1)and (WhotisPole(i_2-1,j_2)<>cblack) then
+                                begin
+                                   dec(i_2);
+                                    CopyList();
+                                   if (WhotisPoledetector(i_2,j_2)=cwhite) then DeleteFigdetector(i_2,j_2);  // скушали фигурку.
+                                   arrbdetector[i_1].i:=i_2;
+                                   arrbdetector[i_1].j:=j_2;
+                                   GenerateWhiteAttack();
+                                   if (not(BlackKing_Check(Sender))) then
+                                   begin
+                                      vacantmove_for_detect_game_over[i_2,j_2]:=true;
+                                   end;
+                                end;
+                             end;
+
+                             // Рокировка в короткую сторону
+                             if ((WhotisPole(1,6)=cempty)and
+                             (WhotisPole(1,7)=cempty)and
+                             (WhotisPole(1,8)=cblack)and
+                             (WhotisPole(1,5)=cblack)and
+                             (WhotisFig(1,8)=crook)and
+                             (WhotisFig(1,5)=cking)) then
+                             begin
+                                 i_2:=i;
+                                 j_2:=j;
+                                 if (j_2+2<=8) then
+                                 begin
+                                    CopyList();
+                                    GenerateWhiteAttack();
+                                    if ((white_attack[1,6])or(white_attack[1,7])or
+                                    (white_attack[1,5])or did_the_black_right_rook_move
+                                    or did_the_black_king_move) then
+                                    begin
+                                       // рокировка невозможна.
+                                       // если поле, пройденное королём во время рокировки, находится под боем противника;
+                                       //если король перед началом рокировки находится под шахом или после её осуществления попадает под шах;
+                                       // ходила правая ладья или уже ходил король.
+                                    end
+                                    else
+                                    begin
+                                       vacantmove_for_detect_game_over[i_2,j_2+2]:=true;
+                                    end;
+                                 end;
+                             end;
+
+                             // Рокировка в длинную сторону
+                             if ((WhotisPole(1,2)=cempty)and
+                             (WhotisPole(1,3)=cempty)and
+                             (WhotisPole(1,4)=cempty)and
+                             (WhotisPole(1,1)=cblack)and
+                             (WhotisPole(1,5)=cblack)and
+                             (WhotisFig(1,1)=crook)and
+                             (WhotisFig(1,5)=cking)) then
+                             begin
+                                 i_2:=i;
+                                 j_2:=j;
+                                 if (j_2-2>=1) then
+                                 begin
+                                    CopyList();
+                                    GenerateWhiteAttack();
+                                    if ((white_attack[1,3])or(white_attack[1,4])or
+                                    (white_attack[1,5])or did_the_black_left_rook_move
+                                    or did_the_black_king_move) then
+                                    begin
+                                       // рокировка невозможна.
+                                       // если поле, пройденное королём во время рокировки, находится под боем противника;
+                                       //если король перед началом рокировки находится под шахом или после её осуществления попадает под шах;
+                                       // ходила левая ладья или уже ходил король.
+                                    end
+                                    else
+                                    begin
+                                       vacantmove_for_detect_game_over[i_2,j_2-2]:=true;
+                                    end;
+                                 end;
+                             end;
+
+                          end;
+
+                       end;
+                    end;
+                 end;
+
+
+
+end;
+
 // if (cMove=cwhite) соблюдение очередности ходов.
 procedure TForm1.FormMouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
@@ -1978,7 +3475,7 @@ begin
                                      (j_2<>arrb[i_1].j) then
                                      begin
                                         white_eating.fig:=cpawn;
-                                        white_eating.i:=arrw[i_1].i;
+                                        white_eating.i:=arrb[i_1].i;
                                         white_eating.j:=j_2;
                                         DeleteFig(arrb[i_1].i,j_2); // Удаляем пешку при взятии на проходе.
                                      end;
