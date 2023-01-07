@@ -10,6 +10,7 @@ unit Unit1;
 // Воспроизведение только что сыгранной партии. TODO
 // 5.01.2023 физические шахматы. 3569 строк кода.
 // 6.01.2023 исправление ошибок 3863 строки кода.
+// 7.01.2023 Удалил пешку при взятии на проходе. Исправлено.
 
 {$mode objfpc}{$H+}
 
@@ -1857,6 +1858,16 @@ begin
                                      did_the_white_king_move:=true;
 
 
+                                     // Удаление пешки при взятии на проходе
+                                     if (WhotisPole(i_2,j_2)=cempty)and (arrw[i_1].fig=cpawn) and
+                                     (j_2<>arrw[i_1].j) then
+                                     begin
+                                        black_eating.fig:=cpawn;
+                                        black_eating.i:=arrw[i_1].i;
+                                        black_eating.j:=j_2;
+                                        DeleteFig(arrw[i_1].i,j_2); // Удаляем пешку при взятии на проходе.
+                                     end;
+
                                      arrw[i_1].i:=i_2;
                                      arrw[i_1].j:=j_2;
                                      // Превращение пешки в королеву.
@@ -1961,6 +1972,16 @@ begin
                                      did_the_black_left_rook_move:=true;
                                      if (arrb[i_1].fig=cking) and (arrb[i_1].i=1)and(arrb[i_1].j=5) then
                                      did_the_black_king_move:=true;
+
+                                     // Удаление пешки при взятии на проходе
+                                     if (WhotisPole(i_2,j_2)=cempty)and (arrb[i_1].fig=cpawn) and
+                                     (j_2<>arrb[i_1].j) then
+                                     begin
+                                        white_eating.fig:=cpawn;
+                                        white_eating.i:=arrw[i_1].i;
+                                        white_eating.j:=j_2;
+                                        DeleteFig(arrb[i_1].i,j_2); // Удаляем пешку при взятии на проходе.
+                                     end;
 
                                       arrb[i_1].i:=i_2;
                                       arrb[i_1].j:=j_2;
