@@ -12,6 +12,8 @@ unit Unit1;
 // 6.01.2023 исправление ошибок 3863 строки кода.
 // 7.01.2023 Удалил пешку при взятии на проходе. В Form1.caption объявляется мат или пат. Исправлено.
 // 5386 строк кода.
+// 8.01.2023 Сохранение позиции на доске в двоичный файл. Чтение позиции на доске из двоичного файла.
+// 5600 строк кода.
 
 {$mode objfpc}{$H+}
 
@@ -62,12 +64,23 @@ type
     MenuItem1: TMenuItem;
     MenuItem2: TMenuItem;
     MenuItem3: TMenuItem;
+    MenuItem4: TMenuItem;
+    MenuItem5: TMenuItem;
+    MenuItem6: TMenuItem;
+    OpenDialog1: TOpenDialog;
+    SaveDialog1: TSaveDialog;
     Timer1: TTimer;
     procedure FormCreate(Sender: TObject);
     procedure FormMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure FormPaint(Sender: TObject);
     procedure MenuItem3Click(Sender: TObject);
+    // Сохранение позиции на доске в двоичный файл.
+    procedure MenuItem4Click(Sender: TObject);
+    // Чтение позиции на доске из двоичного файла.
+    procedure MenuItem5Click(Sender: TObject);
+    // Закрыть приложение.
+    procedure MenuItem6Click(Sender: TObject);
 
   private
     { private declarations }
@@ -99,6 +112,8 @@ type
     white_eating, black_eating : Figure; // Сьеденная фигура которую нужно вернуть при UNDO.
     State : Integer; // Не более двух нажатий undo.
 
+    // Возвращает цвет фигуры на поле или пустую клетку.
+    function WhotisPoledetector(i0,j0 : Integer): Integer;   // Для копии доски.
     //  Удаляет фигуру из arrwdetector или  arrbdetector.
     procedure DeleteFigdetector(i0,j0 : Integer);
     // vacantmove1 заполняется при  DrawBlackAttack или DrawWhiteAttack.
@@ -106,6 +121,7 @@ type
     procedure DrawWhiteAttack(Sender : TObject);
     procedure Fill_vacant_move_for_detect_game_over(Sender : TObject); // Полный список ходов всех фигур для детектирования окончания партии.
     function MatorPat(Sender : TObject) : Boolean; // Возвращает true если некуда идти.
+    procedure CopyList(); // Копирование фигур для детектора шахов.
   public
     { public declarations }
 
@@ -120,13 +136,10 @@ type
    procedure Draw(Sender: TObject);  // нарисовать всё.
    procedure DeleteFig(i0,j0 : Integer); // удалить фигуру из списка фигур по заданным координатам
    procedure DeleteFig1(i0,j0 : Integer); // удалить фигуру из списка фигур по заданным координатам
-
-   function WhotisPole(i0,j0 : Integer): Integer;
-   function WhotisPoledetector(i0,j0 : Integer): Integer;   // Для копии доски.
+   function WhotisPole(i0,j0 : Integer): Integer;  // Возвращает цвет фигуры на поле или пустую клетку.
    function WhotisFig(i0,j0 : Integer): Integer; // какая фигура стоит на поле i0,j0 ?
    procedure GenerateWhiteAttack(); // Генерирует поля которые бьют белые фигуры.
    procedure GenerateBlackAttack(); // Генерирует поля которые бьют чёрные фигуры.
-   procedure CopyList(); // Копирование фигур для детектора шахов.
    function WhiteKing_Check(Sender : TObject) : Boolean; // Белый король под Шахом ?
    function BlackKing_Check(Sender : TObject) : Boolean; // Чёрный король под Шахом ?
   end;
@@ -5070,11 +5083,11 @@ begin
                 found:=true;
             end;
          end;
-         if (not(found)) then
+         {if (not(found)) then
          begin
             SetLength(arrw,Length(arrw)+1);
             arrw[High(arrw)]:=white_eating;
-         end;
+         end;}
          //DeleteFig1(white_eating.i,white_eating.j);
          //SetLength(arrw1,Length(arrw1)+1);
          //arrw1[High(arrw1)]:=white_eating;
@@ -5106,11 +5119,11 @@ begin
                 found:=true;
             end;
          end;
-         if (not(found)) then
+         {if (not(found)) then
          begin
             SetLength(arrb,Length(arrb)+1);
             arrb[High(arrb)]:=black_eating;
-         end;
+         end;}
          //DeleteFig1(black_eating.i,black_eating.j);
          //SetLength(arrb1,Length(arrb1)+1);
          //arrb1[High(arrb1)]:=black_eating;
@@ -5139,6 +5152,207 @@ begin
 
    if (State<2) then inc(State);
    if (State>2) then State:=2;
+end;
+
+// Save
+// Сохранение позиции на доске в двоичный файл.
+procedure TForm1.MenuItem4Click(Sender: TObject);
+type
+  Titem = record
+    fig : Figure;
+    i : Integer;
+    b : Boolean;
+    m : Move;
+  end;
+
+var
+    datFile    : File of Titem;
+    itemContent : Titem;
+    i : Integer;
+
+begin
+   if SaveDialog1.Execute then
+   Assignfile(datFile, ( SaveDialog1.Filename )); // Assigns the name of the file to the variable txtFile and opens the file
+
+   ReWrite (datFile);  // File will be overwritten if it exists
+   for i:=0 to 15 do
+   begin
+      itemContent.fig := arrw[i];
+      case i of
+          0: begin
+              itemContent.b:=did_the_black_right_rook_move;
+              itemContent.i:=State;
+              itemContent.m:=white_previos_move;
+         end;
+           1: begin
+              itemContent.b:=did_the_black_right_rook_move1;
+              itemContent.i:=cMove;
+              itemContent.m:=black_previos_move;
+         end;
+           2: begin
+              itemContent.b:=did_the_black_left_rook_move;
+              itemContent.m:=white_previos_move1;
+         end;
+           3: begin
+              itemContent.b:=did_the_black_left_rook_move1; // ходили ли чёрные ладьи
+              itemContent.m:=black_previos_move1;
+         end;
+           4: begin
+              itemContent.b:=did_the_black_king_move;
+         end;
+           5: begin
+              itemContent.b:=did_the_black_king_move1; // ходили ли короли.
+         end;
+              6: begin
+              itemContent.b:=did_the_white_right_rook_move;
+         end;
+           7: begin
+              itemContent.b:=did_the_white_right_rook_move1;
+         end;
+           8: begin
+              itemContent.b:=did_the_white_left_rook_move;
+         end;
+           9: begin
+              itemContent.b:=did_the_white_left_rook_move1; // ходили ли чёрные ладьи
+         end;
+           10: begin
+              itemContent.b:=did_the_white_king_move;
+         end;
+           11: begin
+              itemContent.b:=did_the_white_king_move1; // ходили ли короли.
+         end;
+      end;
+      Write(datFile, itemContent);          // Write the white figures to the new file
+   end;
+   for i:=0 to 15 do
+   begin
+      itemContent.fig := arrb[i];
+      Write(datFile, itemContent);          // Write the black figures to the new file
+   end;
+     for i:=0 to 15 do
+   begin
+      itemContent.fig := arrw1[i];
+      Write(datFile, itemContent);          // Write the white figures to the new file
+   end;
+   for i:=0 to 15 do
+   begin
+      itemContent.fig := arrb1[i];
+      Write(datFile, itemContent);          // Write the black figures to the new file
+   end;
+   itemContent.fig := white_eating;
+   Write(datFile, itemContent);
+   itemContent.fig := black_eating;
+   Write(datFile, itemContent);
+
+   CloseFile(datFile);  // closes the file
+end;
+
+// Open
+// Чтение позиции на доске из двоичного файла.
+procedure TForm1.MenuItem5Click(Sender: TObject);
+type
+  Titem = record
+    fig : Figure;
+    i : Integer;
+    b : Boolean;
+    m : Move;
+  end;
+
+var
+    datFile    : File of Titem;
+    itemContent : Titem;
+    i : Integer;
+
+begin
+
+  if OpenDialog1.Execute then
+  begin
+     if fileExists(OpenDialog1.Filename) then
+     begin
+        Assignfile(datFile, OpenDialog1.Filename);  // Assigns the name of the file to the variable txtFile and opens the file
+        Reset(datFile);                    // File will be overwritten if it exists
+        for i:=0 to 15 do
+        begin
+           read(datFile, itemContent);   // reads a single item into chrContent variable
+           arrw[i]:=itemContent.fig;
+        case i of
+          0: begin
+                did_the_black_right_rook_move:=itemContent.b;
+                State:=itemContent.i;
+                white_previos_move:=itemContent.m;
+             end;
+           1: begin
+                 did_the_black_right_rook_move1:=itemContent.b;
+                 cMove:=itemContent.i;
+                 black_previos_move:=itemContent.m;
+              end;
+           2: begin
+                 did_the_black_left_rook_move:=itemContent.b;
+                 white_previos_move1:=itemContent.m;
+              end;
+           3: begin
+                 did_the_black_left_rook_move1:=itemContent.b; // ходили ли чёрные ладьи
+                 black_previos_move1:=itemContent.m;
+              end;
+           4: begin
+                 did_the_black_king_move:=itemContent.b;
+              end;
+           5: begin
+                 did_the_black_king_move1:=itemContent.b; // ходили ли короли.
+              end;
+         6: begin
+               did_the_white_right_rook_move:=itemContent.b;
+            end;
+           7: begin
+                 did_the_white_right_rook_move1:=itemContent.b;
+              end;
+           8: begin
+                 did_the_white_left_rook_move:=itemContent.b;
+              end;
+           9: begin
+                 did_the_white_left_rook_move1:=itemContent.b; // ходили ли чёрные ладьи
+              end;
+           10: begin
+                  did_the_white_king_move:=itemContent.b;
+               end;
+           11: begin
+                  did_the_white_king_move1:=itemContent.b; // ходили ли короли.
+               end;
+         end; // case
+      end; // for
+      for i:=0 to 15 do
+      begin
+         read(datFile, itemContent);   // reads a single item into chrContent variable
+         arrb[i]:=itemContent.fig;
+      end;
+      for i:=0 to 15 do
+      begin
+         read(datFile, itemContent);   // reads a single item into chrContent variable
+         arrw1[i]:=itemContent.fig;
+      end;
+      for i:=0 to 15 do
+      begin
+         read(datFile, itemContent);   // reads a single item into chrContent variable
+         arrb1[i]:=itemContent.fig;
+      end;
+      read(datFile, itemContent);   // reads a single item into chrContent variable
+      white_eating:=itemContent.fig;
+      read(datFile, itemContent);   // reads a single item into chrContent variable
+      black_eating:=itemContent.fig;
+
+
+      CloseFile(datFile);  // closes the file
+   end;
+
+  end;
+
+end;
+
+// Закрыть программу
+procedure TForm1.MenuItem6Click(Sender: TObject);
+begin
+   Form1.Close;
+   Application.Terminate;
 end;
 
 // Нарисовать доску и фигуры на ней
