@@ -10,7 +10,8 @@ unit Unit1;
 // Воспроизведение только что сыгранной партии. TODO
 // 5.01.2023 физические шахматы. 3569 строк кода.
 // 6.01.2023 исправление ошибок 3863 строки кода.
-// 7.01.2023 Удалил пешку при взятии на проходе. Исправлено.
+// 7.01.2023 Удалил пешку при взятии на проходе. В Form1.caption объявляется мат или пат. Исправлено.
+// 5386 строк кода.
 
 {$mode objfpc}{$H+}
 
@@ -40,15 +41,18 @@ type
 
   { TForm1 }
 
+  // позиция на доске
   Position = record
     i,j : Integer;
   end;
 
+  // ход
   Move = record
     from, to_ : Position;
     fig : Integer;
   end;
 
+  // фигура и её позиция на доске
   Figure = record
     i,j,fig : Integer;
   end;
@@ -67,21 +71,20 @@ type
 
   private
     { private declarations }
-  public
-    { public declarations }
     xmouse, ymouse : Integer;
     bPress : Boolean;
-    arrw : array of Figure;
-    arrb : array of Figure;
+    arrw : array of Figure; // Список белых фигур
+    arrb : array of Figure; // Список чёрных фигур
     cMove : Integer; // Чей ход белых или чёрных ?
     vacantmove : array[1..8,1..8] of Boolean; // Подсвечиваем клетки куда можно пойти по правилам Шахмат.
-    vacantmove1 : array[1..8,1..8] of Boolean;
+    vacantmove1 : array[1..8,1..8] of Boolean; // заполняется при  DrawBlackAttack или DrawWhiteAttack.
+    // массив  vacantmove_for_detect_game_over заполняется по требованию.
     vacantmove_for_detect_game_over : array[1..8,1..8] of Boolean;
     white_previos_move, black_previos_move : Move; // Предыдущий ход забелых и за чёрных.
     arrw1 : array of Figure;  // Состояние доски на предыдущем ходу.
     arrb1 : array of Figure;
-    white_previos_move1, black_previos_move1 : Move; // Предыдущий ход забелых и за чёрных.
-    // Массивы attack заполняются по требованию.
+    white_previos_move1, black_previos_move1 : Move; // Предыдущий ход забелых и за чёрных ход назад.
+    // Массивы attack и detector заполняются по требованию.
     white_attack : array[1..8,1..8] of Boolean; // Поля в которых атакуют белые фигуры
     black_attack : array[1..8,1..8] of Boolean; // Поля в которых атакуют чёрные фигуры
     arrwdetector : array of Figure; // Используется для детектора шахов.
@@ -89,11 +92,26 @@ type
     did_the_white_right_rook_move, did_the_white_left_rook_move : Boolean; // ходили ли белые ладьи
     did_the_black_right_rook_move, did_the_black_left_rook_move : Boolean; // ходили ли чёрные ладьи
     did_the_white_king_move, did_the_black_king_move : Boolean; // ходили ли короли.
+    // Ход назад. Используется при операции UNDO.
     did_the_white_right_rook_move1, did_the_white_left_rook_move1 : Boolean; // ходили ли белые ладьи
     did_the_black_right_rook_move1, did_the_black_left_rook_move1 : Boolean; // ходили ли чёрные ладьи
     did_the_white_king_move1, did_the_black_king_move1 : Boolean; // ходили ли короли.
     white_eating, black_eating : Figure; // Сьеденная фигура которую нужно вернуть при UNDO.
     State : Integer; // Не более двух нажатий undo.
+
+    // Возвращает цвет фигуры на поле или пустую клетку.
+    function WhotisPoledetector(i0,j0 : Integer): Integer;   // Для копии доски.
+    //  Удаляет фигуру из arrwdetector или  arrbdetector.
+    procedure DeleteFigdetector(i0,j0 : Integer);
+    // vacantmove1 заполняется при  DrawBlackAttack или DrawWhiteAttack.
+    procedure DrawBlackAttack(Sender : TObject);
+    procedure DrawWhiteAttack(Sender : TObject);
+    procedure Fill_vacant_move_for_detect_game_over(Sender : TObject); // Полный список ходов всех фигур для детектирования окончания партии.
+    function MatorPat(Sender : TObject) : Boolean; // Возвращает true если некуда идти.
+    procedure CopyList(); // Копирование фигур для детектора шахов.
+  public
+    { public declarations }
+
 
    procedure Kletka(x,y,a:integer;cl:TColor);
    procedure Pawn(x,y,a:integer;c1,c2:TColor);   // Нарисовать пешку
@@ -105,19 +123,12 @@ type
    procedure Draw(Sender: TObject);  // нарисовать всё.
    procedure DeleteFig(i0,j0 : Integer); // удалить фигуру из списка фигур по заданным координатам
    procedure DeleteFig1(i0,j0 : Integer); // удалить фигуру из списка фигур по заданным координатам
-   procedure DeleteFigdetector(i0,j0 : Integer);
-   function WhotisPole(i0,j0 : Integer): Integer;
-   function WhotisPoledetector(i0,j0 : Integer): Integer;   // Для копии доски.
+   function WhotisPole(i0,j0 : Integer): Integer;  // Возвращает цвет фигуры на поле или пустую клетку.
    function WhotisFig(i0,j0 : Integer): Integer; // какая фигура стоит на поле i0,j0 ?
    procedure GenerateWhiteAttack(); // Генерирует поля которые бьют белые фигуры.
    procedure GenerateBlackAttack(); // Генерирует поля которые бьют чёрные фигуры.
-   procedure CopyList(); // Копирование фигур для детектора шахов.
    function WhiteKing_Check(Sender : TObject) : Boolean; // Белый король под Шахом ?
    function BlackKing_Check(Sender : TObject) : Boolean; // Чёрный король под Шахом ?
-   procedure DrawBlackAttack(Sender : TObject);
-   procedure DrawWhiteAttack(Sender : TObject);
-   procedure Fill_vacant_move_for_detect_game_over(Sender : TObject); // Полный список ходов всех фигур для детектирования окончания партии.
-   function MatorPat(Sender : TObject) : Boolean; // Возвращает true если некуда идти.
   end;
 
 var
@@ -404,7 +415,6 @@ begin
     //Result:=false;
 end;
 
-
 procedure TForm1.DeleteFig(i0,j0 : Integer);
 var k: Integer;
 begin
@@ -430,8 +440,6 @@ begin
       end
    end;
 end;
-
-
 
  procedure TForm1.DeleteFig1(i0,j0 : Integer);
 var k : Integer;
@@ -484,8 +492,6 @@ begin
       end
    end;
 end;
-
-
 
 function TForm1.WhotisPole(i0,j0 : Integer) : Integer;
 var k : Integer;
@@ -1567,6 +1573,7 @@ begin
       end;
 end;
 
+// Вызывается при создании формы.
 procedure TForm1.FormCreate(Sender: TObject);
 var
   i,j : Integer;
@@ -1738,7 +1745,6 @@ begin
 end;
 
 end;
-
 
 procedure TForm1.Fill_vacant_move_for_detect_game_over(Sender : TObject); // Полный список ходов всех фигур для детектирования окончания партии.
 const n=8;
@@ -5135,8 +5141,7 @@ begin
    if (State>2) then State:=2;
 end;
 
-
-
+// Нарисовать доску и фигуры на ней
 procedure TForm1.Draw(Sender: TObject);
 const n=8;
       kr=clTeal; // цвет темных клеток
