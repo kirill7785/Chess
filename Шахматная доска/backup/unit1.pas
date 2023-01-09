@@ -1,19 +1,21 @@
 unit Unit1;
-// Шахматы в Лазаре v2.2.4
+// Графический интерфейс для шахмат в среде разработке на Паскаль  Лазарь v2.2.4.
 // 4.01.2023 начало 733 строки кода.
 // Взятие на проходе.
-// Откад хода назад (отмена одного хода Undo). Не забыть вернуть сьеденную фигуру.
-// Внимание не более двух undo иначе неопределенное поведение.
+// Откад хода назад (отмена текущего хода Undo). Не забыть вернуть сьеденную фигуру.
+// Произвольное количество отмен хода. 09.01.2023
 // рокировка.
 // Подсвечивания при шахе красным.
-// Сохранение партии в файл. Save; Open; TODO
-// Воспроизведение только что сыгранной партии. TODO
+// Сохранение позиции на доске в файл. Save; Open; 8.01.2023
+// Воспроизведение только что сыгранной партии. Undo, Next. 09.01.2023
 // 5.01.2023 физические шахматы. 3569 строк кода.
 // 6.01.2023 исправление ошибок 3863 строки кода.
 // 7.01.2023 Удалил пешку при взятии на проходе. В Form1.caption объявляется мат или пат. Исправлено.
 // 5386 строк кода.
 // 8.01.2023 Сохранение позиции на доске в двоичный файл. Чтение позиции на доске из двоичного файла.
 // 5600 строк кода.
+// 9.01.2023 Перемотка вперед на любое допустимое число ходов. Организовал логгирование ходов партии
+// в двоичный файл и перемещение по файлу вперед и назад на любое допустимое число полуходов.
 
 {$mode objfpc}{$H+}
 
@@ -59,6 +61,14 @@ type
     i,j,fig : Integer;
   end;
 
+  // Универсальная структура используемая при записи позиции на доске в бинарный файл.
+  Titem = record
+    fig : Figure;
+    i : Integer;
+    b : Boolean;
+    m : Move;
+  end;
+
   TForm1 = class(TForm)
     MainMenu1: TMainMenu;
     MenuItem1: TMenuItem;
@@ -67,6 +77,7 @@ type
     MenuItem4: TMenuItem;
     MenuItem5: TMenuItem;
     MenuItem6: TMenuItem;
+    MenuItem7: TMenuItem;
     OpenDialog1: TOpenDialog;
     SaveDialog1: TSaveDialog;
     Timer1: TTimer;
@@ -74,6 +85,7 @@ type
     procedure FormMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure FormPaint(Sender: TObject);
+    // Вернутся на один полуход назад не более двух раз.
     procedure MenuItem3Click(Sender: TObject);
     // Сохранение позиции на доске в двоичный файл.
     procedure MenuItem4Click(Sender: TObject);
@@ -81,6 +93,7 @@ type
     procedure MenuItem5Click(Sender: TObject);
     // Закрыть приложение.
     procedure MenuItem6Click(Sender: TObject);
+    procedure MenuItem7Click(Sender: TObject);
 
   private
     { private declarations }
@@ -109,8 +122,9 @@ type
     did_the_white_right_rook_move1, did_the_white_left_rook_move1 : Boolean; // ходили ли белые ладьи
     did_the_black_right_rook_move1, did_the_black_left_rook_move1 : Boolean; // ходили ли чёрные ладьи
     did_the_white_king_move1, did_the_black_king_move1 : Boolean; // ходили ли короли.
-    white_eating, black_eating : Figure; // Сьеденная фигура которую нужно вернуть при UNDO.
-    State : Integer; // Не более двух нажатий undo.
+    white_eating, black_eating : Figure; // Сьеденная фигура которую нужно вернуть при UNDO
+    datFile_gl : File of Titem;
+    current_item, current_item1 : Integer; // Номер текущей записи в двоичном файле. Позиция состоит из 66 записей.
 
     // Возвращает цвет фигуры на поле или пустую клетку.
     function WhotisPoledetector(i0,j0 : Integer): Integer;   // Для копии доски.
@@ -122,9 +136,11 @@ type
     procedure Fill_vacant_move_for_detect_game_over(Sender : TObject); // Полный список ходов всех фигур для детектирования окончания партии.
     function MatorPat(Sender : TObject) : Boolean; // Возвращает true если некуда идти.
     procedure CopyList(); // Копирование фигур для детектора шахов.
+    procedure AddPositon_in_Log(); //  Добавление текущей позиции в файл логирования на диске.
+    procedure ReadPositon_in_Log(); //  Чтение очередной позиции из файла логирования на диске.
+
   public
     { public declarations }
-
 
    procedure Kletka(x,y,a:integer;cl:TColor);
    procedure Pawn(x,y,a:integer;c1,c2:TColor);   // Нарисовать пешку
@@ -1591,12 +1607,18 @@ procedure TForm1.FormCreate(Sender: TObject);
 var
   i,j : Integer;
 begin
-clientwidth:=540;
-clientheight:=560;
-position:=poScreenCenter;
-bPress:=false;
 
-    State:=0;
+    Assignfile(datFile_gl,'temp'); // Играемая партия будет логироваться в файл temp на диске.
+    ReWrite (datFile_gl); // Очистка файла лога. Файл будет писаться по новой.
+    current_item:=0; // номер позиций накапливаемых в логе.
+    current_item1:=0;
+
+    clientwidth:=540;
+    clientheight:=560;
+    position:=poScreenCenter;
+    bPress:=false;
+
+
 
     // Фигуру которую нужно вернуть при операции UNDO.
     white_eating.fig:=cemptyfig;
@@ -1756,6 +1778,8 @@ begin
    arrw1[i]:=arrw[i];
    arrb1[i]:=arrb[i];
 end;
+
+  AddPositon_in_Log(); //  Добавление начальной расстановки фигур в файл на диске.
 
 end;
 
@@ -3258,6 +3282,12 @@ var i,j, i_1, i_2, j_2, i_3, i_4 : Integer;
     bO_O : Boolean; // признак рокировки.
 
 begin
+
+    if (Button=mbLeft) and (Shift = [ssLeft]) then
+    begin
+       // была нажата левая кнопка и что никакие клавиши-модификаторы не использовались
+
+
     bO_O:=false;
 
     if (bPress) then
@@ -3327,8 +3357,6 @@ begin
                                   if ((WhotisPole(i_2,j_2)<>cwhite)and(vacantmove[i_2,j_2])) then
                                   begin
 
-                                     dec(State);
-                                     if (State<0) then State:=0;
 
                                      // Резервное копирование состояния шахматной доски.
                                      SetLength(arrw1,Length(arrw));
@@ -3420,6 +3448,7 @@ begin
                                      end;
 
                                      cMove:=cblack;  // Передаём очередь хода чёрным.
+                                     AddPositon_in_Log(); //  Добавление текущей позиции в файл логирования на диске.
                                   end;
                                end;
                             end;
@@ -3442,8 +3471,6 @@ begin
                                    if ((WhotisPole(i_2,j_2)<>cblack)and(vacantmove[i_2,j_2])) then
                                    begin
 
-                                        dec(State);
-                                     if (State<0) then State:=0;
 
 
                                       // Резервное копирование состояния шахматной доски.
@@ -3535,7 +3562,7 @@ begin
                                      end;
 
                                       cMove:=cwhite;  // Передаём очередь хода белым.
-
+                                      AddPositon_in_Log(); //  Добавление текущей позиции в файл логирования на диске.
                                    end;
                                 end;
                              end;
@@ -5039,6 +5066,8 @@ begin
               end;
           end;
     end;
+
+   end;
 end;
 
 procedure TForm1.FormPaint(Sender: TObject);
@@ -5046,125 +5075,24 @@ begin
    Draw(Sender);
 end;
 
-// Откат ровно на один ход назад.
+// Откат на любое количество ходов назад.
 procedure TForm1.MenuItem3Click(Sender: TObject);
-var i,j:Integer;
-    found : Boolean;
 begin
 
-   if (State<2) then
+   // Откат на любое количество ходов назад за счёт сохранения истории в файле логирования.
+   if ( current_item1=current_item) then
    begin
-
-   for i:=1 to 8 do
-       for j:=1 to 8 do
-           vacantmove[i][j]:=false;
-
-
-
-
-   if (cMove=cwhite) then
-   begin
-      // Предыдущий ход был чёрных
-      SetLength(arrb,Length(arrb1));
-      for i:=0 to High(arrb1) do
-      begin
-         arrb[i]:=arrb1[i];
-      end;
-
-      if (white_eating.fig<>cemptyfig) then
-      begin
-         // Возвращаем съеденую фигуру.
-         found:=false;
-         for i:=0 to High(arrw) do
-         begin
-            if ((not(found))and (arrw[i].fig=cemptyfig)) then
-            begin
-                arrw[i]:=white_eating;
-                found:=true;
-            end;
-         end;
-         {if (not(found)) then
-         begin
-            SetLength(arrw,Length(arrw)+1);
-            arrw[High(arrw)]:=white_eating;
-         end;}
-         //DeleteFig1(white_eating.i,white_eating.j);
-         //SetLength(arrw1,Length(arrw1)+1);
-         //arrw1[High(arrw1)]:=white_eating;
-      end;
-
-      did_the_black_right_rook_move:=did_the_black_right_rook_move1;
-      did_the_black_left_rook_move :=did_the_black_left_rook_move1; // ходили ли чёрные ладьи
-      did_the_black_king_move:=did_the_black_king_move1; // ходили ли короли.
-
-      cMove:=cblack;
-   end
-   else
-   begin
-      SetLength(arrw,Length(arrw1));
-      for i:=0 to High(arrw1) do
-      begin
-         arrw[i]:=arrw1[i];
-      end;
-
-      if (black_eating.fig<>cemptyfig) then
-      begin
-         // Возвращаем съеденую фигуру.
-         found:=false;
-         for i:=0 to High(arrb) do
-         begin
-            if ((not(found))and (arrb[i].fig=cemptyfig)) then
-            begin
-                arrb[i]:=black_eating;
-                found:=true;
-            end;
-         end;
-         {if (not(found)) then
-         begin
-            SetLength(arrb,Length(arrb)+1);
-            arrb[High(arrb)]:=black_eating;
-         end;}
-         //DeleteFig1(black_eating.i,black_eating.j);
-         //SetLength(arrb1,Length(arrb1)+1);
-         //arrb1[High(arrb1)]:=black_eating;
-      end;
-
-      did_the_white_right_rook_move:=did_the_white_right_rook_move1;
-      did_the_white_left_rook_move :=did_the_white_left_rook_move1; // ходили ли белые ладьи
-       did_the_white_king_move:=did_the_white_king_move1;
-
-      cMove:=cwhite;
+      current_item1:=current_item1-66;
    end;
-   {SetLength(arrw,Length(arrw1));
-   SetLength(arrb,Length(arrb1));
+   current_item1:=current_item1-66;
+   if (current_item1<0) then current_item1:=0;
+   ReadPositon_in_Log(); //  Чтение очередной позиции на доске из файла логирования на диске.
 
-   for i:=0 to High(arrw1) do
-   begin
-      arrw[i]:=arrw1[i];
-   end;
-   for i:=0 to High(arrb1) do
-   begin
-      arrb[i]:=arrb1[i];
-   end;}
-
-
-   end;
-
-   if (State<2) then inc(State);
-   if (State>2) then State:=2;
 end;
 
 // Save
 // Сохранение позиции на доске в двоичный файл.
 procedure TForm1.MenuItem4Click(Sender: TObject);
-type
-  Titem = record
-    fig : Figure;
-    i : Integer;
-    b : Boolean;
-    m : Move;
-  end;
-
 var
     datFile    : File of Titem;
     itemContent : Titem;
@@ -5181,7 +5109,6 @@ begin
       case i of
           0: begin
               itemContent.b:=did_the_black_right_rook_move;
-              itemContent.i:=State;
               itemContent.m:=white_previos_move;
          end;
            1: begin
@@ -5250,14 +5177,6 @@ end;
 // Open
 // Чтение позиции на доске из двоичного файла.
 procedure TForm1.MenuItem5Click(Sender: TObject);
-type
-  Titem = record
-    fig : Figure;
-    i : Integer;
-    b : Boolean;
-    m : Move;
-  end;
-
 var
     datFile    : File of Titem;
     itemContent : Titem;
@@ -5278,7 +5197,6 @@ begin
         case i of
           0: begin
                 did_the_black_right_rook_move:=itemContent.b;
-                State:=itemContent.i;
                 white_previos_move:=itemContent.m;
              end;
            1: begin
@@ -5300,7 +5218,7 @@ begin
            5: begin
                  did_the_black_king_move1:=itemContent.b; // ходили ли короли.
               end;
-         6: begin
+           6: begin
                did_the_white_right_rook_move:=itemContent.b;
             end;
            7: begin
@@ -5351,8 +5269,301 @@ end;
 // Закрыть программу
 procedure TForm1.MenuItem6Click(Sender: TObject);
 begin
+   // Закрытие файла логирования.
+   CloseFile(datFile_gl);  // closes the file
    Form1.Close;
    Application.Terminate;
+end;
+
+// Следующий ход.
+procedure TForm1.MenuItem7Click(Sender: TObject);
+begin
+   // Перемотка вперед на любое допустимое число ходов.
+   if (current_item1<current_item) then
+   begin
+      current_item1:=current_item1+66;
+      if (current_item1>current_item) then current_item1:=current_item;
+      if (current_item1<=current_item-66) then
+      begin
+         ReadPositon_in_Log(); //  Чтение очередной позиции на доске из файла логирования на диске.
+      end;
+   end;
+end;
+
+// Добавление шахматной позиции в конец двоичного файла логирования ходов.
+procedure TForm1.AddPositon_in_Log(); //  Добавление текущей позиции в файл логирования на диске.
+var
+    datFile    : File of Titem;
+    itemContent : Titem;
+    i : Integer;
+
+begin
+   if ((current_item=current_item1)or (current_item1=current_item-66)) then
+   begin
+       if (current_item1=current_item-66) then current_item1:=current_item;
+
+   Reset(datFile_gl); // Sets the file pointer to the beginning of the file
+   Seek(datFile_gl, FileSize(datFile_gl));  // Determines the end of the file and sets the file pointer to the end
+   //Seek (datFile_gl, current_item-1);
+   for i:=0 to 15 do
+   begin
+      itemContent.fig := arrw[i];
+      case i of
+          0: begin
+              itemContent.b:=did_the_black_right_rook_move;
+              itemContent.m:=white_previos_move;
+         end;
+           1: begin
+              itemContent.b:=did_the_black_right_rook_move1;
+              itemContent.i:=cMove;
+              itemContent.m:=black_previos_move;
+         end;
+           2: begin
+              itemContent.b:=did_the_black_left_rook_move;
+              itemContent.m:=white_previos_move1;
+         end;
+           3: begin
+              itemContent.b:=did_the_black_left_rook_move1; // ходили ли чёрные ладьи
+              itemContent.m:=black_previos_move1;
+         end;
+           4: begin
+              itemContent.b:=did_the_black_king_move;
+         end;
+           5: begin
+              itemContent.b:=did_the_black_king_move1; // ходили ли короли.
+         end;
+           6: begin
+              itemContent.b:=did_the_white_right_rook_move;
+         end;
+           7: begin
+              itemContent.b:=did_the_white_right_rook_move1;
+         end;
+           8: begin
+              itemContent.b:=did_the_white_left_rook_move;
+         end;
+           9: begin
+              itemContent.b:=did_the_white_left_rook_move1; // ходили ли чёрные ладьи
+         end;
+           10: begin
+              itemContent.b:=did_the_white_king_move;
+         end;
+           11: begin
+              itemContent.b:=did_the_white_king_move1; // ходили ли короли.
+         end;
+      end;
+      Write(datFile_gl, itemContent);          // Write the white figures to the new file
+   end;
+   for i:=0 to 15 do
+   begin
+      itemContent.fig := arrb[i];
+      Write(datFile_gl, itemContent);          // Write the black figures to the new file
+   end;
+      for i:=0 to 15 do
+      begin
+         itemContent.fig := arrw1[i];
+         Write(datFile_gl, itemContent);          // Write the white figures to the new file
+      end;
+      for i:=0 to 15 do
+      begin
+         itemContent.fig := arrb1[i];
+         Write(datFile_gl, itemContent);          // Write the black figures to the new file
+      end;
+      itemContent.fig := white_eating;
+      Write(datFile_gl, itemContent);
+      itemContent.fig := black_eating;
+      Write(datFile_gl, itemContent);
+
+      current_item:=current_item+66;
+      current_item1:=current_item1+66;
+
+   end
+   else
+   begin
+      if (current_item1<current_item-66) then
+      begin
+
+         // Уничтожим ненужный хвост файла gl, путем записи в спомогательный файл datFile.
+         // Обрезанным назовем файл без хвоста. Далее работаем с обрезанным файлом как обычно.
+
+         Assignfile(datFile, 'tmp_buf'); // Assigns the name of the file to the variable txtFile and opens the file
+
+         ReWrite (datFile);  // File will be overwritten if it exists
+         Reset(datFile_gl);
+
+         for i:=0 to current_item1+65 do
+         begin
+            read(datFile_gl, itemContent);   // reads a single item into chrContent variable
+            Write(datFile, itemContent);
+         end;
+
+         ReWrite (datFile_gl);
+         Reset(datFile);
+         for i:=0 to current_item1+65 do
+         begin
+            read(datFile, itemContent);   // reads a single item into chrContent variable
+            Write(datFile_gl, itemContent);
+         end;
+
+         CloseFile(datFile);  // closes the file
+
+         current_item1:=current_item1+65+1;
+         current_item:=current_item1;
+
+         Reset(datFile_gl); // Sets the file pointer to the beginning of the file
+         Seek(datFile_gl, FileSize(datFile_gl));  // Determines the end of the file and sets the file pointer to the end
+         //Seek (datFile_gl, current_item-1);
+         for i:=0 to 15 do
+         begin
+            itemContent.fig := arrw[i];
+            case i of
+              0: begin
+                   itemContent.b:=did_the_black_right_rook_move;
+                   itemContent.m:=white_previos_move;
+                 end;
+              1: begin
+              itemContent.b:=did_the_black_right_rook_move1;
+              itemContent.i:=cMove;
+              itemContent.m:=black_previos_move;
+         end;
+              2 : begin
+              itemContent.b:=did_the_black_left_rook_move;
+              itemContent.m:=white_previos_move1;
+         end;
+              3: begin
+              itemContent.b:=did_the_black_left_rook_move1; // ходили ли чёрные ладьи
+              itemContent.m:=black_previos_move1;
+         end;
+              4: begin
+              itemContent.b:=did_the_black_king_move;
+         end;
+              5: begin
+              itemContent.b:=did_the_black_king_move1; // ходили ли короли.
+         end;
+              6: begin
+              itemContent.b:=did_the_white_right_rook_move;
+         end;
+              7: begin
+              itemContent.b:=did_the_white_right_rook_move1;
+         end;
+              8: begin
+              itemContent.b:=did_the_white_left_rook_move;
+         end;
+              9: begin
+              itemContent.b:=did_the_white_left_rook_move1; // ходили ли чёрные ладьи
+         end;
+             10: begin
+              itemContent.b:=did_the_white_king_move;
+         end;
+             11: begin
+              itemContent.b:=did_the_white_king_move1; // ходили ли короли.
+         end;
+            end;
+            Write(datFile_gl, itemContent);          // Write the white figures to the new file
+         end;
+         for i:=0 to 15 do
+         begin
+            itemContent.fig := arrb[i];
+            Write(datFile_gl, itemContent);          // Write the black figures to the new file
+         end;
+         for i:=0 to 15 do
+         begin
+            itemContent.fig := arrw1[i];
+            Write(datFile_gl, itemContent);          // Write the white figures to the new file
+         end;
+         for i:=0 to 15 do
+         begin
+            itemContent.fig := arrb1[i];
+            Write(datFile_gl, itemContent);          // Write the black figures to the new file
+         end;
+         itemContent.fig := white_eating;
+         Write(datFile_gl, itemContent);
+         itemContent.fig := black_eating;
+         Write(datFile_gl, itemContent);
+
+         current_item:=current_item+66;
+         current_item1:=current_item1+66;
+
+
+      end;
+   end;
+end;
+
+
+procedure TForm1.ReadPositon_in_Log(); //  Чтение очередной позиции из файла логирования на диске.
+var
+    itemContent : Titem;
+    i : Integer;
+begin
+       Reset(datFile_gl);                     // Sets the file pointer to the beginning of the file
+       Seek (datFile_gl, current_item1);   // Set the file pointer to the item_current1 record in the file
+
+      for i:=0 to 15 do
+       begin
+          read(datFile_gl, itemContent);   // reads a single item into chrContent variable
+          arrw[i]:=itemContent.fig;
+       case i of
+         0: begin
+               did_the_black_right_rook_move:=itemContent.b;
+               white_previos_move:=itemContent.m;
+            end;
+          1: begin
+                did_the_black_right_rook_move1:=itemContent.b;
+                cMove:=itemContent.i;
+                black_previos_move:=itemContent.m;
+             end;
+          2: begin
+                did_the_black_left_rook_move:=itemContent.b;
+                white_previos_move1:=itemContent.m;
+             end;
+          3: begin
+                did_the_black_left_rook_move1:=itemContent.b; // ходили ли чёрные ладьи
+                black_previos_move1:=itemContent.m;
+             end;
+          4: begin
+                did_the_black_king_move:=itemContent.b;
+             end;
+          5: begin
+                did_the_black_king_move1:=itemContent.b; // ходили ли короли.
+             end;
+          6: begin
+              did_the_white_right_rook_move:=itemContent.b;
+           end;
+          7: begin
+                did_the_white_right_rook_move1:=itemContent.b;
+             end;
+          8: begin
+                did_the_white_left_rook_move:=itemContent.b;
+             end;
+          9: begin
+                did_the_white_left_rook_move1:=itemContent.b; // ходили ли чёрные ладьи
+             end;
+          10: begin
+                 did_the_white_king_move:=itemContent.b;
+              end;
+          11: begin
+                 did_the_white_king_move1:=itemContent.b; // ходили ли короли.
+              end;
+        end; // case
+     end; // for
+     for i:=0 to 15 do
+     begin
+        read(datFile_gl, itemContent);   // reads a single item into chrContent variable
+        arrb[i]:=itemContent.fig;
+     end;
+     for i:=0 to 15 do
+     begin
+        read(datFile_gl, itemContent);   // reads a single item into chrContent variable
+        arrw1[i]:=itemContent.fig;
+     end;
+     for i:=0 to 15 do
+     begin
+        read(datFile_gl, itemContent);   // reads a single item into chrContent variable
+        arrb1[i]:=itemContent.fig;
+     end;
+     read(datFile_gl, itemContent);   // reads a single item into chrContent variable
+     white_eating:=itemContent.fig;
+     read(datFile_gl, itemContent);   // reads a single item into chrContent variable
+     black_eating:=itemContent.fig;
 end;
 
 // Нарисовать доску и фигуры на ней
