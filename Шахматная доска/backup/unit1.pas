@@ -2,20 +2,22 @@ unit Unit1;
 // Графический интерфейс для шахмат в среде разработке на Паскаль  Лазарь v2.2.4.
 // 4.01.2023 начало 733 строки кода.
 // Взятие на проходе.
-// Откад хода назад (отмена текущего хода Undo). Не забыть вернуть сьеденную фигуру.
+// Откат хода назад (отмена текущего хода Undo). Не забыть вернуть сьеденную фигуру.
 // Произвольное количество отмен хода. 09.01.2023
-// рокировка.
+// рокировка - задаётся ходом короля на две клетки.
 // Подсвечивания при шахе красным.
 // Сохранение позиции на доске в файл. Save; Open; 8.01.2023
-// Воспроизведение только что сыгранной партии. Undo, Next. 09.01.2023
+// Воспроизведение только что сыгранной партии. Undo, Next Move. 09.01.2023
 // 5.01.2023 физические шахматы. 3569 строк кода.
 // 6.01.2023 исправление ошибок 3863 строки кода.
 // 7.01.2023 Удалил пешку при взятии на проходе. В Form1.caption объявляется мат или пат. Исправлено.
 // 5386 строк кода.
 // 8.01.2023 Сохранение позиции на доске в двоичный файл. Чтение позиции на доске из двоичного файла.
 // 5600 строк кода.
-// 9.01.2023 Перемотка вперед на любое допустимое число ходов. Организовал логгирование ходов партии
-// в двоичный файл и перемещение по файлу вперед и назад на любое допустимое число полуходов.
+// 9.01.2023 Перемотка вперед и назад на любое допустимое число ходов. Организовал логгирование ходов партии
+// в двоичный файл и перемещение по файлу вперед и назад на любое допустимое число полуходов. Файл логгирования
+// сохраняется Save и читается Open пользователем. Теперь по факту сохраняется целая партия на диске.
+// Сохранённую партию можно прочитать с диска и пролистать вперед и назад. 5835 строк кода.
 
 {$mode objfpc}{$H+}
 
@@ -5110,6 +5112,7 @@ begin
           0: begin
               itemContent.b:=did_the_black_right_rook_move;
               itemContent.m:=white_previos_move;
+              itemContent.i:=current_item;
          end;
            1: begin
               itemContent.b:=did_the_black_right_rook_move1;
@@ -5119,6 +5122,7 @@ begin
            2: begin
               itemContent.b:=did_the_black_left_rook_move;
               itemContent.m:=white_previos_move1;
+              itemContent.i:=current_item1;
          end;
            3: begin
               itemContent.b:=did_the_black_left_rook_move1; // ходили ли чёрные ладьи
@@ -5171,6 +5175,14 @@ begin
    itemContent.fig := black_eating;
    Write(datFile, itemContent);
 
+
+   Reset(datFile_gl);
+   for i:=0 to current_item-1 do
+   begin
+      read(datFile_gl, itemContent);   // reads a single item into chrContent variable
+      Write(datFile, itemContent);          // Write the black figures to the new file
+   end;
+
    CloseFile(datFile);  // closes the file
 end;
 
@@ -5198,6 +5210,7 @@ begin
           0: begin
                 did_the_black_right_rook_move:=itemContent.b;
                 white_previos_move:=itemContent.m;
+                current_item:=itemContent.i;
              end;
            1: begin
                  did_the_black_right_rook_move1:=itemContent.b;
@@ -5207,6 +5220,7 @@ begin
            2: begin
                  did_the_black_left_rook_move:=itemContent.b;
                  white_previos_move1:=itemContent.m;
+                 current_item1:=itemContent.i;
               end;
            3: begin
                  did_the_black_left_rook_move1:=itemContent.b; // ходили ли чёрные ладьи
@@ -5258,6 +5272,13 @@ begin
       read(datFile, itemContent);   // reads a single item into chrContent variable
       black_eating:=itemContent.fig;
 
+
+      ReWrite(datFile_gl);  // Файл будет перезаписан сначала.
+      for i:=0 to current_item-1 do
+      begin
+         read(datFile, itemContent);   // reads a single item into chrContent variable
+         Write(datFile_gl, itemContent);     // Write the black figures to the new file
+      end;
 
       CloseFile(datFile);  // closes the file
    end;
