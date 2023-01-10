@@ -1,4 +1,4 @@
-# Chess
+# ascii-шахматы
 ![alt_text](https://raw.githubusercontent.com/kirill7785/Chess/main/pic/шахматная%20доска.bmp)
 
 # Шахматная доска
