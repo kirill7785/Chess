@@ -17,7 +17,8 @@ unit Unit1;
 // 9.01.2023 Перемотка вперед и назад на любое допустимое число ходов. Организовал логгирование ходов партии
 // в двоичный файл и перемещение по файлу вперед и назад на любое допустимое число полуходов. Файл логгирования
 // сохраняется Save и читается Open пользователем. Теперь по факту сохраняется целая партия на диске.
-// Сохранённую партию можно прочитать с диска и пролистать вперед и назад. 5835 строк кода.
+// Сохранённую партию можно прочитать с диска и пролистать вперед и назад. Смотри сохранённую
+// партию мат Легаля 44Кб. В интерфейсе 5835 строк кода.
 
 {$mode objfpc}{$H+}
 
@@ -25,7 +26,9 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, ExtCtrls,
-  Menus;
+  Menus, LCLType;
+
+// LCLType для определения кода клавиш стрелка влево VK_LEFT, стрелка вправо VK_RIGHT.
 
 // 0 - empty, 1 - king, 2 - queen, 3 - rook, 4 - bishop,  5 - knight, 6 - pawn;
 // 0 - empty, 1 - black, 2 - white;
@@ -84,10 +87,11 @@ type
     SaveDialog1: TSaveDialog;
     Timer1: TTimer;
     procedure FormCreate(Sender: TObject);
+
     procedure FormMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure FormPaint(Sender: TObject);
-    // Вернутся на один полуход назад не более двух раз.
+    // Вернутся на один полуход назад
     procedure MenuItem3Click(Sender: TObject);
     // Сохранение позиции на доске в двоичный файл.
     procedure MenuItem4Click(Sender: TObject);
@@ -95,6 +99,7 @@ type
     procedure MenuItem5Click(Sender: TObject);
     // Закрыть приложение.
     procedure MenuItem6Click(Sender: TObject);
+    // Перейти на один полуход вперёд
     procedure MenuItem7Click(Sender: TObject);
 
   private
@@ -1784,6 +1789,8 @@ end;
   AddPositon_in_Log(); //  Добавление начальной расстановки фигур в файл на диске.
 
 end;
+
+
 
 procedure TForm1.Fill_vacant_move_for_detect_game_over(Sender : TObject); // Полный список ходов всех фигур для детектирования окончания партии.
 const n=8;

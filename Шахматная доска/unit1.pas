@@ -26,7 +26,9 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, ExtCtrls,
-  Menus;
+  Menus, LCLType;
+
+// LCLType для определения кода клавиш стрелка влево VK_LEFT, стрелка вправо VK_RIGHT.
 
 // 0 - empty, 1 - king, 2 - queen, 3 - rook, 4 - bishop,  5 - knight, 6 - pawn;
 // 0 - empty, 1 - black, 2 - white;
@@ -85,10 +87,13 @@ type
     SaveDialog1: TSaveDialog;
     Timer1: TTimer;
     procedure FormCreate(Sender: TObject);
+    // Нажата клавиша на клавиатуре стрелка вперёд или назад.
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    // Щелчок левой кнопкой мыши
     procedure FormMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure FormPaint(Sender: TObject);
-    // Вернутся на один полуход назад не более двух раз.
+    // Вернутся на один полуход назад
     procedure MenuItem3Click(Sender: TObject);
     // Сохранение позиции на доске в двоичный файл.
     procedure MenuItem4Click(Sender: TObject);
@@ -96,6 +101,7 @@ type
     procedure MenuItem5Click(Sender: TObject);
     // Закрыть приложение.
     procedure MenuItem6Click(Sender: TObject);
+    // Перейти на один полуход вперёд
     procedure MenuItem7Click(Sender: TObject);
 
   private
@@ -1785,6 +1791,23 @@ end;
   AddPositon_in_Log(); //  Добавление начальной расстановки фигур в файл на диске.
 
 end;
+
+// Нажата клавиша на клавиатуре стрелка вперёд или назад.
+procedure TForm1.FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+begin
+    if (Key=VK_LEFT) then
+    begin
+        // Вернутся на один полуход назад
+        MenuItem3Click(Sender);
+    end;
+    if (Key=VK_RIGHT) then
+    begin
+        // Перейти на один полуход вперёд
+        MenuItem7Click(Sender);
+    end;
+end;
+
+
 
 procedure TForm1.Fill_vacant_move_for_detect_game_over(Sender : TObject); // Полный список ходов всех фигур для детектирования окончания партии.
 const n=8;
