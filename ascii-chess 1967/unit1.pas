@@ -19,7 +19,8 @@ unit Unit1;
 // сохраняется Save и читается Open пользователем. Теперь по факту сохраняется целая партия на диске.
 // Сохранённую партию можно прочитать с диска и пролистать вперед и назад. Смотри сохранённую
 // партию мат Легаля 44Кб. В интерфейсе 5835 строк кода.
-// 10.01.2023 Начало подключения dll с мсинимаксом к коду интерфейса. Параметр компоновщика  -Xt статическая компоновка dll.
+// 10.01.2023 Начало подключения dll с мсинимаксом к коду интерфейса. Без chess.dll программа не работает.
+// 11.01.2023 Исправил досадную ошибку при сьедении на проходе.
 
 {$mode objfpc}{$H+}
 
@@ -87,6 +88,7 @@ type
     MenuItem6: TMenuItem;
     MenuItem7: TMenuItem;
     MenuItem8: TMenuItem;
+    MenuItem9: TMenuItem;
     OpenDialog1: TOpenDialog;
     SaveDialog1: TSaveDialog;
     Timer1: TTimer;
@@ -109,6 +111,7 @@ type
     procedure MenuItem7Click(Sender: TObject);
     // Выбор опонента человек с человеком или человек с движком.
     procedure MenuItem8Click(Sender: TObject);
+    procedure MenuItem9Click(Sender: TObject);
 
   private
     { private declarations }
@@ -185,7 +188,7 @@ var
 
 implementation
 
-uses unitGameMode;
+uses unitGameMode, unitBotSettings;
 
 {$R *.lfm}
 
@@ -3324,7 +3327,10 @@ var i,j, i_1, i_2, j_2, i_3, i_4 : Integer;
     i5,j_5,i6, i7,j7,i8,j8 : Integer;
     move1exp : array[0..10] of Integer;
     O_Oexp : array[0..3] of Boolean;
+    beat : Boolean;
 begin
+
+    beat:=false; // Ели ли мы фигуру. false - не ели.
 
     if (Button=mbLeft) and (Shift = [ssLeft]) then
     begin
@@ -3417,12 +3423,15 @@ begin
 
                                      if (arrw[i_1].fig=cking) and (abs(j_2-j)=2) then bO_O:=true;
 
+                                     beat:=false;
+
                                      if (WhotisPole(i_2,j_2)=cblack) then
                                      begin
                                           black_eating.fig:=WhotisFig(i_2,j_2);
                                           black_eating.i:=i_2;
                                           black_eating.j:=j_2;
                                           DeleteFig(i_2,j_2); // Удаляем сьеденную вражескую фигуру.
+                                          beat:=true;
                                      end
                                      else
                                      begin
@@ -3450,14 +3459,16 @@ begin
 
 
                                      // Удаление пешки при взятии на проходе
-                                     if (WhotisPole(i_2,j_2)=cempty)and (arrw[i_1].fig=cpawn) and
-                                     (j_2<>arrw[i_1].j) then
+                                     if (WhotisPole(i_2,j_2)=cempty)and(beat=false)and (arrw[i_1].fig=cpawn) and
+                                     (j_2<>arrw[i_1].j)and(arrw[i_1].i=4) then
                                      begin
                                         black_eating.fig:=cpawn;
                                         black_eating.i:=arrw[i_1].i;
                                         black_eating.j:=j_2;
                                         DeleteFig(arrw[i_1].i,j_2); // Удаляем пешку при взятии на проходе.
                                      end;
+
+                                     beat:=false;
 
                                      arrw[i_1].i:=i_2;
                                      arrw[i_1].j:=j_2;
@@ -3584,7 +3595,9 @@ begin
 
                                          // Нулевой уровень игры. Бумажная машина Алана Тьюринга. Два полухода без форсированного варианта.
                                          // Только два полухода без форсированого варианта, пропускает детский мат.
-                                         move1exp[10]:=0;
+                                         // move1exp[10]:=0;
+
+                                         move1exp[10]:=FormBotSettings.ComboBoxBotOpponent.ItemIndex; // Передаём выбранного противника в dll
 
                                          move1exp[9]:=0; // Партия продолжается.
 
@@ -3633,12 +3646,16 @@ begin
                                       // Правила для рокировки должны соблюдаться.
 
                                       if (arrb[j_5].fig=cking) and (abs(j8-j7)=2) then bO_O:=true;
+
+                                      beat:=false;
+
                                        if (WhotisPole(i8,j8)=cwhite) then
                                      begin
                                           white_eating.fig:=WhotisFig(i8,j8);
                                           white_eating.i:=i8;
                                           white_eating.j:=j8;
                                           DeleteFig(i8,j8); // Удаляем сьеденную вражескую фигуру.
+                                          beat:=true;
                                      end
                                      else
                                      begin
@@ -3667,14 +3684,16 @@ begin
                                      did_the_black_king_move:=true;
 
                                      // Удаление пешки при взятии на проходе
-                                     if (WhotisPole(i8,j8)=cempty)and (arrb[j_5].fig=cpawn) and
-                                     (j8<>arrb[j_5].j) then
+                                     if (WhotisPole(i8,j8)=cempty) and (beat=false)and (arrb[j_5].fig=cpawn) and
+                                     (j8<>arrb[j_5].j)and(arrb[j_5].i=5) then
                                      begin
                                         white_eating.fig:=cpawn;
                                         white_eating.i:=arrb[j_5].i;
                                         white_eating.j:=j8;
                                         DeleteFig(arrb[j_5].i,j8); // Удаляем пешку при взятии на проходе.
                                      end;
+
+                                     beat:=false;
 
                                       arrb[j_5].i:=i8;
                                       arrb[j_5].j:=j8;
@@ -3752,6 +3771,8 @@ begin
                                       // Правила должны соблюдаться нельзя чёрными сьесть чёрных.
                                       // Правила для рокировки должны соблюдаться.
 
+                                      beat:=false;
+
                                       if (arrb[i_1].fig=cking) and (abs(j_2-j)=2) then bO_O:=true;
                                        if (WhotisPole(i_2,j_2)=cwhite) then
                                      begin
@@ -3759,6 +3780,7 @@ begin
                                           white_eating.i:=i_2;
                                           white_eating.j:=j_2;
                                           DeleteFig(i_2,j_2); // Удаляем сьеденную вражескую фигуру.
+                                          beat:=true;
                                      end
                                      else
                                      begin
@@ -3787,14 +3809,16 @@ begin
                                      did_the_black_king_move:=true;
 
                                      // Удаление пешки при взятии на проходе
-                                     if (WhotisPole(i_2,j_2)=cempty)and (arrb[i_1].fig=cpawn) and
-                                     (j_2<>arrb[i_1].j) then
+                                     if (WhotisPole(i_2,j_2)=cempty)and (beat=false)and (arrb[i_1].fig=cpawn) and
+                                     (j_2<>arrb[i_1].j)and(arrb[i_1].i=5)  then
                                      begin
                                         white_eating.fig:=cpawn;
                                         white_eating.i:=arrb[i_1].i;
                                         white_eating.j:=j_2;
                                         DeleteFig(arrb[i_1].i,j_2); // Удаляем пешку при взятии на проходе.
                                      end;
+
+                                     beat:=false;
 
                                       arrb[i_1].i:=i_2;
                                       arrb[i_1].j:=j_2;
@@ -5585,6 +5609,15 @@ begin
    FormGamemode.ShowModal;
    b_continue_Draw:=true; // Дочерняя форма успешно вызвана, снова отрисовываем доску.
    Draw(Sender);
+end;
+
+// Выбор настроек бота с которым человек играет.
+procedure TForm1.MenuItem9Click(Sender: TObject);
+begin
+  b_continue_Draw:=false; // Не будем отрисовывать доску на момент вызова дочерней формы
+  FormBotSettings.ShowModal;
+  b_continue_Draw:=true; // Дочерняя форма успешно вызвана, снова отрисовываем доску.
+  Draw(Sender);
 end;
 
 // Добавление шахматной позиции в конец двоичного файла логирования ходов.
