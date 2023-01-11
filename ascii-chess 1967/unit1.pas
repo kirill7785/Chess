@@ -140,6 +140,7 @@ type
     white_eating, black_eating : Figure; // Сьеденная фигура которую нужно вернуть при UNDO
     datFile_gl : File of Titem;
     current_item, current_item1 : Integer; // Номер текущей записи в двоичном файле. Позиция состоит из 66 записей.
+    b_continue_Draw : Boolean; // рисовать ли доску с фигурами. Это ресурсоёмкая операция.
 
     // Возвращает цвет фигуры на поле или пустую клетку.
     function WhotisPoledetector(i0,j0 : Integer): Integer;   // Для копии доски.
@@ -1629,6 +1630,7 @@ var
   i,j : Integer;
 begin
 
+    b_continue_Draw:=true; // рисовать ли доску с фигурами. Это ресурсоёмкая операция.
     Assignfile(datFile_gl,'temp'); // Играемая партия будет логироваться в файл temp на диске.
     ReWrite (datFile_gl); // Очистка файла лога. Файл будет писаться по новой.
     current_item:=0; // номер позиций накапливаемых в логе.
@@ -5336,7 +5338,10 @@ end;
 
 procedure TForm1.FormPaint(Sender: TObject);
 begin
-   Draw(Sender);
+   if (b_continue_Draw) then
+   begin
+      Draw(Sender);
+   end;
 end;
 
 // Откат на любое количество ходов назад.
@@ -5576,7 +5581,10 @@ end;
 // Выберите играть с человеком или с машиной.
 procedure TForm1.MenuItem8Click(Sender: TObject);
 begin
+   b_continue_Draw:=false; // Не будем отрисовывать доску на момент вызова дочерней формы
    FormGamemode.ShowModal;
+   b_continue_Draw:=true; // Дочерняя форма успешно вызвана, снова отрисовываем доску.
+   Draw(Sender);
 end;
 
 // Добавление шахматной позиции в конец двоичного файла логирования ходов.
