@@ -3306,8 +3306,11 @@ procedure TForm1.FormMouseDown(Sender: TObject; Button: TMouseButton;
 const n=8;
 var i,j, i_1, i_2, j_2, i_3, i_4 : Integer;
     bO_O : Boolean; // признак рокировки.
+    beat : Boolean;
 
 begin
+
+    beat:=false;
 
     if (Button=mbLeft) and (Shift = [ssLeft]) then
     begin
@@ -3400,12 +3403,15 @@ begin
 
                                      if (arrw[i_1].fig=cking) and (abs(j_2-j)=2) then bO_O:=true;
 
+                                     beat:=false;
+
                                      if (WhotisPole(i_2,j_2)=cblack) then
                                      begin
                                           black_eating.fig:=WhotisFig(i_2,j_2);
                                           black_eating.i:=i_2;
                                           black_eating.j:=j_2;
                                           DeleteFig(i_2,j_2); // Удаляем сьеденную вражескую фигуру.
+                                          beat:=true;
                                      end
                                      else
                                      begin
@@ -3433,14 +3439,16 @@ begin
 
 
                                      // Удаление пешки при взятии на проходе
-                                     if (WhotisPole(i_2,j_2)=cempty)and (arrw[i_1].fig=cpawn) and
-                                     (j_2<>arrw[i_1].j) then
+                                     if (WhotisPole(i_2,j_2)=cempty)and (beat=false)and (arrw[i_1].fig=cpawn) and
+                                     (j_2<>arrw[i_1].j)and (arrw[i_1].i=4) then
                                      begin
                                         black_eating.fig:=cpawn;
                                         black_eating.i:=arrw[i_1].i;
                                         black_eating.j:=j_2;
                                         DeleteFig(arrw[i_1].i,j_2); // Удаляем пешку при взятии на проходе.
                                      end;
+
+                                     beat:=false;
 
                                      arrw[i_1].i:=i_2;
                                      arrw[i_1].j:=j_2;
@@ -3513,12 +3521,16 @@ begin
                                       // Правила для рокировки должны соблюдаться.
 
                                       if (arrb[i_1].fig=cking) and (abs(j_2-j)=2) then bO_O:=true;
+
+                                      beat:=false;
+
                                        if (WhotisPole(i_2,j_2)=cwhite) then
                                      begin
                                           white_eating.fig:=WhotisFig(i_2,j_2);
                                           white_eating.i:=i_2;
                                           white_eating.j:=j_2;
                                           DeleteFig(i_2,j_2); // Удаляем сьеденную вражескую фигуру.
+                                          beat:=true;
                                      end
                                      else
                                      begin
@@ -3547,14 +3559,16 @@ begin
                                      did_the_black_king_move:=true;
 
                                      // Удаление пешки при взятии на проходе
-                                     if (WhotisPole(i_2,j_2)=cempty)and (arrb[i_1].fig=cpawn) and
-                                     (j_2<>arrb[i_1].j) then
+                                     if (WhotisPole(i_2,j_2)=cempty)and (beat=false) and (arrb[i_1].fig=cpawn) and
+                                     (j_2<>arrb[i_1].j)and (arrb[i_1].i=5) then
                                      begin
                                         white_eating.fig:=cpawn;
                                         white_eating.i:=arrb[i_1].i;
                                         white_eating.j:=j_2;
                                         DeleteFig(arrb[i_1].i,j_2); // Удаляем пешку при взятии на проходе.
                                      end;
+
+                                     beat:=false;
 
                                       arrb[i_1].i:=i_2;
                                       arrb[i_1].j:=j_2;

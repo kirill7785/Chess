@@ -8,6 +8,7 @@ object Form1: TForm1
   DesignTimePPI = 144
   Menu = MainMenu1
   OnCreate = FormCreate
+  OnKeyDown = FormKeyDown
   OnMouseDown = FormMouseDown
   OnPaint = FormPaint
   LCLVersion = '2.2.4.0'
