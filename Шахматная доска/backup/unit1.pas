@@ -19,6 +19,8 @@ unit Unit1;
 // сохраняется Save и читается Open пользователем. Теперь по факту сохраняется целая партия на диске.
 // Сохранённую партию можно прочитать с диска и пролистать вперед и назад. Смотри сохранённую
 // партию мат Легаля 44Кб. В интерфейсе 5835 строк кода.
+// 11.01.2023 Исправлена ошибка при взятии на проходе.
+// 11.01.2023 Переход на BitMap. Форма больше не тормозит при закрытиии.
 
 {$mode objfpc}{$H+}
 
@@ -134,6 +136,7 @@ type
     white_eating, black_eating : Figure; // Сьеденная фигура которую нужно вернуть при UNDO
     datFile_gl : File of Titem;
     current_item, current_item1 : Integer; // Номер текущей записи в двоичном файле. Позиция состоит из 66 записей.
+    BitMap : TBitMap;
 
     // Возвращает цвет фигуры на поле или пустую клетку.
     function WhotisPoledetector(i0,j0 : Integer): Integer;   // Для копии доски.
@@ -658,7 +661,7 @@ end;
 
 procedure TForm1.kletka(x,y,a:integer;cl:TColor);
 begin
-with Canvas do
+with BitMap.Canvas do
  begin
   pen.Color:=cl;
   brush.Color:=cl;
@@ -673,7 +676,7 @@ begin
 xc:=x+a div 2;
 yc:=y+a div 2;
 s:=10;
-with Canvas do
+with BitMap.Canvas do
  begin
     cmem1:=Color;
     Color:=c2;
@@ -693,7 +696,7 @@ begin
 xc:=x+a div 2;
 yc:=y+a div 2;
 s:=10;
-with Canvas do
+with BitMap.Canvas do
  begin
     cmem1:=Color;
     Color:=c2;
@@ -713,7 +716,7 @@ begin
 xc:=x+a div 2;
 yc:=y+a div 2;
 s:=10;
-with Canvas do
+with BitMap.Canvas do
  begin
     cmem1:=Color;
     Color:=c2;
@@ -733,7 +736,7 @@ begin
 xc:=x+a div 2;
 yc:=y+a div 2;
 s:=10;
-with Canvas do
+with BitMap.Canvas do
  begin
     cmem1:=Color;
     Color:=c2;
@@ -753,7 +756,7 @@ begin
 xc:=x+a div 2;
 yc:=y+a div 2;
 s:=10;
-with Canvas do
+with BitMap.Canvas do
  begin
     cmem1:=Color;
     Color:=c2;
@@ -773,7 +776,7 @@ begin
 xc:=x+a div 2;
 yc:=y+a div 2;
 s:=10;
-with Canvas do
+with BitMap.Canvas do
  begin
     cmem1:=Color;
     Color:=c2;
@@ -1627,6 +1630,9 @@ begin
     position:=poScreenCenter;
     bPress:=false;
 
+    BitMap:=Graphics.TBitmap.Create;
+    BitMap.Width:=clientwidth;
+    BitMap.Height:=clientheight;
 
 
     // Фигуру которую нужно вернуть при операции UNDO.
@@ -1789,6 +1795,7 @@ begin
 end;
 
   AddPositon_in_Log(); //  Добавление начальной расстановки фигур в файл на диске.
+  Draw(Sender);
 
 end;
 
@@ -3306,8 +3313,11 @@ procedure TForm1.FormMouseDown(Sender: TObject; Button: TMouseButton;
 const n=8;
 var i,j, i_1, i_2, j_2, i_3, i_4 : Integer;
     bO_O : Boolean; // признак рокировки.
+    beat : Boolean;
 
 begin
+
+    beat:=false;
 
     if (Button=mbLeft) and (Shift = [ssLeft]) then
     begin
@@ -3400,12 +3410,15 @@ begin
 
                                      if (arrw[i_1].fig=cking) and (abs(j_2-j)=2) then bO_O:=true;
 
+                                     beat:=false;
+
                                      if (WhotisPole(i_2,j_2)=cblack) then
                                      begin
                                           black_eating.fig:=WhotisFig(i_2,j_2);
                                           black_eating.i:=i_2;
                                           black_eating.j:=j_2;
                                           DeleteFig(i_2,j_2); // Удаляем сьеденную вражескую фигуру.
+                                          beat:=true;
                                      end
                                      else
                                      begin
@@ -3433,14 +3446,16 @@ begin
 
 
                                      // Удаление пешки при взятии на проходе
-                                     if (WhotisPole(i_2,j_2)=cempty)and (arrw[i_1].fig=cpawn) and
-                                     (j_2<>arrw[i_1].j) then
+                                     if (WhotisPole(i_2,j_2)=cempty)and (beat=false)and (arrw[i_1].fig=cpawn) and
+                                     (j_2<>arrw[i_1].j)and (arrw[i_1].i=4) then
                                      begin
                                         black_eating.fig:=cpawn;
                                         black_eating.i:=arrw[i_1].i;
                                         black_eating.j:=j_2;
                                         DeleteFig(arrw[i_1].i,j_2); // Удаляем пешку при взятии на проходе.
                                      end;
+
+                                     beat:=false;
 
                                      arrw[i_1].i:=i_2;
                                      arrw[i_1].j:=j_2;
@@ -3513,12 +3528,16 @@ begin
                                       // Правила для рокировки должны соблюдаться.
 
                                       if (arrb[i_1].fig=cking) and (abs(j_2-j)=2) then bO_O:=true;
+
+                                      beat:=false;
+
                                        if (WhotisPole(i_2,j_2)=cwhite) then
                                      begin
                                           white_eating.fig:=WhotisFig(i_2,j_2);
                                           white_eating.i:=i_2;
                                           white_eating.j:=j_2;
                                           DeleteFig(i_2,j_2); // Удаляем сьеденную вражескую фигуру.
+                                          beat:=true;
                                      end
                                      else
                                      begin
@@ -3547,14 +3566,16 @@ begin
                                      did_the_black_king_move:=true;
 
                                      // Удаление пешки при взятии на проходе
-                                     if (WhotisPole(i_2,j_2)=cempty)and (arrb[i_1].fig=cpawn) and
-                                     (j_2<>arrb[i_1].j) then
+                                     if (WhotisPole(i_2,j_2)=cempty)and (beat=false) and (arrb[i_1].fig=cpawn) and
+                                     (j_2<>arrb[i_1].j)and (arrb[i_1].i=5) then
                                      begin
                                         white_eating.fig:=cpawn;
                                         white_eating.i:=arrb[i_1].i;
                                         white_eating.j:=j_2;
                                         DeleteFig(arrb[i_1].i,j_2); // Удаляем пешку при взятии на проходе.
                                      end;
+
+                                     beat:=false;
 
                                       arrb[i_1].i:=i_2;
                                       arrb[i_1].j:=j_2;
@@ -5093,12 +5114,15 @@ begin
           end;
     end;
 
+     Draw(Sender);
+
    end;
 end;
 
 procedure TForm1.FormPaint(Sender: TObject);
 begin
-   Draw(Sender);
+   //Draw(Sender);
+   Canvas.Draw(0,0,BitMap);
 end;
 
 // Откат на любое количество ходов назад.
@@ -5113,6 +5137,7 @@ begin
    current_item1:=current_item1-66;
    if (current_item1<0) then current_item1:=0;
    ReadPositon_in_Log(); //  Чтение очередной позиции на доске из файла логирования на диске.
+   Draw(Sender);
 
 end;
 
@@ -5305,6 +5330,8 @@ begin
       end;
 
       CloseFile(datFile);  // closes the file
+
+      Draw(Sender);
    end;
 
   end;
@@ -5332,6 +5359,7 @@ begin
       begin
          ReadPositon_in_Log(); //  Чтение очередной позиции на доске из файла логирования на диске.
       end;
+      Draw(Sender);
    end;
 end;
 
@@ -5648,7 +5676,7 @@ begin
       else Kletka(40+(j-1)*60,20+(i-1)*60,60,kw);
    end;
 end;
-with Canvas do
+with BitMap.Canvas do
  begin
   pen.Color:=kr;
   pen.Width:=3;

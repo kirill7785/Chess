@@ -19,6 +19,8 @@ unit Unit1;
 // сохраняется Save и читается Open пользователем. Теперь по факту сохраняется целая партия на диске.
 // Сохранённую партию можно прочитать с диска и пролистать вперед и назад. Смотри сохранённую
 // партию мат Легаля 44Кб. В интерфейсе 5835 строк кода.
+// 11.01.2023 Исправлена ошибка при взятии на проходе.
+// 11.01.2023 Переход на BitMap. Форма больше не тормозит при закрытиии.
 
 {$mode objfpc}{$H+}
 
@@ -134,6 +136,7 @@ type
     white_eating, black_eating : Figure; // Сьеденная фигура которую нужно вернуть при UNDO
     datFile_gl : File of Titem;
     current_item, current_item1 : Integer; // Номер текущей записи в двоичном файле. Позиция состоит из 66 записей.
+    BitMap : TBitMap;
 
     // Возвращает цвет фигуры на поле или пустую клетку.
     function WhotisPoledetector(i0,j0 : Integer): Integer;   // Для копии доски.
@@ -658,7 +661,7 @@ end;
 
 procedure TForm1.kletka(x,y,a:integer;cl:TColor);
 begin
-with Canvas do
+with BitMap.Canvas do
  begin
   pen.Color:=cl;
   brush.Color:=cl;
@@ -673,7 +676,7 @@ begin
 xc:=x+a div 2;
 yc:=y+a div 2;
 s:=10;
-with Canvas do
+with BitMap.Canvas do
  begin
     cmem1:=Color;
     Color:=c2;
@@ -693,7 +696,7 @@ begin
 xc:=x+a div 2;
 yc:=y+a div 2;
 s:=10;
-with Canvas do
+with BitMap.Canvas do
  begin
     cmem1:=Color;
     Color:=c2;
@@ -713,7 +716,7 @@ begin
 xc:=x+a div 2;
 yc:=y+a div 2;
 s:=10;
-with Canvas do
+with BitMap.Canvas do
  begin
     cmem1:=Color;
     Color:=c2;
@@ -733,7 +736,7 @@ begin
 xc:=x+a div 2;
 yc:=y+a div 2;
 s:=10;
-with Canvas do
+with BitMap.Canvas do
  begin
     cmem1:=Color;
     Color:=c2;
@@ -753,7 +756,7 @@ begin
 xc:=x+a div 2;
 yc:=y+a div 2;
 s:=10;
-with Canvas do
+with BitMap.Canvas do
  begin
     cmem1:=Color;
     Color:=c2;
@@ -773,7 +776,7 @@ begin
 xc:=x+a div 2;
 yc:=y+a div 2;
 s:=10;
-with Canvas do
+with BitMap.Canvas do
  begin
     cmem1:=Color;
     Color:=c2;
@@ -1627,6 +1630,9 @@ begin
     position:=poScreenCenter;
     bPress:=false;
 
+    BitMap:=Graphics.TBitmap.Create;
+    BitMap.Width:=clientwidth;
+    BitMap.Height:=clientheight;
 
 
     // Фигуру которую нужно вернуть при операции UNDO.
@@ -1789,6 +1795,7 @@ begin
 end;
 
   AddPositon_in_Log(); //  Добавление начальной расстановки фигур в файл на диске.
+  Draw(Sender);
 
 end;
 
@@ -5107,12 +5114,15 @@ begin
           end;
     end;
 
+     Draw(Sender);
+
    end;
 end;
 
 procedure TForm1.FormPaint(Sender: TObject);
 begin
-   Draw(Sender);
+   //Draw(Sender);
+   Canvas.Draw(0,0,BitMap);
 end;
 
 // Откат на любое количество ходов назад.
@@ -5127,6 +5137,7 @@ begin
    current_item1:=current_item1-66;
    if (current_item1<0) then current_item1:=0;
    ReadPositon_in_Log(); //  Чтение очередной позиции на доске из файла логирования на диске.
+   Draw(Sender);
 
 end;
 
@@ -5319,6 +5330,8 @@ begin
       end;
 
       CloseFile(datFile);  // closes the file
+
+      Draw(Sender);
    end;
 
   end;
@@ -5346,6 +5359,7 @@ begin
       begin
          ReadPositon_in_Log(); //  Чтение очередной позиции на доске из файла логирования на диске.
       end;
+      Draw(Sender);
    end;
 end;
 
@@ -5633,6 +5647,13 @@ const n=8;
       uclr=clWhite; // Цвет белых фигур.
 var i,j:Integer;
 begin
+
+with BitMap.Canvas do
+begin
+   brush.color:=clBtnFace;
+   rectangle(0,0,clientwidth,clientheight);
+end;
+
 for i:=1 to n do
 for j:=1 to n do
 begin
@@ -5662,7 +5683,7 @@ begin
       else Kletka(40+(j-1)*60,20+(i-1)*60,60,kw);
    end;
 end;
-with Canvas do
+with BitMap.Canvas do
  begin
   pen.Color:=kr;
   pen.Width:=3;
