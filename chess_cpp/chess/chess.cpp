@@ -2721,7 +2721,7 @@ float calculation_phase_for_conic_rate(ChessPiece board[8][8], MOVESL& wList, MO
 
     // 256 - Окончание партии
     // 0 - дебют партии.
-    return (all_phase < 1.0 ? 0.0 : (phase*256.0+0.5*all_phase)/all_phase);
+    return (all_phase < 1.0f ? 0.0f : (phase*256.0f+0.5f*all_phase)/all_phase);
 }
 
 
@@ -4198,7 +4198,7 @@ float Board::rate(Color color)
     if (color == Color::BLACK) {
 
         // Преимущество двух слонов. Треть пешки.
-        if (two_Bishop == 2) res += 10.0 * 0.33333;
+        if (two_Bishop == 2) res += 10.0f * 0.33333f;
     }
 
     two_Bishop = 0;
@@ -4240,7 +4240,7 @@ float Board::rate(Color color)
 
     if (color == Color::WHITE) {
         // Преимущество двух слонов. Треть пешки.
-        if (two_Bishop == 2) res += 10.0 * 0.33333;
+        if (two_Bishop == 2) res += 10.0f * 0.33333f;
 
     }
 
@@ -7361,7 +7361,7 @@ int main()
 // O_O - информация о рокировке.
 //extern "C" EXPORT void analiticChess(int* cb, bool clr,
   //  int* move1, bool* O_O)
-int main_for_dll(int* cb, bool clr,
+void main_for_dll(int* cb, bool clr,
     int* move1, bool* O_O)
 {
 
