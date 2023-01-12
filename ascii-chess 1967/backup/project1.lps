@@ -21,10 +21,12 @@
         <UnitName Value="Unit1"/>
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <CursorPos X="65" Y="24"/>
+        <TopLine Value="340"/>
+        <CursorPos X="35" Y="4"/>
         <FoldState Value=" T3+T0_T1 ppP;f0#.W p0i}c0{901113 plfr70$1 PmYiZ0 T0i(a4#jC0?]gtE4#.SH"/>
         <UsageCount Value="97"/>
         <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
       </Unit1>
       <Unit2>
         <Filename Value="unitgamemode.pas"/>
