@@ -3719,7 +3719,7 @@ begin
                                            end;
                                         end;
                                      end;
-                                     if ((bO_O) and (j_2<5)) then
+                                     if ((bO_O) and (j8<5)) then
                                      begin
                                         // Рокировка в длинную сторону.
                                         // Двигаем Ладью.

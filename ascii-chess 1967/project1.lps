@@ -21,12 +21,11 @@
         <UnitName Value="Unit1"/>
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="3640"/>
-        <CursorPos X="66" Y="3652"/>
-        <FoldState Value=" T3+T0_T1 ppPyC0}F2 p(djiP0{901113 plfr70$1 PmYiZ0 T0jl84#.SR"/>
+        <TopLine Value="3703"/>
+        <CursorPos X="56" Y="3722"/>
+        <FoldState Value=" T3+T0_T1 ppPyC0}F2 p(djiP0{901113 plfr70$1 PmYiZ0 T0i#3b61N]I(RwHa0"/>
         <UsageCount Value="98"/>
         <Loaded Value="True"/>
-        <LoadedDesigner Value="True"/>
       </Unit1>
       <Unit2>
         <Filename Value="unitgamemode.pas"/>
@@ -57,19 +56,15 @@
         <DefaultSyntaxHighlighter Value="LFM"/>
       </Unit4>
     </Units>
-    <JumpHistory Count="3" HistoryIndex="2">
+    <JumpHistory Count="2" HistoryIndex="1">
       <Position1>
         <Filename Value="unit1.pas"/>
-        <Caret Line="3345" Column="9" TopLine="3343"/>
+        <Caret Line="3652" Column="76" TopLine="3640"/>
       </Position1>
       <Position2>
         <Filename Value="unit1.pas"/>
-        <Caret Line="3429" Column="91" TopLine="3410"/>
+        <Caret Line="3654" Column="92" TopLine="3646"/>
       </Position2>
-      <Position3>
-        <Filename Value="unit1.pas"/>
-        <Caret Line="3484" Column="47" TopLine="3494"/>
-      </Position3>
     </JumpHistory>
     <RunParams>
       <FormatVersion Value="2"/>
