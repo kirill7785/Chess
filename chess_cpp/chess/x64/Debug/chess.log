@@ -1,2 +1,22 @@
-﻿  chess.cpp
-  chess.vcxproj -> C:\Users\Кирилл\Downloads\Chess-main\Chess-main\chess_cpp\x64\Debug\chess.exe
+﻿Сборка начата 14.01.2023 9:52:47.
+Уровень детализации журнала: Normal.     1>Проект "C:\Users\Kirill\Desktop\CFD\chess_cpp\chess\chess.vcxproj" в узле 2 (целевые объекты Rebuild).
+     1>_PrepareForClean:
+         Файл "x64\Debug\chess.tlog\chess.lastbuildstate" удаляется.
+       InitializeBuildStatus:
+         Создание "x64\Debug\chess.tlog\unsuccessfulbuild", так как было задано "AlwaysCreate".
+       ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30133\bin\HostX86\x64\CL.exe /c /ZI /JMC /nologo /W3 /WX- /diagnostics:column /sdl /Od /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /permissive- /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"x64\Debug\\" /Fd"x64\Debug\vc142.pdb" /external:W3 /Gd /TP /FC /errorReport:prompt chess.cpp
+         chess.cpp
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30133\bin\HostX86\x64\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Kirill\Desktop\CFD\chess_cpp\x64\Debug\chess.exe" /INCREMENTAL /ILK:"x64\Debug\chess.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Kirill\Desktop\CFD\chess_cpp\x64\Debug\chess.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Kirill\Desktop\CFD\chess_cpp\x64\Debug\chess.lib" /MACHINE:X64 x64\Debug\chess.obj
+         chess.vcxproj -> C:\Users\Kirill\Desktop\CFD\chess_cpp\x64\Debug\chess.exe
+       FinalizeBuildStatus:
+         Файл "x64\Debug\chess.tlog\unsuccessfulbuild" удаляется.
+         Обращение к "x64\Debug\chess.tlog\chess.lastbuildstate".
+     1>Сборка проекта "C:\Users\Kirill\Desktop\CFD\chess_cpp\chess\chess.vcxproj" завершена (целевые объекты Rebuild).
+
+Сборка успешно завершена.
+    Предупреждений: 0
+    Ошибок: 0
+
+Прошло времени 00:00:01.77

@@ -4399,10 +4399,10 @@ void generate_attack_WHITE(bool attack_WHITE[8][8], ChessPiece board[8][8], MOVE
     bool WHITE_O_O, bool WHITE_O_O_O,
     bool BLACK_O_O, bool BLACK_O_O_O)
 {
-    for (__int8 k = 0; k < bList.n; ++k) {
+    for (__int8 k = 0; k < wList.n; ++k) {
 
-        __int8 j = bList.moves[k].y;
-        __int8 i = bList.moves[k].x;
+        __int8 j = wList.moves[k].y;
+        __int8 i = wList.moves[k].x;
 
         if (board[j][i] == ChessPiece::W_KING) {
             // Поля на которые атакует чёрный король.
