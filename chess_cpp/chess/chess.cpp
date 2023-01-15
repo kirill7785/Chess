@@ -1,13 +1,13 @@
 ﻿// chess.cpp : Алгоритм шахматной игры.
 // Компьютер играет за чёрных.
 // Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
-// (6-7).08.2022 Код пешек. Код короля. Пешка делает просто ходы. Взятия на проход нету. В ферзи пешка превращаться неумеет. 
+// (6-7).08.2022 Код пешек. Код короля. Пешка делает просто ходы. Взятия на проход нету. В ферзи пешка превращаться не умеет. 
 //               Доска печатает себя в коноль. Никакого минимакса еще нет.
 // (13-14).08.2022 (выходные 1500 строк в ядре.). Написан код фигур - слон, ладья, ферзь и конь.  Написан алгоритм минимакса. 
 // Разыгрываются окончания партий. Нету рокировки, нету взятия на проход,
 //                        список ходов в случае шаха не доработан.
 // 15.08.2022 (понедельник) установил unity.
-// 16.08.2022 (вторник) графическая часть шахматной игры с помощью видео на yuoyube написана. Реализует  drag and drop.
+// 16.08.2022 (вторник) графическая часть шахматной игры с помощью видео на yuotube написана. Реализует  drag and drop.
 // 17.08.2022 (среда) Прикрутил свой шахматрый движок на dll к графической части шахмат. Впервые расставлена начальная позиция фигур.
 //            Первый показ Василевскому и Костину.
 // 19.08.2022  Можно делать только те ходы фигурами чтобы король не был под шахом. Реализовано 19.08.2022.
@@ -27,11 +27,14 @@
 // 8.12.2022   Рокировку нельзя делать из под шаха.
 // 10.12.2022  Новый консольный визуализатор шахматной доски.
 // 11.12.2022  Заменил KING_CENTER_PRIORITY_NUMBER_FIGURES==19 на коническую оценку из Chessprogramming wiki.
+// 14.01.2023  Распараллелил алгоритм minimax по OpenMP на два xeon 2630v4. 9431 строка.
+// Применение на первых двух полуходах быстрого поиска на глубину 4 полухода для правильной сортировки ходов ускоряет alpha-beta с 11мин до 3мин 16с.
 
 #include <iostream>
 #include <time.h>
 #include <random>
 #include <string>
+#include <omp.h>
 
 
 #pragma once
@@ -41,7 +44,9 @@
 using namespace std;
 
 // Если не определено то обычный код с cout
-//#define CODE_FOR_DLL 1
+#define CODE_FOR_DLL 1
+
+#define MOBILITY_USER_SETTING true // Ручная (не константная через VALUE) мобильность для Ладьи, Ферзя, Слона и Коня на основе легальных ходов.
 
 const __int8 POOL_SIZE = 120; // 100 размер хранилища под количество ходов.
 const __int8 POOL_SIZEL = 16;// количество фигур одного цвета.
@@ -1310,7 +1315,7 @@ float bishopEvalBlack[8][8] = {
 class Bishop {
 public:
     Color color;
-    float VALUE = 30; // стоимость слона.
+    float VALUE = 30; // стоимость слона. 33.3
 
     Bishop();
 
@@ -1329,7 +1334,12 @@ public:
     MOVES get_moves(ChessPiece board[8][8], MOVESL &wList, MOVESL &bList, PREVIOS_MOVE previos_moves, __int8 x, __int8 y, bool bterminal, bool WHITE_O_O, bool WHITE_O_O_O, bool BLACK_O_O, bool BLACK_O_O_O);
 
     float rate(ChessPiece board[8][8], __int8 x, __int8 y) {
+
+#ifdef MOBILITY_USER_SETTING
+        return VALUE;
+#else
         return VALUE + (color == Color::WHITE ? bishopEvalWhite[y][x] : bishopEvalBlack[y][x]);;
+#endif
     }
 
 };
@@ -1520,7 +1530,7 @@ float rookEvalBlack[8][8] = {
 class Rook {
 public:
     Color color;
-    float VALUE = 50; // стоимость ладьи.
+    float VALUE = 50; // стоимость ладьи. 56.3
 
     Rook();
 
@@ -1539,7 +1549,11 @@ public:
     MOVES get_moves(ChessPiece board[8][8], MOVESL &wList, MOVESL &bList, PREVIOS_MOVE previos_moves, __int8 x, __int8 y, bool bterminal, bool WHITE_O_O, bool WHITE_O_O_O, bool BLACK_O_O, bool BLACK_O_O_O);
 
     float rate(ChessPiece board[8][8], __int8 x, __int8 y) {
+#ifdef MOBILITY_USER_SETTING
+        return VALUE;
+#else
         return VALUE + (color == Color::WHITE ? rookEvalWhite[y][x] : rookEvalBlack[y][x]);
+#endif
     }
 };
 
@@ -1554,16 +1568,9 @@ Rook::Rook() : color(Color::EMPTY)
 // 18.08.2022 Можно делать только те ходы ладьёй чтобы король не был под шахом. Реализовано 18,08,2022
 MOVES Rook::get_moves(ChessPiece board[8][8], MOVESL &wList, MOVESL &bList, PREVIOS_MOVE previos_moves, __int8 x, __int8 y, bool bterminal, bool WHITE_O_O, bool WHITE_O_O_O, bool BLACK_O_O, bool BLACK_O_O_O) {
 
-
-
-
     MOVES m;// (14);
     m.n = 0;
-
-
-
-   
-
+    
     // горизонталь.
     for (__int8 j_step = -1; j_step <= 1; j_step += 2) 
     {
@@ -1669,7 +1676,7 @@ float evalQueen[8][8] = {
 class Queen {
 public:
     Color color;
-    float VALUE = 90.0f; // стоимость ферзя.
+    float VALUE = 90.0f; // стоимость ферзя. 95
 
     Queen();
 
@@ -1688,7 +1695,11 @@ public:
     MOVES get_moves(ChessPiece board[8][8], MOVESL &wList, MOVESL &bList, PREVIOS_MOVE previos_moves, __int8 x, __int8 y, bool bterminal, bool WHITE_O_O, bool WHITE_O_O_O, bool BLACK_O_O, bool BLACK_O_O_O);
 
     float rate(ChessPiece board[8][8], __int8 x, __int8 y) {
+#ifdef MOBILITY_USER_SETTING
+        return VALUE;
+#else
         return VALUE + evalQueen[y][x];
+#endif
     }
 };
 
@@ -1697,19 +1708,13 @@ Queen::Queen() : color(Color::EMPTY)
 
 }
 
-
-
 // 18.08.2022 Можно делать только те ходы ферзём чтобы король не был под шахом. Реализовано 18,08,2022
 MOVES  Queen::get_moves(ChessPiece board[8][8], MOVESL &wList, MOVESL &bList, PREVIOS_MOVE previos_moves, __int8 x, __int8 y, bool bterminal, bool WHITE_O_O, bool WHITE_O_O_O, bool BLACK_O_O, bool BLACK_O_O_O)
 {
 
-
-
     MOVES m;
     m.n = 0;
-
     
-
     // От Ладьи.
 
     // горизонталь.
@@ -1949,7 +1954,7 @@ float knightEval[8][8] = {
 class Knight {
 public:
     Color color;
-    float VALUE = 30.0f; // стоимость коня.
+    float VALUE = 30.0f; // стоимость коня. 30.5
 
     Knight();
 
@@ -1971,7 +1976,11 @@ public:
 
 
     float rate(ChessPiece board[8][8], __int8 x, __int8 y) {
+#ifdef MOBILITY_USER_SETTING
+        return VALUE;
+#else
         return VALUE + knightEval[y][x];
+#endif
     }
 };
 
@@ -4135,6 +4144,19 @@ MOVES Pawn::get_moves(ChessPiece board[8][8], MOVESL &wList, MOVESL &bList, PREV
     return m;
 }
 
+// Поля которыми белые фигуры атакуют черных фигур
+void generate_mobility_WHITE(float attack_WHITE[8][8], ChessPiece board[8][8], MOVESL& wList, MOVESL& bList,
+    PREVIOS_MOVE previos_moves,
+    bool WHITE_O_O, bool WHITE_O_O_O,
+    bool BLACK_O_O, bool BLACK_O_O_O);
+
+
+// Поля которыми чёрные фигуры атакуют белых фигур
+void generate_mobility_BLACK(float attack_BLACK[8][8], ChessPiece board[8][8], MOVESL& wList, MOVESL& bList,
+    PREVIOS_MOVE previos_moves,
+    bool WHITE_O_O, bool WHITE_O_O_O,
+    bool BLACK_O_O, bool BLACK_O_O_O);
+
 
 // Оценка позиции для белых или чёрных на доске.
 float Board::rate(Color color) 
@@ -4160,87 +4182,200 @@ float Board::rate(Color color)
           //      continue;
 
     __int8 two_Bishop = 0;
+    if (color == Color::BLACK) 
+    {
+#ifdef MOBILITY_USER_SETTING
+        /*__int8 mobility = 0; // мобильность.
+
+        bool attack_BLACK[8][8];
+        for (__int8 x = 0; x < 8; ++x)
+        {
+            for (__int8 y = 0; y < 8; ++y)
+            {
+                attack_BLACK[y][x] = false;
+            }
+        }
+
+        generate_attack_BLACK(attack_BLACK, board, wList, bList, previos_moves, WHITE_O_O,  WHITE_O_O_O, BLACK_O_O, BLACK_O_O_O);
+               
+
+        for (__int8 x = 0; x < 8; ++x)
+        {
+            for (__int8 y = 0; y < 8; ++y)
+            {
+                if (attack_BLACK[y][x]) {
+                    ++mobility;
+                }
+            }
+        }
+        res+= ((1.0f* mobility)/32.0f)* 10.0f * 0.4f; // Бонус за активность фигур на доске.
+        */
+
+        // Мобильность с учётом весов фигур и своенных линий и диагоналей.
+        float attack_BLACK[8][8];
+        for (__int8 x = 0; x < 8; ++x)
+        {
+            for (__int8 y = 0; y < 8; ++y)
+            {
+                attack_BLACK[y][x] = 0.0f;
+            }
+        }
+        generate_mobility_BLACK(attack_BLACK, board, wList, bList, previos_moves, WHITE_O_O, WHITE_O_O_O, BLACK_O_O, BLACK_O_O_O);
+        
+        for (__int8 x = 0; x < 8; ++x)
+        {
+            for (__int8 y = 0; y < 8; ++y)
+            {
+                res+=attack_BLACK[y][x];
+            }
+        }
+#endif
+
+        //float phase = calculation_phase_for_conic_rate(board, wList, bList); // фаза коническая оценка.
+        //if ((phase < KING_CENTER_PRIORITY_WEIGHT) && (BLACK_O_O || BLACK_O_O_O)) {
+            // Начальная стадия партии и рокировка уже сделана.
+          //  res += 3.0f; // Бонус за сделанную рокировку и безопасность короля.
+        //}
+
     for (__int8 k = 0; k < bList.n; ++k) {
 
         __int8 y = bList.moves[k].y;
         __int8 x = bList.moves[k].x;
-
-        if (color == Color::BLACK) {            
+                    
             if (board[y][x] == ChessPiece::B_PAWN) {
                 Pawn p = Pawn(Color::BLACK);
                 res += p.rate(board, x, y);
                 pawn_x_position[x]++;
             }           
-            if (board[y][x] == ChessPiece::B_KING) {
+            else if (board[y][x] == ChessPiece::B_KING) {
                 King k = King(Color::BLACK);
                 res += k.rate(board, wList, bList, x, y);
             }            
-            if (board[y][x] == ChessPiece::B_QUEEN) {
+            else if (board[y][x] == ChessPiece::B_QUEEN) {
                 Queen q = Queen(Color::BLACK);
                 res += q.rate(board, x, y);
             }            
-            if (board[y][x] == ChessPiece::B_BISHOP) {
+            else if (board[y][x] == ChessPiece::B_BISHOP) {
                 Bishop bishop = Bishop(Color::BLACK);
                 res += bishop.rate(board, x, y);
                 ++two_Bishop;
             }            
-            if (board[y][x] == ChessPiece::B_ROOK) {
+            else if (board[y][x] == ChessPiece::B_ROOK) {
                 Rook rook = Rook(Color::BLACK);
                 res += rook.rate(board, x, y);
             }            
-            if (board[y][x] == ChessPiece::B_KNIGHT) {
+            else if (board[y][x] == ChessPiece::B_KNIGHT) {
                 Knight kn = Knight(Color::BLACK);
                 res += kn.rate(board, x, y);
             }
         }
-    }
+    
 
-    if (color == Color::BLACK) {
+       
 
         // Преимущество двух слонов. Треть пешки.
-        if (two_Bishop == 2) res += 10.0f * 0.33333f;
+        if (two_Bishop == 2) res += 10.0f * 0.33f;
     }
 
-    two_Bishop = 0;
+    
+      
+    if (color == Color::WHITE) 
+    {
+#ifdef MOBILITY_USER_SETTING
+       /* __int8 mobility = 0;
+
+        bool attack_WHITE[8][8];
+        for (__int8 x = 0; x < 8; ++x)
+        {
+            for (__int8 y = 0; y < 8; ++y)
+            {
+                attack_WHITE[y][x] = false;
+            }
+        }
+
+        generate_attack_WHITE(attack_WHITE, board, wList, bList, previos_moves, WHITE_O_O, WHITE_O_O_O, BLACK_O_O, BLACK_O_O_O);
+
+        for (__int8 x = 0; x < 8; ++x)
+        {
+            for (__int8 y = 0; y < 8; ++y)
+            {
+                if (attack_WHITE[y][x]) {
+                    ++mobility;
+                }
+            }
+        }
+
+        res += ((1.0f* mobility) / 32.0f) * 10.0f * 0.4f; //  Бонус за активность фигур на доске.
+        */
+       
+        // Мобильность с учётом весов фигур и своенных линий и диагоналей.
+        float attack_WHITE[8][8];
+        for (__int8 x = 0; x < 8; ++x)
+        {
+            for (__int8 y = 0; y < 8; ++y)
+            {
+                attack_WHITE[y][x] = 0.0f;
+            }
+        }
+
+        generate_mobility_WHITE(attack_WHITE, board, wList, bList, previos_moves, WHITE_O_O, WHITE_O_O_O, BLACK_O_O, BLACK_O_O_O);
+
+        for (__int8 x = 0; x < 8; ++x)
+        {
+            for (__int8 y = 0; y < 8; ++y)
+            {               
+                res += attack_WHITE[y][x];                
+            }
+        }
+
+#endif
+
+        //float phase = calculation_phase_for_conic_rate(board, wList, bList); // фаза коническая оценка.
+        //if ((phase < KING_CENTER_PRIORITY_WEIGHT) && (WHITE_O_O || WHITE_O_O_O)) {
+            // Начальная стадия партии и рокировка уже сделана.
+          //  res += 3.0f; // Бонус за сделанную рокировку и безопасность короля.
+        //}
+
+        two_Bishop = 0;
+
+        for (__int8 k = 0; k < wList.n; ++k) {
+
+           __int8 y = wList.moves[k].y;
+           __int8 x = wList.moves[k].x;
+
         
-    for (__int8 k = 0; k < wList.n; ++k) {
-
-        __int8 y = wList.moves[k].y;
-        __int8 x = wList.moves[k].x;
-
-        if (color == Color::WHITE) {            
             if (board[y][x] == ChessPiece::W_PAWN) {
                 Pawn p = Pawn(Color::WHITE);
                 res += p.rate(board, x, y);
                 pawn_x_position[x]++;
             }            
-            if (board[y][x] == ChessPiece::W_KING) {
+            else if (board[y][x] == ChessPiece::W_KING) {
                 King k = King(Color::WHITE);
                 res += k.rate(board, wList, bList, x, y);
             }            
-            if (board[y][x] == ChessPiece::W_QUEEN) {
+            else if (board[y][x] == ChessPiece::W_QUEEN) {
                 Queen q = Queen(Color::WHITE);
                 res += q.rate(board, x, y);
             }            
-            if (board[y][x] == ChessPiece::W_BISHOP) {
+            else if (board[y][x] == ChessPiece::W_BISHOP) {
                 Bishop bishop = Bishop(Color::WHITE);
                 res += bishop.rate(board, x, y);
                 ++two_Bishop;
             }           
-            if (board[y][x] == ChessPiece::W_ROOK) {
+            else if (board[y][x] == ChessPiece::W_ROOK) {
                 Rook rook = Rook(Color::WHITE);
                 res += rook.rate(board, x, y);
             }            
-            if (board[y][x] == ChessPiece::W_KNIGHT) {
+            else if (board[y][x] == ChessPiece::W_KNIGHT) {
                 Knight kn = Knight(Color::WHITE);
                 res += kn.rate(board, x, y);
             }
         }
-    }
+    
+       
 
-    if (color == Color::WHITE) {
         // Преимущество двух слонов. Треть пешки.
-        if (two_Bishop == 2) res += 10.0f * 0.33333f;
+        if (two_Bishop == 2) res += 10.0f * 0.33f;
 
     }
 
@@ -4278,13 +4413,13 @@ float Board::rate(Color color)
     }
     // Количество сдвоенных пешек есть количество пешек минус количество вертикалей с пешками.
     __int8 ipawn2 = ipawn - iverticalpawn;
-    res -= 2 * (ipawn2); // для каждой сдвоенной пешки вычитаем два балла из оценки.
+    res -= 2.5f * (ipawn2); // для каждой сдвоенной пешки вычитаем два с половиной балла из оценки.
 
     // одинокая пешка снижает оценку позиции
     for (__int8 i = 1; i <= 6; ++i) {
 
         if ((pawn_x_position[i] > 0) && (pawn_x_position[i - 1] == 0) && (pawn_x_position[i + 1] == 0)) {
-            res -= 2;
+            res -= 2.0f;
         }
     }
 
@@ -4295,6 +4430,202 @@ float Board::rate(Color color)
 Color Color_invert(Color color)
 {    
         return (color == Color::WHITE ? Color::BLACK : Color::WHITE);
+}
+
+
+// Поля которыми чёрные фигуры атакуют белых фигур
+void generate_mobility_BLACK(float attack_BLACK[8][8], ChessPiece board[8][8], MOVESL& wList, MOVESL& bList,
+    PREVIOS_MOVE previos_moves,
+    bool WHITE_O_O, bool WHITE_O_O_O,
+    bool BLACK_O_O, bool BLACK_O_O_O)
+{
+    for (__int8 k = 0; k < bList.n; ++k) {
+
+        __int8 j = bList.moves[k].y;
+        __int8 i = bList.moves[k].x;
+
+       /* if (board[j][i] == ChessPiece::B_KING) {
+            // Поля на которые атакует чёрный король.
+            if (j - 1 >= 0)  if (get_color1(board, i, j - 1) != Color::BLACK) attack_BLACK[j - 1][i] = true;
+            if (j + 1 <= 7)  if (get_color1(board, i, j + 1) != Color::BLACK) attack_BLACK[j + 1][i] = true;
+            if (i - 1 >= 0) if (get_color1(board, i - 1, j) != Color::BLACK) attack_BLACK[j][i - 1] = true;
+            if (i + 1 <= 7) if (get_color1(board, i + 1, j) != Color::BLACK) attack_BLACK[j][i + 1] = true;
+            if ((j - 1 >= 0) && (i - 1 >= 0)) if (get_color1(board, i - 1, j - 1) != Color::BLACK) attack_BLACK[j - 1][i - 1] = true;
+            if ((j + 1 <= 7) && (i + 1 <= 7)) if (get_color1(board, i + 1, j + 1) != Color::BLACK) attack_BLACK[j + 1][i + 1] = true;
+            if ((j + 1 <= 7) && (i - 1 >= 0)) if (get_color1(board, i - 1, j + 1) != Color::BLACK) attack_BLACK[j + 1][i - 1] = true;
+            if ((j - 1 >= 0) && (i + 1 <= 7)) if (get_color1(board, i + 1, j - 1) != Color::BLACK) attack_BLACK[j - 1][i + 1] = true;
+        }
+        else if (board[j][i] == ChessPiece::B_PAWN) {
+            // Пешка нападает наискосок.
+            if ((j + 1 <= 7) && (i - 1 >= 0)) if (get_color1(board, i - 1, j + 1) != Color::BLACK)  attack_BLACK[j + 1][i - 1] = true;
+            if ((j + 1 <= 7) && (i + 1 <= 7)) if (get_color1(board, i + 1, j + 1) != Color::BLACK) attack_BLACK[j + 1][i + 1] = true;
+        }
+        else*/ if (board[j][i] == ChessPiece::B_ROOK) {
+            {
+                // Только если Ладья стоит на одной линии с Королём.
+
+                MOVES m; // (14);
+                m.n = 0;
+                Rook rook;
+                rook.color = Color::BLACK;
+                m = rook.get_moves((board), wList, bList, previos_moves, i, j, true, WHITE_O_O, WHITE_O_O_O, BLACK_O_O, BLACK_O_O_O);
+
+                for (__int8 k = 0; k < m.n; ++k) {
+                    // Поля куда ходить королём нельзя потому что атакует одна из вражеских ладей.
+                    attack_BLACK[m.moves[k].y][m.moves[k].x] += (attack_BLACK[m.moves[k].y][m.moves[k].x] > 0.1f ? 0.5f : 0.3f); // Сдвоенная ладья 0,2 бонус
+                }
+            }
+        }
+        else if (board[j][i] == ChessPiece::B_QUEEN) {
+
+
+            {
+                // Ферзь на одной вертикали или горизонтали или диагонали с Королём.
+
+                MOVES m;
+                m.n = 0;
+                Queen queen;
+                queen.color = Color::BLACK;
+                m = queen.get_moves((board), wList, bList, previos_moves, i, j, true, WHITE_O_O, WHITE_O_O_O, BLACK_O_O, BLACK_O_O_O);
+
+                for (__int8 k = 0; k < m.n; ++k) {
+                    // Поля куда ходить королём нельзя потому что атакует вражеский ферзь.
+                    attack_BLACK[m.moves[k].y][m.moves[k].x] += (attack_BLACK[m.moves[k].y][m.moves[k].x] > 0.1f ?0.5f : 0.3f); // Ферзь сдвоен с ладьёй или слоном.
+                }
+            }
+        }
+        else if (board[j][i] == ChessPiece::B_BISHOP) {
+
+
+            {
+                // Если Король на одной диагонали со слоном.
+
+                MOVES m; // (14);
+                m.n = 0;
+                Bishop bishop;
+                bishop.color = Color::BLACK;
+                m = bishop.get_moves((board), wList, bList, previos_moves, i, j, true, WHITE_O_O, WHITE_O_O_O, BLACK_O_O, BLACK_O_O_O);
+
+                for (__int8 k = 0; k < m.n; ++k) {
+                    // Поля куда ходить королём нельзя потому что атакует один из вражеских слонов.
+                    attack_BLACK[m.moves[k].y][m.moves[k].x] += (attack_BLACK[m.moves[k].y][m.moves[k].x] > 0.1f ?  0.6f : 0.4f); // Ферзь сдвоен со слоном
+                }
+            }
+        }
+        else if (board[j][i] == ChessPiece::B_KNIGHT) {
+            MOVES m; // (8);
+            m.n = 0;
+            Knight knight;
+            knight.color = Color::BLACK;
+            m = knight.get_moves_terminal((board), wList, bList, previos_moves, i, j, true, WHITE_O_O, WHITE_O_O_O, BLACK_O_O, BLACK_O_O_O);
+
+            for (__int8 k = 0; k < m.n; ++k) {
+                // Поля куда ходить королём нельзя потому что атакует один из вражеских коней.
+                if (get_color1(board, m.moves[k].x, m.moves[k].y) != Color::BLACK)
+                {
+                    attack_BLACK[m.moves[k].y][m.moves[k].x] += 0.9f;
+                }
+            }
+        }
+    }
+}
+
+// Поля которыми белые фигуры атакуют черных фигур
+void generate_mobility_WHITE(float attack_WHITE[8][8], ChessPiece board[8][8], MOVESL& wList, MOVESL& bList,
+    PREVIOS_MOVE previos_moves,
+    bool WHITE_O_O, bool WHITE_O_O_O,
+    bool BLACK_O_O, bool BLACK_O_O_O)
+{
+    for (__int8 k = 0; k < wList.n; ++k) {
+
+        __int8 j = wList.moves[k].y;
+        __int8 i = wList.moves[k].x;
+
+        /*if (board[j][i] == ChessPiece::W_KING) {
+            // Поля на которые атакует чёрный король.
+            if (j - 1 >= 0) if (get_color1(board, i, j - 1) != Color::WHITE) attack_WHITE[j - 1][i] = true;
+            if (j + 1 <= 7) if (get_color1(board, i, j + 1) != Color::WHITE) attack_WHITE[j + 1][i] = true;
+            if (i - 1 >= 0) if (get_color1(board, i - 1, j) != Color::WHITE) attack_WHITE[j][i - 1] = true;
+            if (i + 1 <= 7) if (get_color1(board, i + 1, j) != Color::WHITE) attack_WHITE[j][i + 1] = true;
+            if ((j - 1 >= 0) && (i - 1 >= 0)) if (get_color1(board, i - 1, j - 1) != Color::WHITE) attack_WHITE[j - 1][i - 1] = true;
+            if ((j + 1 <= 7) && (i + 1 <= 7)) if (get_color1(board, i + 1, j + 1) != Color::WHITE) attack_WHITE[j + 1][i + 1] = true;
+            if ((j + 1 <= 7) && (i - 1 >= 0)) if (get_color1(board, i - 1, j + 1) != Color::WHITE) attack_WHITE[j + 1][i - 1] = true;
+            if ((j - 1 >= 0) && (i + 1 <= 7)) if (get_color1(board, i + 1, j - 1) != Color::WHITE) attack_WHITE[j - 1][i + 1] = true;
+        }
+        else if (board[j][i] == ChessPiece::W_PAWN) {
+            // Пешка нападает наискосок.
+            if ((j - 1 >= 0) && (i - 1 >= 0)) if (get_color1(board, i - 1, j - 1) != Color::WHITE) attack_WHITE[j - 1][i - 1] = true;
+            if ((j - 1 >= 0) && (i + 1 <= 7)) if (get_color1(board, i + 1, j - 1) != Color::WHITE) attack_WHITE[j - 1][i + 1] = true;
+        }
+        else*/ if (board[j][i] == ChessPiece::W_ROOK) {
+
+
+            {
+                // Только если Ладья стоит на одной линии с Королём.
+
+                MOVES m; // (14);
+                m.n = 0;
+                Rook rook;
+                rook.color = Color::WHITE;
+                m = rook.get_moves((board), wList, bList, previos_moves, i, j, true, WHITE_O_O, WHITE_O_O_O, BLACK_O_O, BLACK_O_O_O);
+
+                for (__int8 k = 0; k < m.n; ++k) {
+                    // Поля куда ходить королём нельзя потому что атакует одна из вражеских ладей.
+                    attack_WHITE[m.moves[k].y][m.moves[k].x] += (attack_WHITE[m.moves[k].y][m.moves[k].x]>0.1f ? 0.5f : 0.3f); // Сдвоенная ладья 0.2f бонус
+                }
+            }
+        }
+        else if (board[j][i] == ChessPiece::W_QUEEN) {
+
+
+            {
+                // Ферзь на одной вертикали или горизонтали или диагонали с Королём.
+
+                MOVES m;
+                m.n = 0;
+                Queen queen;
+                queen.color = Color::WHITE;
+                m = queen.get_moves((board), wList, bList, previos_moves, i, j, true, WHITE_O_O, WHITE_O_O_O, BLACK_O_O, BLACK_O_O_O);
+
+                for (__int8 k = 0; k < m.n; ++k) {
+                    // Поля куда ходить королём нельзя потому что атакует вражеский ферзь.
+                    attack_WHITE[m.moves[k].y][m.moves[k].x] += (attack_WHITE[m.moves[k].y][m.moves[k].x]>0.1f ? 0.5f : 0.3f); // Ферзь сдвоенный с ладьёй или слоном бонус 0,2а
+                }
+            }
+        }
+        else if (board[j][i] == ChessPiece::B_BISHOP) {
+
+
+            {
+                // Если Король на одной диагонали со слоном.
+
+                MOVES m; // (14);
+                m.n = 0;
+                Bishop bishop;
+                bishop.color = Color::WHITE;
+                m = bishop.get_moves((board), wList, bList, previos_moves, i, j, true, WHITE_O_O, WHITE_O_O_O, BLACK_O_O, BLACK_O_O_O);
+
+                for (__int8 k = 0; k < m.n; ++k) {
+                    // Поля куда ходить королём нельзя потому что атакует один из вражеских слонов.
+                    attack_WHITE[m.moves[k].y][m.moves[k].x] += (attack_WHITE[m.moves[k].y][m.moves[k].x]>0.1f ? 0.6f : 0.4f); // Слон сдвоенный с ферзём бонус 0,2f
+                }
+            }
+        }
+        else if (board[j][i] == ChessPiece::B_KNIGHT) {
+            MOVES m; // (8);
+            m.n = 0;
+            Knight knight;
+            knight.color = Color::WHITE;
+            m = knight.get_moves_terminal((board), wList, bList, previos_moves, i, j, true, WHITE_O_O, WHITE_O_O_O, BLACK_O_O, BLACK_O_O_O);
+
+            for (__int8 k = 0; k < m.n; ++k) {
+                // Поля куда ходить королём нельзя потому что атакует один из вражеских коней.
+                if (get_color1(board, m.moves[k].x, m.moves[k].y) != Color::WHITE) {
+                    attack_WHITE[m.moves[k].y][m.moves[k].x] += 0.9f;
+                }
+            }
+        }
+    }
 }
 
 // Поля которыми чёрные фигуры атакуют белых фигур
@@ -4310,23 +4641,21 @@ void generate_attack_BLACK(bool attack_BLACK[8][8], ChessPiece board[8][8], MOVE
 
         if (board[j][i] == ChessPiece::B_KING) {
             // Поля на которые атакует чёрный король.
-            if (j - 1 >= 0)  attack_BLACK[j - 1][i] = true;
-            if (j + 1 <= 7)  attack_BLACK[j + 1][i] = true;
-            if (i - 1 >= 0)  attack_BLACK[j][i - 1] = true;
-            if (i + 1 <= 7)  attack_BLACK[j][i + 1] = true;
-            if ((j - 1 >= 0) && (i - 1 >= 0)) attack_BLACK[j - 1][i - 1] = true;
-            if ((j + 1 <= 7) && (i + 1 <= 7)) attack_BLACK[j + 1][i + 1] = true;
-            if ((j + 1 <= 7) && (i - 1 >= 0)) attack_BLACK[j + 1][i - 1] = true;
-            if ((j - 1 >= 0) && (i + 1 <= 7)) attack_BLACK[j - 1][i + 1] = true;
+            if (j - 1 >= 0)  if (get_color1(board, i, j-1)!= Color::BLACK) attack_BLACK[j - 1][i] = true;
+            if (j + 1 <= 7)  if (get_color1(board, i, j + 1) != Color::BLACK) attack_BLACK[j + 1][i] = true;
+            if (i - 1 >= 0) if (get_color1(board, i-1, j) != Color::BLACK) attack_BLACK[j][i - 1] = true;
+            if (i + 1 <= 7) if (get_color1(board, i+1, j ) != Color::BLACK) attack_BLACK[j][i + 1] = true;
+            if ((j - 1 >= 0) && (i - 1 >= 0)) if (get_color1(board, i-1, j - 1) != Color::BLACK) attack_BLACK[j - 1][i - 1] = true;
+            if ((j + 1 <= 7) && (i + 1 <= 7)) if (get_color1(board, i+1, j + 1) != Color::BLACK) attack_BLACK[j + 1][i + 1] = true;
+            if ((j + 1 <= 7) && (i - 1 >= 0)) if (get_color1(board, i-1, j + 1) != Color::BLACK) attack_BLACK[j + 1][i - 1] = true;
+            if ((j - 1 >= 0) && (i + 1 <= 7)) if (get_color1(board, i+1, j - 1) != Color::BLACK) attack_BLACK[j - 1][i + 1] = true;
         }
         else if (board[j][i] == ChessPiece::B_PAWN) {
             // Пешка нападает наискосок.
-            if ((j + 1 <= 7) && (i - 1 >= 0))  attack_BLACK[j + 1][i - 1] = true;
-            if ((j + 1 <= 7) && (i + 1 <= 7))  attack_BLACK[j + 1][i + 1] = true;
+            if ((j + 1 <= 7) && (i - 1 >= 0)) if (get_color1(board, i - 1, j + 1) != Color::BLACK)  attack_BLACK[j + 1][i - 1] = true;
+            if ((j + 1 <= 7) && (i + 1 <= 7)) if (get_color1(board, i + 1, j + 1) != Color::BLACK) attack_BLACK[j + 1][i + 1] = true;
         }
-        else if (board[j][i] == ChessPiece::B_ROOK) {
-
-             
+        else if (board[j][i] == ChessPiece::B_ROOK) {             
             {
                 // Только если Ладья стоит на одной линии с Королём.
 
@@ -4387,7 +4716,10 @@ void generate_attack_BLACK(bool attack_BLACK[8][8], ChessPiece board[8][8], MOVE
 
             for (__int8 k = 0; k < m.n; ++k) {
                 // Поля куда ходить королём нельзя потому что атакует один из вражеских коней.
-                attack_BLACK[m.moves[k].y][m.moves[k].x] = true;
+                if (get_color1(board, m.moves[k].x, m.moves[k].y) != Color::BLACK)
+                {
+                    attack_BLACK[m.moves[k].y][m.moves[k].x] = true;
+                }
             }
         }
     }
@@ -4406,19 +4738,19 @@ void generate_attack_WHITE(bool attack_WHITE[8][8], ChessPiece board[8][8], MOVE
 
         if (board[j][i] == ChessPiece::W_KING) {
             // Поля на которые атакует чёрный король.
-            if (j - 1 >= 0)  attack_WHITE[j - 1][i] = true;
-            if (j + 1 <= 7)  attack_WHITE[j + 1][i] = true;
-            if (i - 1 >= 0)  attack_WHITE[j][i - 1] = true;
-            if (i + 1 <= 7)  attack_WHITE[j][i + 1] = true;
-            if ((j - 1 >= 0) && (i - 1 >= 0)) attack_WHITE[j - 1][i - 1] = true;
-            if ((j + 1 <= 7) && (i + 1 <= 7)) attack_WHITE[j + 1][i + 1] = true;
-            if ((j + 1 <= 7) && (i - 1 >= 0)) attack_WHITE[j + 1][i - 1] = true;
-            if ((j - 1 >= 0) && (i + 1 <= 7)) attack_WHITE[j - 1][i + 1] = true;
+            if (j - 1 >= 0) if (get_color1(board, i, j - 1) != Color::WHITE) attack_WHITE[j - 1][i] = true;
+            if (j + 1 <= 7) if (get_color1(board, i, j + 1) != Color::WHITE) attack_WHITE[j + 1][i] = true;
+            if (i - 1 >= 0) if (get_color1(board, i-1, j ) != Color::WHITE) attack_WHITE[j][i - 1] = true;
+            if (i + 1 <= 7) if (get_color1(board, i+1, j ) != Color::WHITE) attack_WHITE[j][i + 1] = true;
+            if ((j - 1 >= 0) && (i - 1 >= 0)) if (get_color1(board, i-1, j - 1) != Color::WHITE) attack_WHITE[j - 1][i - 1] = true;
+            if ((j + 1 <= 7) && (i + 1 <= 7)) if (get_color1(board, i+1, j + 1) != Color::WHITE) attack_WHITE[j + 1][i + 1] = true;
+            if ((j + 1 <= 7) && (i - 1 >= 0)) if (get_color1(board, i-1, j + 1) != Color::WHITE) attack_WHITE[j + 1][i - 1] = true;
+            if ((j - 1 >= 0) && (i + 1 <= 7)) if (get_color1(board, i+1, j - 1) != Color::WHITE) attack_WHITE[j - 1][i + 1] = true;
         }
         else if (board[j][i] == ChessPiece::W_PAWN) {
             // Пешка нападает наискосок.
-            if ((j - 1 >= 0) && (i - 1 >= 0))  attack_WHITE[j - 1][i - 1] = true;
-            if ((j - 1 >= 0) && (i + 1 <= 7))  attack_WHITE[j - 1][i + 1] = true;
+            if ((j - 1 >= 0) && (i - 1 >= 0)) if (get_color1(board, i-1, j - 1) != Color::WHITE) attack_WHITE[j - 1][i - 1] = true;
+            if ((j - 1 >= 0) && (i + 1 <= 7)) if (get_color1(board, i+1, j - 1) != Color::WHITE) attack_WHITE[j - 1][i + 1] = true;
         }
         else if (board[j][i] == ChessPiece::W_ROOK) {
 
@@ -4483,7 +4815,9 @@ void generate_attack_WHITE(bool attack_WHITE[8][8], ChessPiece board[8][8], MOVE
 
             for (__int8 k = 0; k < m.n; ++k) {
                 // Поля куда ходить королём нельзя потому что атакует один из вражеских коней.
-                attack_WHITE[m.moves[k].y][m.moves[k].x] = true;
+                if (get_color1(board, m.moves[k].x, m.moves[k].y) != Color::WHITE) {
+                    attack_WHITE[m.moves[k].y][m.moves[k].x] = true;
+                }
             }
         }
     }
@@ -4527,15 +4861,20 @@ bool eatKing(Board &board) {
     return (!(bKW && bKB));
 }
 
-LIST_MOVES minimax_do(Color my_color, Color enemy_color, __int8 my_depth, Board board, __int8 depth) {
-    
+// Форсированный вариант.
+float Quies(float alpha, float beta, Color my_color, Color enemy_color, Board board, __int8 iply);
+
+// forsing ==false Без формированного варианта. 
+// forsing = true с форсированным вариантом.
+LIST_MOVES minimax_do(Color my_color, Color enemy_color, __int8 my_depth, Board board, __int8 depth, bool forsing) {
+
     bool enemy = (bool)(depth % 2); // нечетный полуход враг(Чёрные).
     Color color = (enemy ? enemy_color : my_color);
 
     // depth - глубина просчёта он нуля.
 
     // если исчерпан лимит глубины - вернём статическую оценку позиции.
-    if ((depth == my_depth)||(eatKing(board))) {
+    if ((depth == my_depth) || (eatKing(board))) {
 
         // Либо съели короля либо достигли глубины перебора.
 
@@ -4546,24 +4885,33 @@ LIST_MOVES minimax_do(Color my_color, Color enemy_color, __int8 my_depth, Board 
 
         LIST_MOVES m;
         m.n = 1;
-        const float multiplyer = 1.1f; //1.1f;
+        const float multiplyer = 1.0f; //1.1f;
 
-        // Вызывалось для my_color.
-        m.moves[0].rate = board.rate(my_color) - board.rate(enemy_color) * multiplyer;
-       
+        
+
+        if (forsing) {
+
+            // Терминальный вызов в листе.
+            m.moves[0].rate = Quies(-10000.0, 10000.0, my_color, enemy_color, board, 0);
+            //m.moves[0].rate = Quies1(-10000.0, 10000.0, my_color, enemy_color, board, 0);
+        }
+        else {
+            // Вызывалось для my_color.
+            m.moves[0].rate = board.rate(my_color) - board.rate(enemy_color) * multiplyer;
+        }
 #ifndef CODE_FOR_DLL
         //std::cout << "static  evaluation = " << board.rate(my_color) << " "<< board.rate(enemy_color) << " "<< board.rate(enemy_color) * multiplyer <<" " << m.moves[0].rate << std::endl;
         //board.print();
         //system("PAUSE");
 #endif
 
-        m.moves[0].xy_from=init(None);
-        m.moves[0].xy_to=init(None);
+        m.moves[0].xy_from = init(None);
+        m.moves[0].xy_to = init(None);
 
         return m;
     }
 
-    
+
     LIST_MOVES rates;
     rates.n = 0;
     float rate;
@@ -4579,7 +4927,7 @@ LIST_MOVES minimax_do(Color my_color, Color enemy_color, __int8 my_depth, Board 
         rate = -9999.0f + 10.0f * depth;
         rate_flag = rate + 1.0f;
     }
-    
+
 
     MOVES figList;
     if (color == Color::WHITE) {
@@ -4705,7 +5053,8 @@ LIST_MOVES minimax_do(Color my_color, Color enemy_color, __int8 my_depth, Board 
             LIST_MOVES m;
             m.n = 0;
 
-            m = minimax_do(my_color, enemy_color, my_depth, new_board, depth + 1);
+            bool forsing=false;
+            m = minimax_do(my_color, enemy_color, my_depth, new_board, depth + 1, forsing);
 
 #ifndef CODE_FOR_DLL
             // std::cout << "i=" << m.n  << " rate=" << (m.n > 0 ? m.moves[0].rate : 0) << std::endl;
@@ -4716,13 +5065,13 @@ LIST_MOVES minimax_do(Color my_color, Color enemy_color, __int8 my_depth, Board 
 
             if (enemy) {
                 //min
-               // rate = (rate < m.moves[0].rate ? rate : m.moves[0].rate);// (best_move)
+                // rate = (rate < m.moves[0].rate ? rate : m.moves[0].rate);// (best_move)
 
             }
             else {
                 //max
 
-               // rate = (rate > m.moves[0].rate ? rate : m.moves[0].rate);// (best_move)
+                // rate = (rate > m.moves[0].rate ? rate : m.moves[0].rate);// (best_move)
 
             }
 
@@ -4765,8 +5114,8 @@ LIST_MOVES minimax_do(Color my_color, Color enemy_color, __int8 my_depth, Board 
         }
 
     }
-      //  }
-    //}
+    //  }
+  //}
 
 
     if (depth == 0) {
@@ -4798,7 +5147,7 @@ LIST_MOVES minimax_do(Color my_color, Color enemy_color, __int8 my_depth, Board 
     LIST_MOVES m;
     m.n = 1;
 
-    
+
     {
 
         __int8 id_found = 0;
@@ -4861,6 +5210,401 @@ LIST_MOVES minimax_do(Color my_color, Color enemy_color, __int8 my_depth, Board 
 }
 
 
+// Простейший самый первый параллельный алгоритм. 14.01.2023
+LIST_MOVES minimax_do_parallel(Color my_color, Color enemy_color, __int8 my_depth, Board board, __int8 depth) {
+
+    bool enemy = (bool)(depth % 2); // нечетный полуход враг(Чёрные).
+    Color color = (enemy ? enemy_color : my_color);
+
+    // depth - глубина просчёта он нуля.
+
+    // если исчерпан лимит глубины - вернём статическую оценку позиции.
+    /*if ((depth == my_depth) || (eatKing(board))) {
+
+        // Либо съели короля либо достигли глубины перебора.
+
+        // Считает материал с точки зрения белых,
+        // она суммирует вес всех белых фигур, а 
+        // потом вычитает из них вес всех чёрных фигур.
+        // Оценка для Чёрных наоборот.
+
+        LIST_MOVES m;
+        m.n = 1;
+        const float multiplyer = 1.1f; //1.1f;
+
+        // Вызывалось для my_color.
+        m.moves[0].rate = board.rate(my_color) - board.rate(enemy_color) * multiplyer;
+
+#ifndef CODE_FOR_DLL
+        //std::cout << "static  evaluation = " << board.rate(my_color) << " "<< board.rate(enemy_color) << " "<< board.rate(enemy_color) * multiplyer <<" " << m.moves[0].rate << std::endl;
+        //board.print();
+        //system("PAUSE");
+#endif
+
+        m.moves[0].xy_from = init(None);
+        m.moves[0].xy_to = init(None);
+
+        return m;
+    }*/
+
+
+    LIST_MOVES rates;
+    rates.n = 0;
+    float rate;
+    float rate_flag;
+
+    if (enemy) {
+        //min
+        rate = +9999.0f - 10.0f * depth;
+        rate_flag = rate - 1.0f;
+    }
+    else {
+        // max
+        rate = -9999.0f + 10.0f * depth;
+        rate_flag = rate + 1.0f;
+    }
+
+
+    MOVES figList;
+    if (color == Color::WHITE) {
+
+        figList.n = board.wList.n;
+        for (__int8 k_1 = 0; k_1 < board.wList.n; ++k_1) {
+            figList.moves[k_1] = board.wList.moves[k_1];
+        }
+
+    }
+    if (color == Color::BLACK) {
+
+        figList.n = board.bList.n;
+        for (__int8 k_1 = 0; k_1 < board.bList.n; ++k_1) {
+            figList.moves[k_1] = board.bList.moves[k_1];
+        }
+    }
+
+
+    // Проходим по доске
+    //for (__int8 y = 0; y < 8; ++y) {
+        //for (__int8 x = 0; x < 8; ++x) {
+            //if (get_color1(board.board, x, y) != color) {
+                // Если фигура чужая или у нас пустая клетка то переходим к следующей клетки доски.
+              //  continue;
+            //}
+
+    // Оценка сверху.
+    PREVIOS_MOVE move_now[987];// 16 ферзей 56клеток каждый.
+    int icount_all_moves = 0;
+
+    for (__int8 k_1 = 0; k_1 < figList.n; ++k_1) {
+
+        __int8 y = figList.moves[k_1].y;
+        __int8 x = figList.moves[k_1].x;
+
+        MOVES_NODE xy_from;
+        xy_from = init(x, y);
+
+        // получим все позиции перемещения
+        MOVES moves_current_list = board.get_moves(x, y);//список возможных ходов из позиции board[y][x].
+
+           // Проверяем каждый сгенерированный код.
+        for (__int8 i = 0; i < moves_current_list.n; ++i) {
+            move_now[icount_all_moves].xy_from.x = x;
+            move_now[icount_all_moves].xy_from.y = y;
+            move_now[icount_all_moves].xy_to.x = moves_current_list.moves[i].x;
+            move_now[icount_all_moves].xy_to.y = moves_current_list.moves[i].y;
+            icount_all_moves++;
+            if (icount_all_moves  >= 987) {
+                std::cout << "parallel limit ischerpan\n";
+                system("pause");
+            }
+        }
+    }
+
+    //for (__int8 k_1 = 0; k_1 < figList.n; ++k_1)
+    
+    std::cout << "number moves =" << icount_all_moves << std::endl;
+    rates.n = icount_all_moves;
+    int id_thread[40] = { 0 };// 2*xeon 2630v4.
+    bool flag_in[POOL_SIZE] = { false };
+
+
+#pragma omp parallel for
+    for (int k_i = 0; k_i < icount_all_moves; ++k_i)
+    {
+
+        __int8 y = move_now[k_i].xy_from.y;
+        __int8 x = move_now[k_i].xy_from.x;
+
+
+
+        MOVES_NODE xy_from;
+        xy_from = init(x, y);
+
+#ifndef CODE_FOR_DLL
+        //std::cout << "from " << (int)(xy_from.x) << " " << (int)(xy_from.y)  << std::endl;
+#endif
+
+            // получим все позиции перемещения
+        MOVES moves_current_list = board.get_moves(x, y);//список возможных ходов из позиции board[y][x].
+#ifndef CODE_FOR_DLL
+            //std::cout << "ChessMan="<< (int)(board.board[y][x]) << "number moves=" << moves_current_list.n << std::endl;
+            //printf("ChessMan= %d number moves = %d\n", (int)(board.board[y][x]), moves_current_list.n);
+#endif
+
+            // Проверяем каждый сгенерированный код.
+        //for (__int8 i = 0; i < moves_current_list.n; ++i)
+        {
+
+            MOVES_NODE xy_to = init(move_now[k_i].xy_to.x, move_now[k_i].xy_to.y);// moves_current_list.moves[i]; // Куда походить фигурой.
+
+
+
+            Board new_board;
+
+            // Копирование доски.
+            new_board.copy(board.board, board.wList, board.bList, board.previos_moves, board.WHITE_O_O, board.WHITE_O_O_O, board.BLACK_O_O, board.BLACK_O_O_O);
+
+            new_board.move(xy_from, xy_to); // Двигаем фигуру по каждому сгенерированному ходу.
+
+             // Предыдущий ход на этой новой  доске после хода.
+            new_board.previos_moves.xy_from = xy_from;
+            new_board.previos_moves.xy_to = xy_to;
+            new_board.previos_moves.figure = board.board[y][x];
+
+#ifndef CODE_FOR_DLL
+            if (0 && (depth == 0)) {
+                //std::cout << "from " << (int)(xy_from.x) << " " << (int)(xy_from.y) << std::endl;
+               // std::cout << "to " << (int)(xy_to.x) << " " << (int)(xy_to.y) << std::endl;
+                printf("depth = 0 from  %d %d to %d %d\n", (int)(xy_from.x), (int)(xy_from.y), (int)(xy_to.x), (int)(xy_to.y));
+
+                new_board.print();
+
+                system("PAUSE");
+            }
+            if (0 && (depth == 1)) {
+                //std::cout << "from " << (int)(xy_from.x) << " " << (int)(xy_from.y) << std::endl;
+               // std::cout << "to " << (int)(xy_to.x) << " " << (int)(xy_to.y) << std::endl;
+                printf("depth = 1 from  %d %d to %d %d\n", (int)(xy_from.x), (int)(xy_from.y), (int)(xy_to.x), (int)(xy_to.y));
+
+                new_board.print();
+
+                system("PAUSE");
+            }
+#endif
+
+            // Место куда атаковали не пусто, там стоит вражеская фигура ?
+            bool captured = (board.board[xy_to.y][xy_to.x] == ChessPiece::EMPTY ? false : true);
+            if (color == Color::WHITE) {
+                if ((board.board[xy_from.y][xy_from.x] == ChessPiece::W_PAWN) &&
+                    (board.previos_moves.figure == ChessPiece::B_PAWN) &&
+                    (xy_to.x == board.previos_moves.xy_to.x) &&
+                    (xy_to.x == board.previos_moves.xy_from.x) &&
+                    ((xy_to.x == xy_from.x + 1) || (xy_to.x == xy_from.x - 1)) &&
+                    (board.previos_moves.xy_from.y == 1) &&
+                    (board.previos_moves.xy_to.y == 3) &&
+                    (xy_from.y == 3) && (xy_to.y == 2)) {
+                    captured = true; // взятие на проходе.
+                }
+            }
+            if (color == Color::BLACK) {
+                if ((board.board[xy_from.y][xy_from.x] == ChessPiece::B_PAWN) &&
+                    (board.previos_moves.figure == ChessPiece::W_PAWN) &&
+                    (xy_to.x == board.previos_moves.xy_to.x) &&
+                    (xy_to.x == board.previos_moves.xy_from.x) &&
+                    ((xy_to.x == xy_from.x + 1) || (xy_to.x == xy_from.x - 1)) &&
+                    (board.previos_moves.xy_from.y == 6) &&
+                    (board.previos_moves.xy_to.y == 4) &&
+                    (xy_from.y == 4) && (xy_to.y == 5)) {
+                    captured = true; // взятие на проходе.
+                }
+            }
+
+            // Сьели Короля.
+            // if (captured && (board.board[xy_to.y][xy_to.x] == ChessPiece::W_KING) || (board.board[xy_to.y][xy_to.x] == ChessPiece::B_KING)) {
+
+             //   rate = ((enemy) ? -1000.0f : 1000.0f); // Вражеский король съеден (мат).
+            //}
+            //else
+            //{
+            LIST_MOVES m;
+            m.n = 0;
+
+            bool forsing = true;
+            m = minimax_do(my_color, enemy_color, my_depth, new_board, depth + 1, forsing);
+
+
+#ifndef CODE_FOR_DLL
+            // std::cout << "i=" << m.n  << " rate=" << (m.n > 0 ? m.moves[0].rate : 0) << std::endl;
+#endif
+
+            if (m.n == 0) continue;
+
+
+            if (enemy) {
+                //min
+               // rate = (rate < m.moves[0].rate ? rate : m.moves[0].rate);// (best_move)
+
+            }
+            else {
+                //max
+
+               // rate = (rate > m.moves[0].rate ? rate : m.moves[0].rate);// (best_move)
+
+            }
+
+            float rate31 = m.moves[0].rate;
+
+#ifndef CODE_FOR_DLL
+            if (depth == 0) {
+                //std::cout << "\n rate= " << rate << std::endl;
+               // printf("\n rate=  %f\n", rate);
+            }
+#endif
+
+
+            if ((captured) && (!enemy)) {
+                // rate += my_depth - depth; // Добавим немного агрессии
+          //  }
+            }
+
+            // Доска  копируется в памяти много раз подряд.
+
+
+
+
+           // rates.n++;
+
+          //  if (rates.n - 1 > POOL_SIZE - 1)
+          //  {
+//#ifndef CODE_FOR_DLL
+              //  std::cout << "error! moves limit <POOL_SIZE\n";
+              //  system("PAUSE");
+//#endif
+          //  }
+
+            rates.moves[std::min(POOL_SIZE - 1,id_thread[omp_get_thread_num()]+omp_get_thread_num())].rate = rate31;
+            // std::cout << "i=" << rates.n - 1 << " rate=" << rate << std::endl;
+            // printf("i=%d rate= %f\n",rates.n - 1, rate);
+
+            rates.moves[std::min(POOL_SIZE - 1, id_thread[omp_get_thread_num()] + omp_get_thread_num())].xy_from = xy_from;
+            rates.moves[std::min(POOL_SIZE - 1, id_thread[omp_get_thread_num()] + omp_get_thread_num())].xy_to = xy_to;
+            flag_in[std::min(POOL_SIZE - 1, id_thread[omp_get_thread_num()] + omp_get_thread_num())] = true;
+            id_thread[omp_get_thread_num()] += omp_get_num_threads();
+        }
+
+    }
+    //  }
+  //}
+
+    // Плотная упаковка от нуля до rates.n-1
+    int imesto0 = 0;
+    int imesto1 = 0;
+    for (int k_i = 0; k_i < POOL_SIZE-1; ++k_i)
+    {
+
+        if (flag_in[imesto1]) {
+            if (imesto1 > imesto0) {
+                rates.moves[imesto0] = rates.moves[imesto1];
+                imesto0++;
+                imesto1++;
+            }
+        }
+        else {
+            ++imesto1;
+        }
+       
+    }
+
+    if (depth == 0) {
+        return rates;
+    }
+    if (rates.n == 0) {
+
+        if (fabs(rate) > fabs(rate_flag)) {
+            // Цель игры мат королю противника.
+            rates.n = 1;
+            if (InCheck(board.board, board.wList, board.bList, board.previos_moves, color, board.WHITE_O_O, board.WHITE_O_O_O, board.BLACK_O_O, board.BLACK_O_O_O)) {
+                // Мы под шахом и нам некуда идти -> мат.
+                rates.moves[0].rate = rate;
+            }
+            else {
+                // Некуда идти и мы не под шахом ничья.
+                rate = 0.0; // Пат
+                rates.moves[0].rate = rate;
+            }
+            rates.moves[0].xy_from.x = None;
+            rates.moves[0].xy_from.y = None;
+            rates.moves[0].xy_to.x = None;
+            rates.moves[0].xy_to.y = None;
+        }
+
+        return rates; // Как бы возврат None так как rates.n == 0.
+    }
+
+    LIST_MOVES m;
+    m.n = 1;
+
+
+    {
+
+        __int8 id_found = 0;
+        float rate_found = rates.moves[0].rate;
+
+        // Мы находимся на некоторой глубине вложенности
+
+        if (enemy) {
+
+            // Поиск минимума  
+            // Враг черные при первом ходе белых или наборот при первом ходе черных.
+
+            for (__int8 i = 1; i < rates.n; ++i) {
+                if (rates.moves[i].rate < rate_found) {
+                    rate_found = rates.moves[i].rate;
+                    id_found = i;
+                }
+            }
+
+        }
+        else {
+            // Поиск максимума   
+            // Белые  при первом ходе белых или наборот при первом ходе черных.
+
+            for (__int8 i = 1; i < rates.n; ++i) {
+                if (rates.moves[i].rate > rate_found) {
+                    rate_found = rates.moves[i].rate;
+                    id_found = i;
+                }
+            }
+        }
+
+#ifndef CODE_FOR_DLL
+        if (0) {
+            //std::cout << "\n";
+            printf("\n");
+            for (__int8 i = 1; i < rates.n; ++i) {
+                if (fabs(rates.moves[i].rate - rate_found) < 0.01) {
+                    //std::cout << i << " ";
+                    printf("%d ", i);
+                }
+            }
+            //std::cout << "\n";
+            printf("\n");
+        }
+#endif
+
+
+        m.moves[0].rate = rates.moves[id_found].rate;
+
+        // m.moves[0].xy_from=init(None);
+         //m.moves[0].xy_to=init(None);
+
+        m.moves[0].xy_from = rates.moves[id_found].xy_from;
+        m.moves[0].xy_to = rates.moves[id_found].xy_to;
+    }
+    return m;
+
+    //return ;
+}
 
 // используется для SEE 
 // только равные или выигрышные взятия.
@@ -4895,72 +5639,12 @@ LIST_MOVES minimax(Color color, __int8 thinking_depth, Board board);
 
 float fig_rate(Color clr, ChessPiece board[8][8], MOVESL& wList, MOVESL& bList, __int8 x, __int8 y);
 
-// https://www.geeksforgeeks.org/minimax-algorithm-in-game-theory-set-4-alpha-beta-pruning/
-// alpha - beta алгоритм.
-LIST_MOVES alpha_beta_do(float alpha, float beta, Color my_color, Color enemy_color, __int8 my_depth, Board board, __int8 depth, __int8 iply) {
-
-    // depth может не менятся на плюс один из-за итеративного углубления.
-    // iply всегда меняется на плюс 1.
-
-    bool enemy = (bool)(iply % 2); // нечетный полуход враг(Чёрные).
-    Color color = (enemy ? enemy_color : my_color);
-
-    
-
-    // depth - глубина просчёта он нуля.
-
-    // если исчерпан лимит глубины - вернём статическую оценку позиции.
-    if ((depth >= my_depth) || (eatKing(board))||(iply>=30)) {
-
-        // Либо съели короля либо достигли глубины перебора.
-
-        // Считает материал с точки зрения белых,
-        // она суммирует вес всех белых фигур, а 
-        // потом вычитает из них вес всех чёрных фигур.
-        // Оценка для Чёрных наоборот.
-
-        LIST_MOVES m;
-        m.n = 1;
-        const float multiplyer = 1.0f; // 1.1f;
-
-        // Вызывалось для my_color.
-        // статическая оценка.
-        // 44.2% 
-        // Добавляем немного агрессии добавляем баллы за взятие фигур противника. 
-        m.moves[0].rate = board.rate(my_color) - board.rate(enemy_color) * multiplyer;
-
-#ifndef CODE_FOR_DLL
-       //std::cout << "static  evaluation = " << board.rate(my_color) << " "<< board.rate(enemy_color) << " "<< board.rate(enemy_color) * multiplyer <<" " << m.moves[0].rate << std::endl;
-       //board.print();
-       //system("PAUSE");
-#endif
-
-        m.moves[0].xy_from = init(None);
-        m.moves[0].xy_to = init(None);
-
-        return m;
-    }
-
-
-    LIST_MOVES rates;
-    rates.n = 0;
-    float rate;
-    float rate_flag;
-    if (enemy) {
-        //min
-        rate = +9999.0f-10.0f* iply;
-        rate_flag = rate - 1.0f;
-    }
-    else {
-        // max
-        rate = -9999.0f+10.0f*iply;
-        rate_flag = rate + 1.0f;
-    }
-
-   
-
+// Генератор ходов и сортировка ходов.
+void GenerateAllMoves(MOVES &figList, LIST_NODE_MOVES make_moves[], MOVES moves_current_list[], 
+    Color color, Board board, int &n_01, int &i_01, int &i_02, Color my_color, Color enemy_color, __int8 my_depth, bool enemy, __int8 iply)
+{
     float key[16] = { -9999.0f, -9999.0f, -9999.0f, -9999.0f, -9999.0f, -9999.0f, -9999.0f, -9999.0f, -9999.0f, -9999.0f, -9999.0f, -9999.0f, -9999.0f, -9999.0f, -9999.0f, -9999.0f };
-    MOVES figList;
+
     if (color == Color::WHITE) {
 
         figList.n = board.wList.n;
@@ -5014,18 +5698,6 @@ LIST_MOVES alpha_beta_do(float alpha, float beta, Color my_color, Color enemy_co
         }
     }
 
-
-    // Проходим по доске
-  //for (__int8 y = 0; y < 8; ++y) {
-      //for (__int8 x = 0; x < 8; ++x) {
-          //if (get_color1(board.board, x, y) != color) {
-              // Если фигура чужая или у нас пустая клетка то переходим к следующей клетки доски.
-            //  continue;
-          //}
-
-    int n_01 = 0;
-    MOVES moves_current_list[POOL_SIZEL];
-
     for (__int8 k_1 = 0; k_1 < figList.n; ++k_1) {
 
         __int8 y = figList.moves[k_1].y;
@@ -5037,9 +5709,6 @@ LIST_MOVES alpha_beta_do(float alpha, float beta, Color my_color, Color enemy_co
         n_01 += moves_current_list[k_1].n;
     }
 
-    LIST_NODE_MOVES make_moves[POOL_SIZE];
-
-    int i_01 = 0;
     for (__int8 k_1 = figList.n - 1; k_1 >= 0; --k_1) {
 
         __int8 y = figList.moves[k_1].y;
@@ -5148,7 +5817,7 @@ LIST_MOVES alpha_beta_do(float alpha, float beta, Color my_color, Color enemy_co
     }
 
 
-    int i_02 = i_01;
+    i_02 = i_01;
 
     // статическая оценка текущей позиции.
     float multiplyer = 1.0f;
@@ -5258,6 +5927,7 @@ LIST_MOVES alpha_beta_do(float alpha, float beta, Color my_color, Color enemy_co
 
     }
 
+
     if (i_01 != n_01) {
         printf("error propusk\n");
         system("pause");
@@ -5278,7 +5948,134 @@ LIST_MOVES alpha_beta_do(float alpha, float beta, Color my_color, Color enemy_co
         }
     }
 
-    if ((!enemy)&&(iply == 0) && (my_depth == 6)) {
+    // true - принудительная обрезка дерева вариантов для глубины 6. 15,01,2023
+    const bool bLite_tree = false;// true;
+
+    if (1 && (my_depth == 6) && (iply < 2))
+    {
+        // 15.01.2023
+        // Быстрый просчёт на четыре полухода использукетя для правильной 
+        // сортировки ходов при alpha-beta алгоритме на первых двух полуходах.
+        // Применяется только на первых двух уровнях при глубине 6. Запускается на глубину 4. 
+        // Этот приём позволяет создать хорошую сортировку ходов для alpha-beta и ускорить её существенно.
+        int idepth_test = 4;
+
+
+        if (!enemy) {
+            // по убыванию.
+             // Ответ Чёрных.
+
+             // Генерация списка возможных ходов с оценкой позиции:
+            Board chess_board_loc;
+            chess_board_loc.copy(board.board, board.wList, board.bList, board.previos_moves, board.WHITE_O_O, board.WHITE_O_O_O, board.BLACK_O_O, board.BLACK_O_O_O);
+            // Мы защищаем доску от изменений, вдруг мы что то испортим при запуске alpha-beta minimax
+            //LIST_MOVES rates7 = minimax(my_color, 2, chess_board_loc);
+            LIST_MOVES rates7 = minimax_do_parallel(my_color, enemy_color, idepth_test, chess_board_loc, iply);
+
+            // Сортировка по убыванию рейтинга
+            for (__int8 id_rate = 1; id_rate < rates7.n; ++id_rate)
+            {
+                for (__int8 id_rate0 = 0; id_rate0 < rates7.n - id_rate; ++id_rate0)
+                {
+                    if (rates7.moves[id_rate0].rate < rates7.moves[id_rate0 + 1].rate) {
+
+                        // swap
+                        LIST_NODE_MOVES tmp;
+                        tmp = rates7.moves[id_rate0];
+                        rates7.moves[id_rate0] = rates7.moves[id_rate0 + 1];
+                        rates7.moves[id_rate0 + 1] = tmp;
+
+
+                    }
+                }
+            }
+
+            for (__int8 id_rate0 = 0; id_rate0 < rates7.n; ++id_rate0)
+            {
+                // В порядке убывания rates что было получено при анализе дерева глубиной 4 полухода.
+                make_moves[id_rate0] = rates7.moves[id_rate0];
+            }
+
+            if (bLite_tree) {
+                // Отрежем половину тихих ходов.
+
+                int id_moves = 1;
+                for (__int8 id_rate0 = 1; id_rate0 < rates7.n; ++id_rate0)
+                {
+                    // Считаем количество ходов отличающихся от лучшего на одну сантипешку.
+                    if (fabs(rates7.moves[id_rate0].rate - rates7.moves[0].rate) < 1.0) {
+                        ++id_moves;
+                    }
+                }
+
+                //i_01 = n_01 = std::min(rates7.n, id_moves + 6);// Только лучшие ходы принудительно.
+            }
+        }
+        else {
+
+            // по возрастанию.
+            // Ответ Белых.
+
+            // Генерация списка возможных ходов с оценкой позиции:
+            Board chess_board_loc;
+            chess_board_loc.copy(board.board, board.wList, board.bList, board.previos_moves, board.WHITE_O_O, board.WHITE_O_O_O, board.BLACK_O_O, board.BLACK_O_O_O);
+            // Мы защищаем доску от изменений, вдруг мы что то испортим при запуске alpha-beta minimax
+            //LIST_MOVES rates7 = minimax(my_color, 2, chess_board_loc);
+            LIST_MOVES rates7 = minimax_do_parallel(my_color, enemy_color, idepth_test, chess_board_loc, iply);// передаём нечетное значение
+
+
+            // Сортировка по возрастанию рейтинга
+            for (__int8 id_rate = 1; id_rate < rates7.n; ++id_rate)
+            {
+                for (__int8 id_rate0 = 0; id_rate0 < rates7.n - id_rate; ++id_rate0)
+                {
+                    if (rates7.moves[id_rate0].rate > rates7.moves[id_rate0 + 1].rate) {
+
+                        // swap
+                        LIST_NODE_MOVES tmp;
+                        tmp = rates7.moves[id_rate0];
+                        rates7.moves[id_rate0] = rates7.moves[id_rate0 + 1];
+                        rates7.moves[id_rate0 + 1] = tmp;
+
+
+                    }
+                }
+            }
+
+            for (__int8 id_rate0 = 0; id_rate0 < rates7.n; ++id_rate0)
+            {
+                // В порядке убывания rates что было получено при анализе дерева глубиной 4 полухода.
+                make_moves[id_rate0] = rates7.moves[id_rate0];
+            }
+
+            if (bLite_tree) {
+                // Отрежем половину тихих ходов.
+
+                int id_moves = 1;
+                for (__int8 id_rate0 = 1; id_rate0 < rates7.n; ++id_rate0)
+                {
+                    // Считаем количество ходов отличающихся от лучшего на одну сантипешку.
+                    if (fabs(rates7.moves[id_rate0].rate - rates7.moves[0].rate) < 1.0) {
+                        ++id_moves;
+                    }
+                }
+
+                //i_01 = n_01 = std::min(rates7.n, id_moves + 6);// Только лучшие ходы принудительно.
+            }
+        }
+    }
+    else if ((my_depth == 6) && (iply >= 2)) {
+
+        if (bLite_tree) {
+            // Отрежем половину тихих ходов.
+
+            //i_01 = n_01 = std::min(i_01, static_cast<int>(0.5 * i_01) + 3);// Только лучшие ходы принудительно.
+        }
+
+    }
+
+
+    if (0 && (!enemy) && (iply == 0) && (my_depth == 6)) {
 
         // Ответ Чёрных.
 
@@ -5332,10 +6129,19 @@ LIST_MOVES alpha_beta_do(float alpha, float beta, Color my_color, Color enemy_co
             }
         }
 
-        //n_01=i_01 = id_moves;
-        for (__int8 id_rate0 = 0; id_rate0 < id_moves; ++id_rate0)
-        {
-          //  make_moves[id_rate0] = rates7.moves[id_rate0];
+        if (0) {
+            //n_01=i_01 = id_moves;
+            for (__int8 id_rate0 = 0; id_rate0 < id_moves; ++id_rate0)
+            {
+                //  make_moves[id_rate0] = rates7.moves[id_rate0];
+            }
+        }
+        else {
+            for (__int8 id_rate0 = 0; id_rate0 < rates7.n; ++id_rate0)
+            {
+                // В порядке убывания rates что было получено при анализе дерева глубиной 4 полухода.
+                make_moves[id_rate0] = rates7.moves[id_rate0];
+            }
         }
 
         std::cout << "best move for black:" << std::endl;
@@ -5350,6 +6156,92 @@ LIST_MOVES alpha_beta_do(float alpha, float beta, Color my_color, Color enemy_co
 
     //delete[]  moves_current_list;
 
+
+}
+
+// https://www.geeksforgeeks.org/minimax-algorithm-in-game-theory-set-4-alpha-beta-pruning/
+// alpha - beta алгоритм.
+LIST_MOVES alpha_beta_do(float alpha, float beta, Color my_color, Color enemy_color, __int8 my_depth, Board board, __int8 depth, __int8 iply) {
+
+    // depth может не менятся на плюс один из-за итеративного углубления.
+    // iply всегда меняется на плюс 1.
+
+    bool enemy = (bool)(iply % 2); // нечетный полуход враг(Чёрные).
+    Color color = (enemy ? enemy_color : my_color);
+
+    
+
+    // depth - глубина просчёта он нуля.
+
+    // если исчерпан лимит глубины - вернём статическую оценку позиции.
+    if ((depth >= my_depth) || (eatKing(board))||(iply>=30)) {
+
+        // Либо съели короля либо достигли глубины перебора.
+
+        // Считает материал с точки зрения белых,
+        // она суммирует вес всех белых фигур, а 
+        // потом вычитает из них вес всех чёрных фигур.
+        // Оценка для Чёрных наоборот.
+
+        LIST_MOVES m;
+        m.n = 1;
+        const float multiplyer = 1.0f; // 1.1f;
+
+        // Вызывалось для my_color.
+        // статическая оценка.
+        // 44.2% 
+        // Добавляем немного агрессии добавляем баллы за взятие фигур противника. 
+        m.moves[0].rate = board.rate(my_color) - board.rate(enemy_color) * multiplyer;
+
+#ifndef CODE_FOR_DLL
+       //std::cout << "static  evaluation = " << board.rate(my_color) << " "<< board.rate(enemy_color) << " "<< board.rate(enemy_color) * multiplyer <<" " << m.moves[0].rate << std::endl;
+       //board.print();
+       //system("PAUSE");
+#endif
+
+        m.moves[0].xy_from = init(None);
+        m.moves[0].xy_to = init(None);
+
+        return m;
+    }
+
+
+    LIST_MOVES rates;
+    rates.n = 0;
+    float rate;
+    float rate_flag;
+    if (enemy) {
+        //min
+        rate = +9999.0f-10.0f* iply;
+        rate_flag = rate - 1.0f;
+    }
+    else {
+        // max
+        rate = -9999.0f+10.0f*iply;
+        rate_flag = rate + 1.0f;
+    }
+
+   
+    MOVES figList;   
+
+    // Проходим по доске
+  //for (__int8 y = 0; y < 8; ++y) {
+      //for (__int8 x = 0; x < 8; ++x) {
+          //if (get_color1(board.board, x, y) != color) {
+              // Если фигура чужая или у нас пустая клетка то переходим к следующей клетки доски.
+            //  continue;
+          //}
+
+    int n_01 = 0;
+    MOVES moves_current_list[POOL_SIZEL];
+    
+    LIST_NODE_MOVES make_moves[POOL_SIZE];
+
+    int i_01 = 0, i_02 = 0;    
+   
+    GenerateAllMoves(figList, make_moves, moves_current_list,  color,  board, n_01, i_01, i_02, my_color, enemy_color, my_depth,  enemy, iply);  
+
+   
 
     if (n_01 > 0) {
         if (n_01 > POOL_SIZE) {
@@ -5924,6 +6816,9 @@ float Quies1(float alpha, float beta, Color my_color, Color enemy_color, Board b
 
 }
 
+
+
+
 // Форсированный вариант.
 float Quies(float alpha, float beta, Color my_color, Color enemy_color, Board board, __int8 iply) {
     // depth может не менятся на плюс один из-за итеративного углубления.
@@ -6308,61 +7203,8 @@ LIST_MOVES alpha_beta_do1(float alpha, float beta, Color my_color, Color enemy_c
         rate_flag = rate + 1.0f;
     }
 
-    float key[16] = { -9999.0f, -9999.0f, -9999.0f, -9999.0f, -9999.0f, -9999.0f, -9999.0f, -9999.0f, -9999.0f, -9999.0f, -9999.0f, -9999.0f, -9999.0f, -9999.0f, -9999.0f, -9999.0f };
-    MOVES figList;
-    if (color == Color::WHITE) {
-
-        figList.n = board.wList.n;
-        for (__int8 k_1 = 0; k_1 < board.wList.n; ++k_1) {
-            figList.moves[k_1] = board.wList.moves[k_1];
-            
-            key[k_1] = fig_rate(color, board.board, board.wList, board.bList, board.wList.moves[k_1].x, board.wList.moves[k_1].y);
-        }
-
-       // Сортировка фигур по убыванию rates (цены фигуры: Король, ферзь, ладья, слон, конь, пешка).
-        for (__int8 k_1 = 0; k_1 < board.wList.n; ++k_1) {
-            for (__int8 l_1 = 1; l_1 < board.wList.n; ++l_1) {
-                if (key[l_1 - 1] < key[l_1]) {
-                    // swap
-                    float ftmp = key[l_1 - 1];
-                    key[l_1 - 1] = key[l_1];
-                    key[l_1] = ftmp;
-                    // swap
-                    MOVES_NODE mn_tmp=figList.moves[l_1 - 1];
-                    figList.moves[l_1 - 1] = figList.moves[l_1];
-                    figList.moves[l_1] = mn_tmp;
-                }
-            }
-        }
-
-    }
-    if (color == Color::BLACK) {
-        
-        figList.n = board.bList.n;
-        for (__int8 k_1 = 0; k_1 < board.bList.n; ++k_1) {
-            figList.moves[k_1] = board.bList.moves[k_1];
-        
-            key[k_1] = fig_rate(color, board.board, board.wList, board.bList, board.bList.moves[k_1].x, board.bList.moves[k_1].y);
-            
-        }
     
-        // Сортировка фигур по убыванию rates (цены фигуры: Король, ферзь, ладья, слон, конь, пешка)
-        for (__int8 k_1 = 0; k_1 < board.bList.n; ++k_1) {
-            for (__int8 l_1 = 1; l_1 < board.bList.n; ++l_1) {
-                if (key[l_1 - 1] < key[l_1]) {
-                    // swap
-                    float ftmp = key[l_1 - 1];
-                    key[l_1 - 1] = key[l_1];
-                    key[l_1] = ftmp;
-                    // swap
-                    MOVES_NODE mn_tmp = figList.moves[l_1 - 1];
-                    figList.moves[l_1 - 1] = figList.moves[l_1];
-                    figList.moves[l_1] = mn_tmp;
-                }
-            }
-        }
-    }
-
+    MOVES figList;
 
     // Проходим по доске
     //for (__int8 y = 0; y < 8; ++y) {
@@ -6375,327 +7217,12 @@ LIST_MOVES alpha_beta_do1(float alpha, float beta, Color my_color, Color enemy_c
     int n_01 = 0;
     MOVES moves_current_list[POOL_SIZEL];
 
-    for (__int8 k_1 = 0; k_1 < figList.n; ++k_1) {
-
-        __int8 y = figList.moves[k_1].y;
-        __int8 x = figList.moves[k_1].x;
-
-        // получим все позиции перемещения
-        moves_current_list[k_1] = board.get_moves(x, y);//список возможных ходов из позиции [x,y].
-
-        n_01 += moves_current_list[k_1].n;
-    }
-
     LIST_NODE_MOVES make_moves[POOL_SIZE];
    
-    int i_01 = 0;
-    for (__int8 k_1 = figList.n-1; k_1 >=0 ; --k_1) {
-
-        __int8 y = figList.moves[k_1].y;
-        __int8 x = figList.moves[k_1].x;
-
-        MOVES_NODE xy_from;
-        xy_from.x = x;
-        xy_from.y = y;
-
-        // получим все позиции перемещения
-        //MOVES moves_current_list = board.get_moves(x, y);//список возможных ходов из позиции [x,y].
-         // Проверяем каждый сгенерированный код.
-        for (__int8 i = 0; i < moves_current_list[k_1].n; ++i) {
-
-            MOVES_NODE xy_to = moves_current_list[k_1].moves[i]; // Куда походить фигурой.  
-
-            // Место куда атаковали не пусто, там стоит вражеская фигура ?
-            bool captured = (board.board[xy_to.y][xy_to.x] == ChessPiece::EMPTY ? false : true);
-            bool eat_Pawn_exit = false;
-            bool bPawn2Queen = false;
-            if (color == Color::WHITE) {
-                if ((board.board[xy_from.y][xy_from.x] == ChessPiece::W_PAWN) &&
-                    (xy_to.y == 0)) {
-                    // пешка стала ферзём.
-                    bPawn2Queen = true;
-                    captured = true;
-                }
-                if ((board.board[xy_from.y][xy_from.x] == ChessPiece::W_PAWN) &&
-                    (board.previos_moves.figure == ChessPiece::B_PAWN) &&
-                    (xy_to.x == board.previos_moves.xy_to.x) &&
-                    (xy_to.x == board.previos_moves.xy_from.x) &&
-                    ((xy_to.x == xy_from.x + 1) || (xy_to.x == xy_from.x - 1)) &&
-                    (board.previos_moves.xy_from.y == 1) &&
-                    (board.previos_moves.xy_to.y == 3)&&
-                    (xy_from.y==3)&&(xy_to.y==2)) {
-                    captured = true; // взятие на проходе.
-                    eat_Pawn_exit = true;
-                }
-            }
-            if (color == Color::BLACK) {
-                if ((board.board[xy_from.y][xy_from.x] == ChessPiece::B_PAWN) &&
-                    (xy_to.y == 7)) {
-                    // пешка стала ферзём.
-                    bPawn2Queen = true;
-                    captured = true;
-                }
-                if ((board.board[xy_from.y][xy_from.x] == ChessPiece::B_PAWN) &&
-                    (board.previos_moves.figure == ChessPiece::W_PAWN) &&
-                    (xy_to.x == board.previos_moves.xy_to.x) &&
-                    (xy_to.x == board.previos_moves.xy_from.x) &&
-                    ((xy_to.x == xy_from.x + 1) || (xy_to.x == xy_from.x - 1)) &&
-                    (board.previos_moves.xy_from.y == 6) &&
-                    (board.previos_moves.xy_to.y == 4) &&
-                    (xy_from.y == 4) && (xy_to.y == 5)) {
-                    captured = true; // взятие на проходе.
-                    eat_Pawn_exit = true;
-
-                }
-            }
-
-            if (captured) {
-               
-                
-                    make_moves[i_01].xy_from.x = x;
-                    make_moves[i_01].xy_from.y = y;
-                    make_moves[i_01].xy_to.x = xy_to.x;
-                    make_moves[i_01].xy_to.y = xy_to.y;
-                    //MVV/LVA наиболее ценная жертва наименее ценный нападающий.
-                    // Ценность того что съели. Чем больше тем лучше.
-                    float rate_eat_figure;
-                    if (eat_Pawn_exit) {
-                        // Взятие на проход.
-                        rate_eat_figure = fig_rate(get_color1(board.board, board.previos_moves.xy_to.x, board.previos_moves.xy_to.y), board.board, board.wList, board.bList, board.previos_moves.xy_to.x, board.previos_moves.xy_to.y);
-                    }
-                    else {
-                        // // Ценность того что съели. Чем больше тем лучше.
-                        rate_eat_figure = fig_rate(get_color1(board.board, xy_to.x, xy_to.y), board.board, board.wList, board.bList, xy_to.x, xy_to.y);
-
-                    }
-                    if (bPawn2Queen) {
-                        Queen q;
-
-                        rate_eat_figure = q.get_value();// Приобрели ферзя.
-                    }
-                    // Ценность того чем едим.
-                    float rate_fig = 1000.0f - fig_rate(get_color1(board.board, x, y), board.board, board.wList, board.bList, x, y);
-                    make_moves[i_01].rate = rate_eat_figure * 1000.0f + rate_fig;// Ключ для сортировки по убыванию.
-                    i_01++;
-                
-            }
-        }
-        
-    }
+    int i_01 = 0, i_02 =0;
+   
     
-    
-        // Сортировка по убыванию.
-        for (__int8 k_1 = 0; k_1 < i_01; ++k_1) {
-            for (__int8 l_1 = 1; l_1 < i_01; ++l_1) {
-                if (make_moves[l_1 - 1].rate < make_moves[l_1].rate) {
-                    //swap
-                    LIST_NODE_MOVES tmp = make_moves[l_1 - 1];
-                    make_moves[l_1 - 1] = make_moves[l_1];
-                    make_moves[l_1] = tmp;
-                }
-            }
-        }
-    
-
-    int i_02 = i_01;
-
-    // статическая оценка текущей позиции.
-    float multiplyer = 1.0f;
-    // Для вычисления прироста стратегической оценки.
-    float val0 = board.rate(my_color) - board.rate(enemy_color) * multiplyer;
-
-    for (__int8 k_1 = 0; k_1 < figList.n; ++k_1) {
-
-        __int8 y = figList.moves[k_1].y;
-        __int8 x = figList.moves[k_1].x;
-
-        MOVES_NODE xy_from;
-        xy_from.x = x;
-        xy_from.y = y;
-
-        // получим все позиции перемещения
-        //MOVES moves_current_list = board.get_moves(x, y);//список возможных ходов из позиции [x,y].
-         // Проверяем каждый сгенерированный код.
-        for (__int8 i = 0; i < moves_current_list[k_1].n; ++i) {
-
-            MOVES_NODE xy_to = moves_current_list[k_1].moves[i]; // Куда походить фигурой.  
-
-            // Место куда атаковали не пусто, там стоит вражеская фигура ?
-            bool captured = (board.board[xy_to.y][xy_to.x] == ChessPiece::EMPTY ? false : true);
-            bool eat_Pawn_exit = false;
-            bool bPawn2Queen = false;
-            if (color == Color::WHITE) {
-                if ((board.board[xy_from.y][xy_from.x] == ChessPiece::W_PAWN) &&
-                    (xy_to.y == 0)) {
-                    // пешка стала ферзём.
-                    bPawn2Queen = true;
-                    captured = true;
-                }
-                if ((board.board[xy_from.y][xy_from.x] == ChessPiece::W_PAWN) &&
-                    (board.previos_moves.figure == ChessPiece::B_PAWN) &&
-                    (xy_to.x == board.previos_moves.xy_to.x) &&
-                    (xy_to.x == board.previos_moves.xy_from.x) &&
-                    ((xy_to.x == xy_from.x + 1) || (xy_to.x == xy_from.x - 1)) &&
-                    (board.previos_moves.xy_from.y == 1) &&
-                    (board.previos_moves.xy_to.y == 3) &&
-                    (xy_from.y == 3) && (xy_to.y == 2)) {
-                    captured = true; // взятие на проходе.
-                    eat_Pawn_exit = true;
-                }
-            }
-            if (color == Color::BLACK) {
-                if ((board.board[xy_from.y][xy_from.x] == ChessPiece::B_PAWN) &&
-                    (xy_to.y == 7)) {
-                    // пешка стала ферзём.
-                    bPawn2Queen = true;
-                    captured = true;
-                }
-                if ((board.board[xy_from.y][xy_from.x] == ChessPiece::B_PAWN) &&
-                    (board.previos_moves.figure == ChessPiece::W_PAWN) &&
-                    (xy_to.x == board.previos_moves.xy_to.x) &&
-                    (xy_to.x == board.previos_moves.xy_from.x) &&
-                    ((xy_to.x == xy_from.x + 1) || (xy_to.x == xy_from.x - 1)) &&
-                    (board.previos_moves.xy_from.y == 6) &&
-                    (board.previos_moves.xy_to.y == 4) &&
-                    (xy_from.y == 4) && (xy_to.y == 5)) {
-                    captured = true; // взятие на проходе.
-                    eat_Pawn_exit = true;
-                }
-            }
-
-
-
-            if (!captured) {
-
-                
-                
-
-                    Board new_board;
-
-                    // Копирование доски.
-                    new_board.copy(board.board, board.wList, board.bList, board.previos_moves, board.WHITE_O_O, board.WHITE_O_O_O, board.BLACK_O_O, board.BLACK_O_O_O);
-
-                    MOVES_NODE xy_from;
-                    xy_from.x = x;
-                    xy_from.y = y;
-
-                    new_board.move(xy_from, xy_to); // Двигаем фигуру по каждому сгенерированному ходу.
-
-                     // Предыдущий ход на этой новой  доске после хода.
-                    new_board.previos_moves.xy_from = xy_from;
-                    new_board.previos_moves.xy_to = xy_to;
-                    new_board.previos_moves.figure = board.board[y][x];
-
-                    float val1 = new_board.rate(my_color) - new_board.rate(enemy_color) * multiplyer;
-
-                    make_moves[i_01].xy_from.x = x;
-                    make_moves[i_01].xy_from.y = y;
-                    make_moves[i_01].xy_to.x = xy_to.x;
-                    make_moves[i_01].xy_to.y = xy_to.y;
-
-                    if (InCheck(new_board.board, new_board.wList, new_board.bList, new_board.previos_moves, Color_invert(color), new_board.WHITE_O_O, new_board.WHITE_O_O_O, new_board.BLACK_O_O, new_board.BLACK_O_O_O)) {
-                        make_moves[i_01].rate = 1000.0f;// Шах лучший ход.
-                    }
-                    else {
-                        make_moves[i_01].rate = val1 - val0;
-                    }
-
-                    i_01++;
-                
-            }
-        }
-
-    }
-
-    if (i_01 != n_01) {
-        printf("error propusk\n");
-        system("pause");
-    }
-
-    //if (make_moves != nullptr)
-    {
-        // Сортировка по убыванию.
-        for (__int8 k_1 = i_02; k_1 < i_01; ++k_1) {
-            for (__int8 l_1 = i_02 + 1; l_1 < i_01; ++l_1) {
-                if (make_moves[l_1 - 1].rate < make_moves[l_1].rate) {
-                    //swap
-                    LIST_NODE_MOVES tmp = make_moves[l_1 - 1];
-                    make_moves[l_1 - 1] = make_moves[l_1];
-                    make_moves[l_1] = tmp;
-                }
-            }
-        }
-    }
-
-    if ((!enemy) && (iply == 0) && (my_depth == 6)) {
-       
-        // Когда мы только запускаем поиск на глубину 3 хода (6 полуходов)
-        // Мы предварительное запускаем быстрый поиск на 2хода (4 полухода) чтобы сразу отсечь большинство непереспективных ходов.
-       
-
-        // Генерация списка возможных ходов с оценкой позиции:
-        Board chess_board_loc;
-        chess_board_loc.copy(board.board, board.wList, board.bList, board.previos_moves, board.WHITE_O_O, board.WHITE_O_O_O, board.BLACK_O_O, board.BLACK_O_O_O);
-        // Мы защищаем доску от изменений, вдруг мы что то испортим при запуске alpha-beta minimax
-        LIST_MOVES rates7 = minimax(my_color, 4, chess_board_loc);
-
-        //printf("rates.n=%d\n", rates.n);
-
-        int id_moves = 0;
-
-        
-
-            // Сортировка по убыванию рейтинга
-            for (__int8 id_rate = 1; id_rate < rates7.n; ++id_rate)
-            {
-                for (__int8 id_rate0 = 0; id_rate0 < rates7.n - id_rate; ++id_rate0)
-                {
-                    if (rates7.moves[id_rate0].rate < rates7.moves[id_rate0 + 1].rate) {
-
-                        // swap
-                        LIST_NODE_MOVES tmp;
-                        tmp = rates7.moves[id_rate0];
-                        rates7.moves[id_rate0] = rates7.moves[id_rate0 + 1];
-                        rates7.moves[id_rate0 + 1] = tmp;
-
-
-                    }
-                }
-            }
-
-            int inumber_equivalent_moves = 1; // Число эквивалентных ответов.
-
-            
-                // При if ((rates.n > 3)&&(ilevel_Gameuser == 5))
-                // Компьютер может выбрать любой в окрестности сантипешка
-                // отличающийся от сильного хода по силе ход, не самый сильный.
-
-                id_moves = 1;
-                for (__int8 id_rate0 = 1; id_rate0 < rates7.n; ++id_rate0)
-                {
-                    // Считаем количество ходов отличающихся от лучшего на одну сантипешку.
-                    if (fabs(rates7.moves[id_rate0].rate - rates7.moves[0].rate) < 1.0) {
-                        ++id_moves;
-                    }
-                }
-
-               // n_01=i_01 = id_moves;
-                for (__int8 id_rate0 = 0; id_rate0 < id_moves; ++id_rate0)
-                {
-                    //make_moves[id_rate0] = rates7.moves[id_rate0];
-                }
-
-                std::cout << "best move for black:" << std::endl;
-                for (__int8 id_rate = 0; id_rate < std::min(4 + std::max(inumber_equivalent_moves, std::min(5, rates7.n)), rates7.n); ++id_rate)
-                {
-                    std::cout << rates7.moves[id_rate].rate << " " << static_cast<char>('a' + rates7.moves[id_rate].xy_from.x);
-                    std::cout << 8 - rates7.moves[id_rate].xy_from.y << static_cast<char>('a' + rates7.moves[id_rate].xy_to.x);
-                    std::cout << 8 - rates7.moves[id_rate].xy_to.y << std::endl;
-                }
-                std::cout << std::endl;
-    }
-
-    //delete[]  moves_current_list;
+    GenerateAllMoves(figList, make_moves, moves_current_list, color, board, n_01, i_01, i_02, my_color, enemy_color, my_depth, enemy, iply);
 
     if (n_01 > 0) {
         if (n_01 > POOL_SIZE) {
@@ -7141,8 +7668,19 @@ LIST_MOVES minimax(Color color, __int8 thinking_depth, Board board) {
          const char depth = 0;
          const char iply = 0;
 
-         //rates = minimax_do(my_color, enemy_color, my_depth, board, 0);
-         rates = alpha_beta_do(-10000.0, 10000.0, my_color, enemy_color, my_depth, board, depth, iply);
+         if ((THINKING_DEPTH == 6)) {
+
+             const char ishah = 0;
+
+             // Распараллеленный минимакс на 40 потоков. Каждый ход в отдельном потоке.
+            // rates = minimax_do_parallel(my_color, enemy_color, my_depth, board, 0);
+             rates = alpha_beta_do1(-10000.0, 10000.0, my_color, enemy_color, my_depth, board, depth, iply, ishah);
+         }
+         else {
+
+             //rates = minimax_do(my_color, enemy_color, my_depth, board, 0);
+             rates = alpha_beta_do(-10000.0, 10000.0, my_color, enemy_color, my_depth, board, depth, iply);
+         }
     }
 
 #ifndef CODE_FOR_DLL
@@ -7359,10 +7897,10 @@ int main()
 // clr цвет (1 - ход Чёрных пока это всегда так.
 // move1 ответный ход Чёрных и информация о предыдущем ходе.
 // O_O - информация о рокировке.
-//extern "C" EXPORT void analiticChess(int* cb, bool clr,
-  //  int* move1, bool* O_O)
-void main_for_dll(int* cb, bool clr,
+extern "C" EXPORT void analiticChess(int* cb, bool clr,
     int* move1, bool* O_O)
+//int main_for_dll(int* cb, bool clr,
+  //  int* move1, bool* O_O)
 {
 
     // Сейчас ход Чёрных. Алгоритм минимакса должен ответить за чёрных.
@@ -7553,8 +8091,9 @@ void main_for_dll(int* cb, bool clr,
                  move_memo[i429] = new int[9];
              }
 
+             int cb_copy[64] = { 0 };
              for (int i428 = 0; i428 < inumber_positions; ++i428) {
-                 int* cb_copy = new int[64];
+                 //int* cb_copy = new int[64];
 
                  for (int i429 = 0; i429 < 64; ++i429) {
                      fscanf_s(fp_database, "%d", &din);
@@ -7619,7 +8158,7 @@ void main_for_dll(int* cb, bool clr,
                      }
                  }
 
-                 delete[] cb_copy;
+                 //delete[] cb_copy;
              }
 
              if (bfound) {
@@ -7669,10 +8208,22 @@ void main_for_dll(int* cb, bool clr,
              // Первый уровень игры. В честь Клода Шеннона. Четыре полухода без форсированного варианта.
              // Только четыре полухода без форсированого варианта.
              THINKING_DEPTH = 4;
-             ilevel_Game = 1;
+             ilevel_Game = 0;
              break;
          case 2:
-             // Второй (наивысший 13.09.2022) уровень игры. В честь советской программы Каисса и первого чемпионата мира среди машин.
+             // Второй уровень игры. В честь Джон фон Нейман. Два полухода с форсированным вариантом.
+             // Только два полухода с форсированым вариантом.
+             THINKING_DEPTH = 2;
+             ilevel_Game = 2;
+             break;
+         case 3:
+             // Третий уровень игры. В честь Кена Томпсона. Шесть полуходов без форсированного варианта.
+             // Только шесть полуходов без форсированого варианта.
+             THINKING_DEPTH = 6;
+             ilevel_Game = 0;
+             break;
+         case 4:
+             // Четвёртый (наивысший 13.09.2022) уровень игры. В честь советской программы Каисса и первого чемпионата мира среди машин.
              //  Четыре полухода с формированным вариантом.
              // Только четыре полухода с форсированым вариантом. На фотографии Михаил Донской.
              THINKING_DEPTH = 4;
@@ -7889,7 +8440,7 @@ void main_for_dll(int* cb, bool clr,
 // Остальные параметры ответный ход Чёрных.
 //extern "C" EXPORT void analiticChess(int* cb, bool clr,
   //  int* move1)
-int main()
+int main0()
 {
 
     // Поддержка кириллицы в консоли Windows
@@ -8242,8 +8793,10 @@ int main()
                     }
                 }
 
+                int cb_copy[64] = { 0 };
+
                 for (int i428 = 0; i428 < inumber_positions; ++i428) {
-                    int* cb_copy = new int[64];
+                    //int* cb_copy = new int[64];
 
                     for (int i429 = 0; i429 < 64; ++i429) {
                         fscanf_s(fp_database, "%d", &din);
@@ -8308,7 +8861,7 @@ int main()
                         }
                     }
 
-                    delete[] cb_copy;
+                    //delete[] cb_copy;
                 }
 
                 if (bfound) {
@@ -8443,10 +8996,38 @@ int main()
            bfound = true;
            char s[6];
            std::cin >> s;
-           xy_from.x = s[0] - 'a';
-           xy_from.y = 8 - (s[1] - '0');
-           xy_to.x = s[2] - 'a';
-           xy_to.y = 8 - (s[3] - '0');
+           if ((s[0] >= 'a') && (s[0] <= 'h')) {
+               xy_from.x = s[0] - 'a';
+           }
+           else {
+               std::cout << "error input string...\n";
+               system("pause");
+               exit(1);
+           }
+           if ((s[1] >= '1') && (s[1] <= '8')) {
+               xy_from.y = 8 - (s[1] - '0');
+           }
+           else {
+               std::cout << "error input string...\n";
+               system("pause");
+               exit(1);
+           }
+           if ((s[2] >= 'a') && (s[2] <= 'h')) {
+               xy_to.x = s[2] - 'a';
+           }
+           else {
+               std::cout << "error input string...\n";
+               system("pause");
+               exit(1);
+           }
+           if ((s[3] >= '1') && (s[3] <= '8')) {
+               xy_to.y = 8 - (s[3] - '0');
+           }
+           else {
+               std::cout << "error input string...\n";
+               system("pause");
+               exit(1);
+           }
            //std::cout << "move :" << static_cast<int>(xy_from.x) << " " << static_cast<int>(xy_from.y) << " " << static_cast<int>(xy_to.x) << " " << static_cast<int>(xy_to.y) << std::endl;
 
            // Предыдущий ход на этой старой  доске.

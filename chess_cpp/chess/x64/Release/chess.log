@@ -1,36 +1,27 @@
-﻿Сборка начата 17.12.2022 19:32:55.
-Уровень детализации журнала: Normal.     1>Проект "C:\Users\Kirill\Desktop\CFD\chess_cpp\chess\chess.vcxproj" в узле 2 (целевые объекты Rebuild).
+﻿Сборка начата 15.01.2023 22:49:57.
+Уровень детализации журнала: Normal.     1>Проект "C:\Users\Kirill\Desktop\CFD\dll_mem\chess_cpp\chess\chess.vcxproj" в узле 2 (целевые объекты Rebuild).
      1>_PrepareForClean:
          Файл "x64\Release\chess.tlog\chess.lastbuildstate" удаляется.
        InitializeBuildStatus:
          Создание "x64\Release\chess.tlog\unsuccessfulbuild", так как было задано "AlwaysCreate".
        ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30133\bin\HostX86\x64\CL.exe /c /Zi /nologo /W3 /WX- /diagnostics:column /sdl /O2 /Oi /GL /D NDEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /permissive- /Zc:wchar_t /Zc:forScope /Zc:inline /openmp /Fo"x64\Release\\" /Fd"x64\Release\vc142.pdb" /external:W3 /Gd /TP /FC /errorReport:prompt chess.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30133\bin\HostX86\x64\CL.exe /c /Zi /nologo /W3 /WX- /diagnostics:column /sdl /Ox /Oi /Ot /GL /D NDEBUG /D _CONSOLE /D _WINDLL /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /permissive- /Zc:wchar_t /Zc:forScope /Zc:inline /openmp /Fo"x64\Release\\" /Fd"x64\Release\vc142.pdb" /external:W3 /Gd /TP /FC /errorReport:prompt chess.cpp
          chess.cpp
-     1>C:\Users\Kirill\Desktop\CFD\chess_cpp\chess\chess.cpp(2724,23): warning C4244: return: преобразование "double" в "float", возможна потеря данных
-     1>C:\Users\Kirill\Desktop\CFD\chess_cpp\chess\chess.cpp(4201,51): warning C4305: +=: усечение из "double" в "float"
-     1>C:\Users\Kirill\Desktop\CFD\chess_cpp\chess\chess.cpp(4243,51): warning C4305: +=: усечение из "double" в "float"
        Link:
-         C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30133\bin\HostX86\x64\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Kirill\Desktop\CFD\chess_cpp\x64\Release\chess.exe" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Kirill\Desktop\CFD\chess_cpp\x64\Release\chess.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG:incremental /LTCGOUT:"x64\Release\chess.iobj" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Kirill\Desktop\CFD\chess_cpp\x64\Release\chess.lib" /MACHINE:X64 x64\Release\chess.obj
+         C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30133\bin\HostX86\x64\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Kirill\Desktop\CFD\dll_mem\chess_cpp\x64\Release\chess.dll" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\Kirill\Desktop\CFD\dll_mem\chess_cpp\x64\Release\chess.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG:incremental /LTCGOUT:"x64\Release\chess.iobj" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\Kirill\Desktop\CFD\dll_mem\chess_cpp\x64\Release\chess.lib" /MACHINE:X64 /DLL x64\Release\chess.obj
+            Создается библиотека C:\Users\Kirill\Desktop\CFD\dll_mem\chess_cpp\x64\Release\chess.lib и объект C:\Users\Kirill\Desktop\CFD\dll_mem\chess_cpp\x64\Release\chess.exp
          Создание кода
          Previous IPDB not found, fall back to full compilation.
-         All 139 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+         All 134 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
          Создание кода завершено
-         chess.vcxproj -> C:\Users\Kirill\Desktop\CFD\chess_cpp\x64\Release\chess.exe
+         chess.vcxproj -> C:\Users\Kirill\Desktop\CFD\dll_mem\chess_cpp\x64\Release\chess.dll
        FinalizeBuildStatus:
          Файл "x64\Release\chess.tlog\unsuccessfulbuild" удаляется.
          Обращение к "x64\Release\chess.tlog\chess.lastbuildstate".
-     1>Сборка проекта "C:\Users\Kirill\Desktop\CFD\chess_cpp\chess\chess.vcxproj" завершена (целевые объекты Rebuild).
+     1>Сборка проекта "C:\Users\Kirill\Desktop\CFD\dll_mem\chess_cpp\chess\chess.vcxproj" завершена (целевые объекты Rebuild).
 
 Сборка успешно завершена.
-
-       "C:\Users\Kirill\Desktop\CFD\chess_cpp\chess\chess.vcxproj" (целевой объект Rebuild ) (1) ->
-       (Целевой объект ClCompile) -> 
-         C:\Users\Kirill\Desktop\CFD\chess_cpp\chess\chess.cpp(2724,23): warning C4244: return: преобразование "double" в "float", возможна потеря данных
-         C:\Users\Kirill\Desktop\CFD\chess_cpp\chess\chess.cpp(4201,51): warning C4305: +=: усечение из "double" в "float"
-         C:\Users\Kirill\Desktop\CFD\chess_cpp\chess\chess.cpp(4243,51): warning C4305: +=: усечение из "double" в "float"
-
-    Предупреждений: 3
+    Предупреждений: 0
     Ошибок: 0
 
-Прошло времени 00:00:02.71
+Прошло времени 00:00:02.59
