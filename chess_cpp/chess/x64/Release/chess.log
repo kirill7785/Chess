@@ -1,4 +1,4 @@
-﻿Сборка начата 15.01.2023 22:49:57.
+﻿Сборка начата 22.01.2023 14:52:11.
 Уровень детализации журнала: Normal.     1>Проект "C:\Users\Kirill\Desktop\CFD\dll_mem\chess_cpp\chess\chess.vcxproj" в узле 2 (целевые объекты Rebuild).
      1>_PrepareForClean:
          Файл "x64\Release\chess.tlog\chess.lastbuildstate" удаляется.
@@ -12,7 +12,7 @@
             Создается библиотека C:\Users\Kirill\Desktop\CFD\dll_mem\chess_cpp\x64\Release\chess.lib и объект C:\Users\Kirill\Desktop\CFD\dll_mem\chess_cpp\x64\Release\chess.exp
          Создание кода
          Previous IPDB not found, fall back to full compilation.
-         All 134 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+         All 136 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
          Создание кода завершено
          chess.vcxproj -> C:\Users\Kirill\Desktop\CFD\dll_mem\chess_cpp\x64\Release\chess.dll
        FinalizeBuildStatus:
@@ -24,4 +24,4 @@
     Предупреждений: 0
     Ошибок: 0
 
-Прошло времени 00:00:02.59
+Прошло времени 00:00:02.33

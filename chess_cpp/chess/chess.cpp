@@ -28,7 +28,14 @@
 // 10.12.2022  Новый консольный визуализатор шахматной доски.
 // 11.12.2022  Заменил KING_CENTER_PRIORITY_NUMBER_FIGURES==19 на коническую оценку из Chessprogramming wiki.
 // 14.01.2023  Распараллелил алгоритм minimax по OpenMP на два xeon 2630v4. 9431 строка.
-// Применение на первых двух полуходах быстрого поиска на глубину 4 полухода для правильной сортировки ходов ускоряет alpha-beta с 11мин до 3мин 16с.
+//             Применение на первых двух полуходах быстрого поиска на глубину 4 полухода для правильной сортировки ходов ускоряет alpha-beta с 11мин до 3мин 16с.
+//            Применение форсированного варианта сильно ускорило alpha-beta алгоритм на глубине 6полуходов.
+// 22.01.2023 нашёл статью в интернете https://github.com/hennimohammed/parallel_chess_engine и распараллелил alpha-beta алгоритм.
+//            Получил ускорение alpha beta алгоритма:
+//            однопоточный время на полуход : 9; 19; 30; 94.
+//            четырёх поточный время на полуход : 3; 7; 13; 36.
+//            10093 строки кода.
+
 
 #include <iostream>
 #include <time.h>
@@ -276,7 +283,7 @@ public:
 
 // Используется только для списков фигур. Всего фигур при любом раскладе не более 16.
 // Каждая фигура в каждый момент времени может занимать только одно поле надоске 8*8.
-// Этот тип данных используется для wList, bList.
+// Этот тип данных используется для списка белых wList и чёрных bList фигур.
 class MOVESL {
 public:
     __int8 n = 0; // Количество элементов в массиве возможных шагов.
@@ -5328,7 +5335,7 @@ LIST_MOVES minimax_do_parallel(Color my_color, Color enemy_color, __int8 my_dept
     bool flag_in[POOL_SIZE] = { false };
 
 
-#pragma omp parallel for
+#pragma omp parallel for schedule (dynamic)
     for (int k_i = 0; k_i < icount_all_moves; ++k_i)
     {
 
@@ -5345,7 +5352,7 @@ LIST_MOVES minimax_do_parallel(Color my_color, Color enemy_color, __int8 my_dept
 #endif
 
             // получим все позиции перемещения
-        MOVES moves_current_list = board.get_moves(x, y);//список возможных ходов из позиции board[y][x].
+        //MOVES moves_current_list = board.get_moves(x, y);//список возможных ходов из позиции board[y][x].
 #ifndef CODE_FOR_DLL
             //std::cout << "ChessMan="<< (int)(board.board[y][x]) << "number moves=" << moves_current_list.n << std::endl;
             //printf("ChessMan= %d number moves = %d\n", (int)(board.board[y][x]), moves_current_list.n);
@@ -5606,6 +5613,10 @@ LIST_MOVES minimax_do_parallel(Color my_color, Color enemy_color, __int8 my_dept
     //return ;
 }
 
+
+
+
+
 // используется для SEE 
 // только равные или выигрышные взятия.
 float rate_fig(ChessPiece figure)
@@ -5641,7 +5652,7 @@ float fig_rate(Color clr, ChessPiece board[8][8], MOVESL& wList, MOVESL& bList, 
 
 // Генератор ходов и сортировка ходов.
 void GenerateAllMoves(MOVES &figList, LIST_NODE_MOVES make_moves[], MOVES moves_current_list[], 
-    Color color, Board board, int &n_01, int &i_01, int &i_02, Color my_color, Color enemy_color, __int8 my_depth, bool enemy, __int8 iply)
+    Color color, Board board, int &n_01, int &i_01, int &i_02, Color my_color, Color enemy_color, __int8 my_depth, bool enemy, __int8 iply, bool bparallel)
 {
     float key[16] = { -9999.0f, -9999.0f, -9999.0f, -9999.0f, -9999.0f, -9999.0f, -9999.0f, -9999.0f, -9999.0f, -9999.0f, -9999.0f, -9999.0f, -9999.0f, -9999.0f, -9999.0f, -9999.0f };
 
@@ -5970,7 +5981,14 @@ void GenerateAllMoves(MOVES &figList, LIST_NODE_MOVES make_moves[], MOVES moves_
             chess_board_loc.copy(board.board, board.wList, board.bList, board.previos_moves, board.WHITE_O_O, board.WHITE_O_O_O, board.BLACK_O_O, board.BLACK_O_O_O);
             // Мы защищаем доску от изменений, вдруг мы что то испортим при запуске alpha-beta minimax
             //LIST_MOVES rates7 = minimax(my_color, 2, chess_board_loc);
-            LIST_MOVES rates7 = minimax_do_parallel(my_color, enemy_color, idepth_test, chess_board_loc, iply);
+            LIST_MOVES rates7;
+            if (bparallel) {
+                rates7 = minimax_do_parallel(my_color, enemy_color, idepth_test, chess_board_loc, iply);
+            }
+            else {
+                // Нельзя вызывать паралельное внутри параллельного.
+                rates7 = minimax_do(my_color, enemy_color, idepth_test, chess_board_loc, iply, true);
+            }
 
             // Сортировка по убыванию рейтинга
             for (__int8 id_rate = 1; id_rate < rates7.n; ++id_rate)
@@ -6021,8 +6039,14 @@ void GenerateAllMoves(MOVES &figList, LIST_NODE_MOVES make_moves[], MOVES moves_
             chess_board_loc.copy(board.board, board.wList, board.bList, board.previos_moves, board.WHITE_O_O, board.WHITE_O_O_O, board.BLACK_O_O, board.BLACK_O_O_O);
             // Мы защищаем доску от изменений, вдруг мы что то испортим при запуске alpha-beta minimax
             //LIST_MOVES rates7 = minimax(my_color, 2, chess_board_loc);
-            LIST_MOVES rates7 = minimax_do_parallel(my_color, enemy_color, idepth_test, chess_board_loc, iply);// передаём нечетное значение
-
+            LIST_MOVES rates7;
+            if (bparallel) {
+                rates7 = minimax_do_parallel(my_color, enemy_color, idepth_test, chess_board_loc, iply); // передаём нечетное значение
+            }
+            else {
+                // Нельзя запускать параллельное внутри параллельного
+                rates7 = minimax_do(my_color, enemy_color, idepth_test, chess_board_loc, iply, true);
+            }
 
             // Сортировка по возрастанию рейтинга
             for (__int8 id_rate = 1; id_rate < rates7.n; ++id_rate)
@@ -6239,7 +6263,7 @@ LIST_MOVES alpha_beta_do(float alpha, float beta, Color my_color, Color enemy_co
 
     int i_01 = 0, i_02 = 0;    
    
-    GenerateAllMoves(figList, make_moves, moves_current_list,  color,  board, n_01, i_01, i_02, my_color, enemy_color, my_depth,  enemy, iply);  
+    GenerateAllMoves(figList, make_moves, moves_current_list,  color,  board, n_01, i_01, i_02, my_color, enemy_color, my_depth,  enemy, iply, false);  
 
    
 
@@ -7222,7 +7246,7 @@ LIST_MOVES alpha_beta_do1(float alpha, float beta, Color my_color, Color enemy_c
     int i_01 = 0, i_02 =0;
    
     
-    GenerateAllMoves(figList, make_moves, moves_current_list, color, board, n_01, i_01, i_02, my_color, enemy_color, my_depth, enemy, iply);
+    GenerateAllMoves(figList, make_moves, moves_current_list, color, board, n_01, i_01, i_02, my_color, enemy_color, my_depth, enemy, iply, false);
 
     if (n_01 > 0) {
         if (n_01 > POOL_SIZE) {
@@ -7620,6 +7644,588 @@ LIST_MOVES alpha_beta_do1(float alpha, float beta, Color my_color, Color enemy_c
 }
 
 
+
+// параллельный alpha - beta алгоритм 21.01.2023.
+// https://github.com/hennimohammed/parallel_chess_engine
+// Root splitting (разделение дочерних узлов корня на паралельные секции).
+// Ставим schedule (dynamic) указывает что  динамическое планирование между потоками будет применено,
+// что означает, что если поток завершит назначенные ему итерации раньше других, ему будут назначены
+// некоторые итерации из другого потока, что позволит лучше использовать доступные потоки.
+// alpha и beta обновляем в критической секции #pragma omp critical 
+LIST_MOVES parallel_chess_engine1(float alpha, float beta, Color my_color, Color enemy_color,
+    __int8 my_depth, Board board, __int8 depth, __int8 iply, __int8 ishah) {
+
+    // depth может не менятся на плюс один из-за итеративного углубления.
+    // iply всегда меняется на плюс 1.
+
+    bool enemy = (bool)(iply % 2); // нечетный полуход враг(Чёрные).
+    Color color = (enemy ? enemy_color : my_color);
+
+    // Если шах то мы продлеваем все ветки на глубину 1.
+    //if (InCheck(board.board, board.previos_moves, (color))) depth-=2;
+
+    // depth - глубина просчёта он нуля.
+
+    // если исчерпан лимит глубины - вернём статическую оценку позиции.
+    if ((depth >= my_depth) || (eatKing(board)) || (iply >= 30)) {
+
+        // Либо съели короля либо достигли глубины перебора.
+
+        // Считает материал с точки зрения белых,
+        // она суммирует вес всех белых фигур, а 
+        // потом вычитает из них вес всех чёрных фигур.
+        // Оценка для Чёрных наоборот.
+
+        LIST_MOVES m;
+        m.n = 1;
+        const float multiplyer = 1.0f; //1.1f;
+
+        // Вызывалось для my_color.
+        // статическая оценка.
+        //m.moves[0].rate = board.rate(my_color) - board.rate(enemy_color) * multiplyer;
+
+        // Терминальный вызов в листе.
+        m.moves[0].rate = Quies(alpha, beta, my_color, enemy_color, board, iply);
+        //m.moves[0].rate = Quies1(alpha, beta, my_color, enemy_color, board, iply);
+
+#ifndef CODE_FOR_DLL
+        //std::cout << "static  evaluation = " << board.rate(my_color) << " "<< board.rate(enemy_color) << " "<< board.rate(enemy_color) * multiplyer <<" " << m.moves[0].rate << std::endl;
+        //board.print();
+        //system("PAUSE");
+#endif
+
+        m.moves[0].xy_from = init(None);
+        m.moves[0].xy_to = init(None);
+
+        return m;
+    }
+
+
+
+    float rate;
+    float rate_flag;
+    if (enemy) {
+        //min
+        rate = +9999.0f - 10.0f * iply;
+        rate_flag = rate - 1.0f;
+    }
+    else {
+        // max
+        rate = -9999.0f + 10.0f * iply;
+        rate_flag = rate + 1.0f;
+    }
+
+
+    MOVES figList;
+
+    // Проходим по доске
+    //for (__int8 y = 0; y < 8; ++y) {
+        //for (__int8 x = 0; x < 8; ++x) {
+            //if (get_color1(board.board, x, y) != color) {
+                // Если фигура чужая или у нас пустая клетка то переходим к следующей клетки доски.
+              //  continue;
+            //}
+
+    int n_01 = 0;
+    MOVES moves_current_list[POOL_SIZEL];
+
+    LIST_NODE_MOVES make_moves[POOL_SIZE];
+
+    int i_01 = 0, i_02 = 0;
+
+
+    GenerateAllMoves(figList, make_moves, moves_current_list, color, board, n_01, i_01, i_02, my_color, enemy_color, my_depth, enemy, iply,true);
+
+    if (n_01 > 0) {
+        if (n_01 > POOL_SIZE) {
+            printf("increase POOL_SIZE %d %d\n", n_01, POOL_SIZE);
+            system("PAUSE");
+        }
+        LIST_MOVES rates;
+        //printf("%d %d %d\n", rates.POOL_SIZE_loc, i_01, n_01);
+        rates.n = 0;
+
+        int rates_sum_n = 0;
+
+
+       
+        std::cout << "number moves =" << i_01 << std::endl;
+       // rates.n = i_01;
+        int id_thread[40] = { 0 };// 2*xeon 2630v4.
+        bool flag_in[POOL_SIZE] = { false };
+
+        float rate_calc[40] = { 0.0f };// 2*xeon 2630v4.
+
+
+        //system("PAUSE");
+
+        // Сканируем ходы
+        //for (__int8 k_1 = 0; k_1 < figList.n; ++k_1)
+        
+
+        omp_set_num_threads(8);//4 или 8
+
+        bool b_we_should_be_continue = true;
+
+        //shared(ishah, iply, depth, my_depth, enemy_color, my_color, alpha, beta) 
+        //reduction(+ : rates_sum_n)
+
+#pragma omp parallel for  schedule (dynamic)
+        for (int k_1 = 0; k_1 < i_01; ++k_1)
+        {
+
+            if (b_we_should_be_continue) {
+
+                __int8 y = make_moves[k_1].xy_from.y;
+                __int8 x = make_moves[k_1].xy_from.x;
+
+                MOVES_NODE xy_from;
+                xy_from = init(x, y);
+
+               
+            // Проверяем каждый сгенерированный код.
+            //for (__int8 i = 0; i < moves_current_list.n; ++i) 
+                {
+
+                    //MOVES_NODE xy_to = moves_current_list.moves[i]; // Куда походить фигурой.               
+
+                    MOVES_NODE xy_to;
+
+                    xy_to.x = make_moves[k_1].xy_to.x;
+                    xy_to.y = make_moves[k_1].xy_to.y;
+
+#ifndef CODE_FOR_DLL
+                //if (iply == 0) {
+                    //-->printf("%d %d iply = 0 from  %d %d to %d %d\n", k_1, n_01, (int)(xy_from.x), (int)(xy_from.y), (int)(xy_to.x), (int)(xy_to.y));
+                    //std::cout << "from " << (int)(xy_from.x) << " " << (int)(xy_from.y) << std::endl;
+                    //board.print();
+                    //system("PAUSE");
+                //}
+#endif
+
+                    Board new_board;
+
+//#pragma omp critical  (create_new_board)
+                    {// Убрал эту критическую секцию и стало выполнятся на 1 секунду быстрее 
+
+                        // Копирование доски.
+                        new_board.copy(board.board, board.wList, board.bList, board.previos_moves, board.WHITE_O_O, board.WHITE_O_O_O, board.BLACK_O_O, board.BLACK_O_O_O);
+
+                        new_board.move(xy_from, xy_to); // Двигаем фигуру по каждому сгенерированному ходу.
+
+                         // Предыдущий ход на этой новой  доске после хода.
+                        new_board.previos_moves.xy_from = xy_from;
+                        new_board.previos_moves.xy_to = xy_to;
+                        new_board.previos_moves.figure = board.board[y][x];
+                    }
+
+#ifndef CODE_FOR_DLL
+                    if (0 && (iply == 0)) {
+                        //std::cout << "from " << (int)(xy_from.x) << " " << (int)(xy_from.y) << std::endl;
+                       // std::cout << "to " << (int)(xy_to.x) << " " << (int)(xy_to.y) << std::endl;
+                        printf("iply = 0 from  %d %d to %d %d\n", (int)(xy_from.x), (int)(xy_from.y), (int)(xy_to.x), (int)(xy_to.y));
+
+                        new_board.print();
+
+                        system("PAUSE");
+                    }
+                    if (0 && (depth == 1)) {
+                        //std::cout << "from " << (int)(xy_from.x) << " " << (int)(xy_from.y) << std::endl;
+                       // std::cout << "to " << (int)(xy_to.x) << " " << (int)(xy_to.y) << std::endl;
+                        printf("depth = 1 from  %d %d to %d %d\n", (int)(xy_from.x), (int)(xy_from.y), (int)(xy_to.x), (int)(xy_to.y));
+
+                        new_board.print();
+
+                        system("PAUSE");
+                    }
+#endif
+
+                    // Место куда атаковали не пусто, там стоит вражеская фигура ?
+                    bool captured = (board.board[xy_to.y][xy_to.x] == ChessPiece::EMPTY ? false : true);
+                    bool captured_see = false;
+                    // true цена того что съели больше или равна цене того чем съели.
+                    if (captured) captured_see = (rate_fig(board.board[xy_to.y][xy_to.x]) >= rate_fig(new_board.board[xy_to.y][xy_to.x]) ? true : false);
+                    if (color == Color::WHITE) {
+                        if ((board.board[xy_from.y][xy_from.x] == ChessPiece::W_PAWN) &&
+                            (board.previos_moves.figure == ChessPiece::B_PAWN) &&
+                            (xy_to.x == board.previos_moves.xy_to.x) &&
+                            (xy_to.x == board.previos_moves.xy_from.x) &&
+                            ((xy_to.x == xy_from.x + 1) || (xy_to.x == xy_from.x - 1)) &&
+                            (board.previos_moves.xy_from.y == 1) &&
+                            (board.previos_moves.xy_to.y == 3) &&
+                            (xy_from.y == 3) && (xy_to.y == 2)) {
+                            captured = true; // взятие на проходе.
+                            captured_see = true;
+
+                        }
+                    }
+                    if (color == Color::BLACK) {
+                        if ((board.board[xy_from.y][xy_from.x] == ChessPiece::B_PAWN) &&
+                            (board.previos_moves.figure == ChessPiece::W_PAWN) &&
+                            (xy_to.x == board.previos_moves.xy_to.x) &&
+                            (xy_to.x == board.previos_moves.xy_from.x) &&
+                            ((xy_to.x == xy_from.x + 1) || (xy_to.x == xy_from.x - 1)) &&
+                            (board.previos_moves.xy_from.y == 6) &&
+                            (board.previos_moves.xy_to.y == 4) &&
+                            (xy_from.y == 4) && (xy_to.y == 5)) {
+                            captured = true; // взятие на проходе.
+                            captured_see = true;
+                        }
+                    }
+
+
+                    // Сьели Короля.
+                    //if (captured && (board.board[xy_to.y][xy_to.x] == ChessPiece::B_KING) || (board.board[xy_to.y][xy_to.x] == ChessPiece::W_KING)) {
+
+                      //  rate = ((enemy) ? -1000.0f : 1000.0f); // Вражеский король сьеден (мат).
+                    //}
+                //    else
+                    {
+                        LIST_MOVES m;
+                        m.n = 0;
+
+                        //alpha - наш максимум.
+                        // beta - максимум противника.
+
+                        m = alpha_beta_do1(alpha, beta, my_color, enemy_color, my_depth, new_board, depth + 1, iply + 1, ishah + 1);
+                        // Было взятие - итеративное углубление.
+                        // captured - Он почемуто жертвует фигуры (выбрасывает фигуры). Коня за пешку.
+                        // Попробуем captured_see только равные или победившие взятия.
+                        //m = alpha_beta_do1(alpha, beta,   my_color, enemy_color, my_depth, new_board, (captured_see ? depth : depth + 1),iply+1);
+                        //  детектор шахов InCheck(new_board.board, new_board.previos_moves, color)
+                        // В малофигурном окончании правило captured_see неверно и заменено на captured так как Король тоже может есть.
+                       // m = alpha_beta_do1(alpha, beta, my_color, enemy_color, my_depth, new_board, 
+                         //   (captured_see|| InCheck(new_board.board, new_board.previos_moves, color)||
+                           //     (captured&& number_figures(new_board.board)<=ENDSHPIL_NUMBER_FIGURES) ? depth : depth + 1), iply + 1);
+                        // Нам же не нужно чтобы он слона за пешку отдал. Без SEE он просто отдаёт материал.
+                        //Color_invert(color) правильное продление шахов с invert color так как на новой доске и цвет новый,
+                        // но продление шахов инициирует всё новые шахи так же как продление взятий инициирует новые взятия иногда неравноценные жертвы
+                        // фигуры выбрасываются.
+                        //-->m = alpha_beta_do1(alpha, beta, my_color, enemy_color, my_depth, new_board,
+                            //(captured_see   || InCheck(new_board.board, new_board.previos_moves, Color_invert(color)) ? depth : depth + 1), iply + 1);
+
+                       // m = alpha_beta_do1(alpha, beta, my_color, enemy_color, my_depth, new_board,
+                         //   (captured_see  || ((ishah==0)&&InCheck(new_board.board, new_board.previos_moves, Color_invert(color))) ? depth -1 : depth + 1),
+                           // iply + 1, (InCheck(new_board.board, new_board.previos_moves, Color_invert(color)) ? ishah+1:ishah));
+
+                        if (m.n == 0) {
+                            continue;
+                        }
+
+                        rate_calc[omp_get_thread_num()] = m.moves[0].rate;
+
+#pragma omp critical  (update_alpha_beta)
+                        {
+
+                            if (enemy) {
+                                //min
+                               // rate = (rate < m.moves[0].rate ? rate : m.moves[0].rate);// (best_move)
+                               // rate = std::min(rate, m.moves[0].rate);
+                                rate = std::min(rate, rate_calc[omp_get_thread_num()]);
+
+                            }
+                            else {
+                                //max
+
+                                //rate = (rate > m.moves[0].rate ? rate : m.moves[0].rate);// (best_move)
+                                //rate = std::max(rate, m.moves[0].rate);
+                                rate = std::max(rate, rate_calc[omp_get_thread_num()]);
+                            }
+
+                            // Оценка позиции не лучший ход.
+                            //17.12.2022 закоментировал rate = m.moves[0].rate; // (best_move)
+
+                            if ((captured) && (!enemy)) {
+                                //rate += my_depth - depth; // Добавим немного агрессии
+                            }
+
+                            if (enemy) {
+                                //min
+
+                                //beta = (rate < beta ? rate : beta);
+                                beta = std::min(rate, beta);
+                            }
+                            else {
+                                // max
+
+                                //if (rate > alpha) alpha = rate;
+                                //alpha = (rate > alpha ? rate : alpha);
+                                alpha = std::max(rate, alpha);
+
+
+                            }
+
+                        }
+
+
+
+                            //if (depth == 0) std::cout << "\n rate= " << rate << std::endl;
+
+                            if (alpha >= beta) {
+#ifndef CODE_FOR_DLL
+                                //  if (depth == 0) std::cout << "alpha-beta\n";
+#endif
+                         // rate = beta;// отсечение
+                         // Возвратить rate (best_move).
+
+#pragma omp critical (add_move1)
+                                {
+
+                                rates.n++;
+                                //rates_sum_n = rates_sum_n + 1;
+
+                                //if (rates.n - 1 > n_01 - 1) {
+#ifndef CODE_FOR_DLL
+                                  //  printf("error! moves limit < n_01\n");
+                                    //system("PAUSE");
+#endif
+                               // }
+
+                                rates.moves[rates.n - 1].rate = rate;
+
+                                rates.moves[rates.n - 1].xy_from = xy_from;
+                                rates.moves[rates.n - 1].xy_to = xy_to;
+                                flag_in[rates.n - 1] = true;
+
+
+                                //rates.moves[rates.n - 1].rate = rate;
+
+                                //rates.moves[rates.n - 1].xy_from = xy_from;
+                                //rates.moves[rates.n - 1].xy_to = xy_to;
+                                //flag_in[rates.n - 1] = true;
+
+                                //rates.moves[std::min(POOL_SIZE - 1, id_thread[omp_get_thread_num()] + omp_get_thread_num())].rate = rate;
+                                // std::cout << "i=" << rates.n - 1 << " rate=" << rate << std::endl;
+                                // printf("i=%d rate= %f\n",rates.n - 1, rate);
+
+                                //rates.moves[std::min(POOL_SIZE - 1, id_thread[omp_get_thread_num()] + omp_get_thread_num())].xy_from = xy_from;
+                                //rates.moves[std::min(POOL_SIZE - 1, id_thread[omp_get_thread_num()] + omp_get_thread_num())].xy_to = xy_to;
+                                //flag_in[std::min(POOL_SIZE - 1, id_thread[omp_get_thread_num()] + omp_get_thread_num())] = true;
+                                //id_thread[omp_get_thread_num()] += omp_get_num_threads();
+
+
+
+                                    //goto ALPHA_BETA_CONT;
+                                    b_we_should_be_continue = false;
+                                }
+
+                        }
+
+
+                    
+
+                    }
+
+
+                   #pragma omp critical (add_move2)
+                    {
+                         rates.n++;
+                        //rates_sum_n = rates_sum_n + 1;
+
+                         //if (rates.n - 1 > n_01 - 1) {
+ //#ifndef CODE_FOR_DLL
+                           //  printf("error! moves limit < n_01\n");
+                           //  system("PAUSE");
+ //#endif
+                         //}
+
+                         rates.moves[rates.n - 1].rate = rate;
+
+                         rates.moves[rates.n - 1].xy_from = xy_from;
+                         rates.moves[rates.n - 1].xy_to = xy_to;
+                         flag_in[rates.n - 1] = true;
+
+                        //rates.moves[std::min(POOL_SIZE - 1, id_thread[omp_get_thread_num()] + omp_get_thread_num())].rate = rate;
+                        // std::cout << "i=" << rates.n - 1 << " rate=" << rate << std::endl;
+                        // printf("i=%d rate= %f\n",rates.n - 1, rate);
+
+                        //rates.moves[std::min(POOL_SIZE - 1, id_thread[omp_get_thread_num()] + omp_get_thread_num())].xy_from = xy_from;
+                        //rates.moves[std::min(POOL_SIZE - 1, id_thread[omp_get_thread_num()] + omp_get_thread_num())].xy_to = xy_to;
+                        //flag_in[std::min(POOL_SIZE - 1, id_thread[omp_get_thread_num()] + omp_get_thread_num())] = true;
+                        //id_thread[omp_get_thread_num()] += omp_get_num_threads();
+
+                    }
+                }
+
+            }
+        }
+        // }
+     //}
+
+
+
+   // ALPHA_BETA_CONT: // результат отсечения досрочное прерывание сканирования
+
+ // Плотная упаковка от нуля до rates.n-1
+        int imesto0 = 0;
+        int imesto1 = 0;
+        for (int k_i = 0; k_i < POOL_SIZE - 1; ++k_i)
+        {
+
+            if (flag_in[imesto1]) {
+                if (imesto1 > imesto0) {
+                    rates.moves[imesto0] = rates.moves[imesto1];
+                    imesto0++;
+                    imesto1++;
+                }
+            }
+            else {
+                ++imesto1;
+            }
+
+        }
+
+       // rates.n = rates_sum_n;
+
+        // Освобождение оперативной памяти.
+      //  if (make_moves != nullptr) {
+        //    delete[] make_moves;
+          //  make_moves = nullptr;
+        //}
+
+        if (depth == 0) {
+
+            /* if (fabs(rate) > 9998.0) {
+                 // Цель игры мат королю противника.
+                 rates.n = 1;
+                 rates.moves[0].rate = rate;
+                 rates.moves[0].xy_from.x = None;
+                 rates.moves[0].xy_from.y = None;
+                 rates.moves[0].xy_to.x = None;
+                 rates.moves[0].xy_to.y = None;
+             }*/
+
+
+
+            return rates;
+        }
+
+#ifndef CODE_FOR_DLL
+        if (depth == 1) {
+            //   std::cout << "1 BLACK evalute " << rates.n << " " << (rates.n > 0 ? rates.moves[0].rate : 0) << std::endl;
+        }
+#endif
+
+        if (rates.n == 0) {
+
+            if (fabs(rate) > fabs(rate_flag)) {
+                // Цель игры мат королю противника.
+                rates.n = 1;
+                if (InCheck(board.board, board.wList, board.bList, board.previos_moves, color, board.WHITE_O_O, board.WHITE_O_O_O, board.BLACK_O_O, board.BLACK_O_O_O)) {
+                    // Мы под шахом и нам некуда идти -> мат.
+                    rates.moves[0].rate = rate;
+                }
+                else {
+                    // Некуда идти и мы не под шахом ничья.
+                    rate = 0.0; // Пат
+                    rates.moves[0].rate = rate;
+                }
+                rates.moves[0].xy_from.x = None;
+                rates.moves[0].xy_from.y = None;
+                rates.moves[0].xy_to.x = None;
+                rates.moves[0].xy_to.y = None;
+            }
+
+            return rates; // Как бы возврат None так как rates.n == 0.
+        }
+
+        LIST_MOVES m;
+        m.n = 1;
+
+        {
+
+
+            __int8 id_found = 0;
+            float rate_found = rates.moves[0].rate;
+
+            // Мы находимся на некоторой глубине вложенности
+
+            if (enemy) {
+
+                // Поиск минимума  
+                // Враг черные при первом ходе белых или наборот при первом ходе черных.
+
+                for (__int8 i = 1; i < rates.n; ++i) {
+                    if (rates.moves[i].rate < rate_found) {
+                        rate_found = rates.moves[i].rate;
+                        id_found = i;
+                    }
+                }
+
+            }
+            else {
+                // Поиск максимума   
+                // Белые  при первом ходе белых или наборот при первом ходе черных.
+
+                for (__int8 i = 1; i < rates.n; ++i) {
+                    if (rates.moves[i].rate > rate_found) {
+                        rate_found = rates.moves[i].rate;
+                        id_found = i;
+                    }
+                }
+            }
+
+            //if (0) {
+                //std::cout << "\n";
+                //for (__int8 i = 1; i < rates.n; ++i) {
+                  //  if (fabs(rates.moves[i].rate - rate_found) < 0.01) {
+                    //    std::cout << i << " ";
+                    //}
+                //}
+                //std::cout << "\n";
+            //}
+
+
+            m.moves[0].rate = rates.moves[id_found].rate;
+
+            // m.moves[0].xy_from=init(None);
+             //m.moves[0].xy_to=init(None);
+
+            m.moves[0].xy_from = rates.moves[id_found].xy_from;
+            m.moves[0].xy_to = rates.moves[id_found].xy_to;
+        }
+        if (depth == 1) {
+            // std::cout << "2 BLACK evalute " <<  (m.n > 0 ? m.moves[0].rate : 0) << std::endl;
+        }
+        // system("PAUSE");
+
+        return m;
+    }
+    else {
+
+
+
+        LIST_MOVES rates;
+
+        rates.n = 0;
+
+        //if (rates.n == 0) {
+
+        if (fabs(rate) > fabs(rate_flag)) {
+            // Цель игры мат королю противника.
+            rates.n = 1;
+            if (InCheck(board.board, board.wList, board.bList, board.previos_moves, color, board.WHITE_O_O, board.WHITE_O_O_O, board.BLACK_O_O, board.BLACK_O_O_O)) {
+                // Мы под шахом и нам некуда идти -> мат.
+                rates.moves[0].rate = rate;
+            }
+            else {
+                // Некуда идти и мы не под шахом ничья.
+                rate = 0.0; // Пат
+                rates.moves[0].rate = rate;
+            }
+            rates.moves[0].xy_from.x = None;
+            rates.moves[0].xy_from.y = None;
+            rates.moves[0].xy_to.x = None;
+            rates.moves[0].xy_to.y = None;
+        }
+
+        return rates; // Как бы возврат None так как rates.n == 0.
+
+    }
+    //return ;
+}
+
+
 // alpha_beta_algorithm
 // Некоторые называют это искуственным интеллектом игры в шахматы.
 LIST_MOVES minimax(Color color, __int8 thinking_depth, Board board) {
@@ -7674,7 +8280,9 @@ LIST_MOVES minimax(Color color, __int8 thinking_depth, Board board) {
 
              // Распараллеленный минимакс на 40 потоков. Каждый ход в отдельном потоке.
             // rates = minimax_do_parallel(my_color, enemy_color, my_depth, board, 0);
-             rates = alpha_beta_do1(-10000.0, 10000.0, my_color, enemy_color, my_depth, board, depth, iply, ishah);
+            // rates = alpha_beta_do1(-10000.0, 10000.0, my_color, enemy_color, my_depth, board, depth, iply, ishah);
+             // параллельный alpha-beta algorithm 
+             rates =  parallel_chess_engine1(-10000.0, 10000.0, my_color, enemy_color, my_depth, board, depth, iply, ishah);
          }
          else {
 
@@ -7900,7 +8508,7 @@ int main()
 extern "C" EXPORT void analiticChess(int* cb, bool clr,
     int* move1, bool* O_O)
 //int main_for_dll(int* cb, bool clr,
-  //  int* move1, bool* O_O)
+   // int* move1, bool* O_O)
 {
 
     // Сейчас ход Чёрных. Алгоритм минимакса должен ответить за чёрных.
