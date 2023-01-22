@@ -31,7 +31,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, ExtCtrls,
-  Menus, LCLType;
+  Menus, LCLType, DateUtils;
 
 // LCLType для определения кода клавиш стрелка влево VK_LEFT, стрелка вправо VK_RIGHT.
 
@@ -636,6 +636,8 @@ var k, fig : Integer;
     found : Boolean;
 begin
    found:=false;
+
+   fig:=cemptyfig;
 
    for k:=0 to High(arrw) do
    begin
@@ -3333,6 +3335,7 @@ var i,j, i_1, i_2, j_2, i_3, i_4 : Integer;
     move1exp : array[0..10] of Integer;
     O_Oexp : array[0..3] of Boolean;
     beat : Boolean;
+    start, stop : TDateTime;
 begin
 
     beat:=false; // Ели ли мы фигуру. false - не ели.
@@ -3619,8 +3622,10 @@ begin
 
                                         // Вызов минимакса
                                         Form1.Caption:='ЭВМ считает варианты для вас...';
+                                        start:=Now; // засекаем начальное время.
                                         analiticChess(cb,  true,  move1exp, O_Oexp); // Вызов Сишного ядра.
-                                        Form1.Caption:='chess';
+                                        stop:=Now; // засекаем конечное время
+                                        Form1.Caption:='chess '+SecondsBetween(start,stop).ToString;
 
                                         // автоматизируем ответ за чёрных который сделал компьютер.
                                         j7:=1+move1exp[0]; // откуда x
