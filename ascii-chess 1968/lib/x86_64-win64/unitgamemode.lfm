@@ -1,0 +1,33 @@
+object FormGamemode: TFormGamemode
+  Left = 256
+  Height = 240
+  Top = 145
+  Width = 320
+  Caption = 'Game mode'
+  ClientHeight = 240
+  ClientWidth = 320
+  LCLVersion = '2.2.4.0'
+  object RadioGroupOpponent: TRadioGroup
+    Left = 8
+    Height = 169
+    Top = 8
+    Width = 304
+    AutoFill = True
+    Caption = 'Opponent'
+    ChildSizing.LeftRightSpacing = 6
+    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+    ChildSizing.EnlargeVertical = crsHomogenousChildResize
+    ChildSizing.ShrinkHorizontal = crsScaleChilds
+    ChildSizing.ShrinkVertical = crsScaleChilds
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 1
+    ClientHeight = 149
+    ClientWidth = 300
+    ItemIndex = 1
+    Items.Strings = (
+      'man playing with man'
+      'man playing with computer'
+    )
+    TabOrder = 0
+  end
+end
