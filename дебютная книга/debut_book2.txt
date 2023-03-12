@@ -1,0 +1,631 @@
+70
+r n b q k b n r 
+p p p p p p p p 
+0 0 0 0 0 0 0 0 
+0 0 0 0 0 0 0 0 
+0 0 0 0 P 0 0 0 
+0 0 0 0 0 0 0 0 
+P P P P 0 P P P 
+R N B Q K B N R 
+e 7 e 5 0 0 0 0 0 
+r n b q k b n r 
+p p p p 0 p p p 
+0 0 0 0 0 0 0 0 
+0 0 0 0 p 0 0 0 
+0 0 0 0 P 0 0 0 
+0 0 0 0 0 N 0 0 
+P P P P 0 P P P 
+R N B Q K B 0 R 
+b 8 c 6 0 0 0 0 0 
+r 0 b q k b n r 
+p p p p 0 p p p 
+0 0 n 0 0 0 0 0 
+0 B 0 0 p 0 0 0 
+0 0 0 0 P 0 0 0 
+0 0 0 0 0 N 0 0 
+P P P P 0 P P P 
+R N B Q K 0 0 R 
+g 8 f 6 0 0 0 0 0 
+r 0 b q k b 0 r 
+p p p p 0 p p p 
+0 0 n 0 0 n 0 0 
+0 B 0 0 p 0 0 0 
+0 0 0 0 P 0 0 0 
+0 0 0 0 0 N 0 0 
+P P P P 0 P P P 
+R N B Q 0 R K 0 
+f 6 e 4 0 0 0 0 0 
+r 0 b q k b 0 r 
+p p p p 0 p p p 
+0 0 n 0 0 0 0 0 
+0 B 0 0 p 0 0 0 
+0 0 0 P n 0 0 0 
+0 0 0 0 0 N 0 0 
+P P P 0 0 P P P 
+R N B Q 0 R K 0 
+e 4 d 6 0 0 0 0 0 
+r 0 b q k b 0 r 
+p p p p 0 p p p 
+0 0 B n 0 0 0 0 
+0 0 0 0 p 0 0 0 
+0 0 0 P 0 0 0 0 
+0 0 0 0 0 N 0 0 
+P P P 0 0 P P P 
+R N B Q 0 R K 0 
+d 7 c 6 0 0 0 0 0 
+r 0 b q k b 0 r 
+p p p 0 0 p p p 
+0 0 p n 0 0 0 0 
+0 0 0 0 P 0 0 0 
+0 0 0 0 0 0 0 0 
+0 0 0 0 0 N 0 0 
+P P P 0 0 P P P 
+R N B Q 0 R K 0 
+d 6 f 5 0 0 0 0 0 
+r 0 b Q k b 0 r 
+p p p 0 0 p p p 
+0 0 p 0 0 0 0 0 
+0 0 0 0 P n 0 0 
+0 0 0 0 0 0 0 0 
+0 0 0 0 0 N 0 0 
+P P P 0 0 P P P 
+R N B 0 0 R K 0 
+e 8 d 8 0 0 0 0 0 
+r 0 b q k b 0 r 
+p p p p 0 p p p 
+0 0 n 0 0 n 0 0 
+0 B 0 0 p 0 0 0 
+0 0 0 0 P 0 0 0 
+0 0 0 P 0 N 0 0 
+P P P 0 0 P P P 
+R N B Q K 0 0 R 
+f 8 c 5 0 0 0 0 0 
+r 0 b q k 0 0 r 
+p p p p 0 p p p 
+0 0 B 0 0 n 0 0 
+0 0 b 0 p 0 0 0 
+0 0 0 0 P 0 0 0 
+0 0 0 P 0 N 0 0 
+P P P 0 0 P P P 
+R N B Q K 0 0 R 
+d 7 c 6 0 0 0 0 0 
+r 0 b q k 0 0 r 
+p p p 0 0 p p p 
+0 0 p 0 0 n 0 0 
+0 0 b 0 p 0 0 0 
+0 0 0 0 P 0 0 0 
+0 0 P P 0 N 0 0 
+P P 0 0 0 P P P 
+R N B Q K 0 0 R 
+c 5 d 6 0 0 0 0 0 
+r 0 b q k 0 0 r 
+p p p 0 0 p p p 
+0 0 p b 0 n 0 0 
+0 0 0 0 p 0 0 0 
+0 0 0 0 P 0 0 0 
+0 0 P P 0 N 0 0 
+P P 0 0 0 P P P 
+R N B Q 0 R K 0 
+c 8 e 6 0 0 0 0 0 
+r 0 0 q k 0 0 r 
+p p p 0 0 p p p 
+0 0 p b b n 0 0 
+0 0 0 0 p 0 0 0 
+0 0 0 0 P 0 0 0 
+0 P P P 0 N 0 0 
+P 0 0 0 0 P P P 
+R N B Q 0 R K 0 
+h 7 h 6 0 0 0 0 0 
+r 0 0 q k 0 0 r 
+p p p 0 0 p p 0 
+0 0 p b b n 0 p 
+0 0 0 0 p 0 0 0 
+0 0 0 0 P 0 0 0 
+0 P P P 0 N 0 0 
+P 0 0 N 0 P P P 
+R 0 B Q 0 R K 0 
+f 6 d 7 0 0 0 0 0 
+r n b q k b n r 
+p p p p p p p p 
+0 0 0 0 0 0 0 0 
+0 0 0 0 0 0 0 0 
+0 0 0 0 P 0 0 0 
+0 0 0 0 0 0 0 0 
+P P P P 0 P P P 
+R N B Q K B N R 
+d 7 d 6 0 0 0 0 0 
+r n b q k b n r 
+p p p 0 p p p p 
+0 0 0 p 0 0 0 0 
+0 0 0 0 0 0 0 0 
+0 0 0 P P 0 0 0 
+0 0 0 0 0 0 0 0 
+P P P 0 0 P P P 
+R N B Q K B N R 
+g 8 f 6 0 0 0 0 0 
+r n b q k b 0 r 
+p p p 0 p p p p 
+0 0 0 p 0 n 0 0 
+0 0 0 0 0 0 0 0 
+0 0 0 P P 0 0 0 
+0 0 N 0 0 0 0 0 
+P P P 0 0 P P P 
+R 0 B Q K B N R 
+g 7 g 6 0 0 0 0 0 
+r n b q k b n r 
+p p p p p p p p 
+0 0 0 0 0 0 0 0 
+0 0 0 0 0 0 0 0 
+0 0 0 0 P 0 0 0 
+0 0 0 0 0 0 0 0 
+P P P P 0 P P P 
+R N B Q K B N R 
+d 7 d 5 0 0 0 0 0 
+r n b q k b n r 
+p p p 0 p p p p 
+0 0 0 0 0 0 0 0 
+0 0 0 P 0 0 0 0 
+0 0 0 0 0 0 0 0 
+0 0 0 0 0 0 0 0 
+P P P P 0 P P P 
+R N B Q K B N R 
+d 8 d 5 0 0 0 0 0 
+r n b 0 k b n r 
+p p p 0 p p p p 
+0 0 0 0 0 0 0 0 
+0 0 0 q 0 0 0 0 
+0 0 0 0 0 0 0 0 
+0 0 N 0 0 0 0 0 
+P P P P 0 P P P 
+R 0 B Q K B N R 
+d 5 d 6 0 0 0 0 0 
+r n b 0 k b n r 
+p p p 0 p p p p 
+0 0 0 0 0 0 0 0 
+0 0 0 q 0 0 0 0 
+0 0 0 0 0 0 0 0 
+0 0 N 0 0 0 0 0 
+P P P P 0 P P P 
+R 0 B Q K B N R 
+d 5 d 8 0 0 0 0 0 
+r n b 0 k b n r 
+p p p 0 p p p p 
+0 0 0 0 0 0 0 0 
+0 0 0 q 0 0 0 0 
+0 0 0 0 0 0 0 0 
+0 0 N 0 0 0 0 0 
+P P P P 0 P P P 
+R 0 B Q K B N R 
+d 5 a 5 0 0 0 0 0 
+r n b 0 k b n r 
+p p p 0 p p p p 
+0 0 0 q 0 0 0 0 
+0 0 0 0 0 0 0 0 
+0 0 0 P 0 0 0 0 
+0 0 N 0 0 0 0 0 
+P P P 0 0 P P P 
+R 0 B Q K B N R 
+g 8 f 6 0 0 0 0 0 
+r n b q k b n r 
+p p p 0 p p p p 
+0 0 0 0 0 0 0 0 
+0 0 0 0 0 0 0 0 
+0 0 0 P 0 0 0 0 
+0 0 N 0 0 0 0 0 
+P P P 0 0 P P P 
+R 0 B Q K B N R 
+g 8 f 6 0 0 0 0 0 
+r n b 0 k b n r 
+p p p 0 p p p p 
+0 0 0 0 0 0 0 0 
+q 0 0 0 0 0 0 0 
+0 0 0 P 0 0 0 0 
+0 0 N 0 0 0 0 0 
+P P P 0 0 P P P 
+R 0 B Q K B N R 
+g 8 f 6 0 0 0 0 0 
+r n b 0 k b 0 r 
+p p p 0 p p p p 
+0 0 0 q 0 n 0 0 
+0 0 0 0 0 0 0 0 
+0 0 0 P 0 0 0 0 
+0 0 N 0 0 N 0 0 
+P P P 0 0 P P P 
+R 0 B Q K B 0 R 
+c 8 g 4 0 0 0 0 0 
+r n b q k b 0 r 
+p p p 0 p p p p 
+0 0 0 0 0 n 0 0 
+0 0 0 0 0 0 0 0 
+0 0 0 P 0 0 0 0 
+0 0 N 0 0 N 0 0 
+P P P 0 0 P P P 
+R 0 B Q K B 0 R 
+c 8 g 4 0 0 0 0 0 
+r n b 0 k b 0 r 
+p p p 0 p p p p 
+0 0 0 0 0 n 0 0 
+q 0 0 0 0 0 0 0 
+0 0 0 P 0 0 0 0 
+0 0 N 0 0 N 0 0 
+P P P 0 0 P P P 
+R 0 B Q K B 0 R 
+c 8 g 4 0 0 0 0 0 
+r n b 0 k b 0 r 
+p p p 0 p p p p 
+0 0 0 q 0 n 0 0 
+0 0 0 0 0 0 0 0 
+0 0 0 P 0 0 0 0 
+0 0 N 0 0 N 0 0 
+P P P 0 0 P P P 
+R 0 B Q K B 0 R 
+b 8 c 6 0 0 0 0 0 
+r n b q k b 0 r 
+p p p 0 p p p p 
+0 0 0 0 0 n 0 0 
+0 0 0 0 0 0 0 0 
+0 0 0 P 0 0 0 0 
+0 0 N 0 0 N 0 0 
+P P P 0 0 P P P 
+R 0 B Q K B 0 R 
+b 8 c 6 0 0 0 0 0 
+r n b 0 k b 0 r 
+p p p 0 p p p p 
+0 0 0 0 0 n 0 0 
+q 0 0 0 0 0 0 0 
+0 0 0 P 0 0 0 0 
+0 0 N 0 0 N 0 0 
+P P P 0 0 P P P 
+R 0 B Q K B 0 R 
+b 8 c 6 0 0 0 0 0 
+r n b q k b n r 
+p p p 0 p p p p 
+0 0 0 0 0 0 0 0 
+0 0 0 P 0 0 0 0 
+0 0 0 0 0 0 0 0 
+0 0 0 0 0 0 0 0 
+P P P P 0 P P P 
+R N B Q K B N R 
+g 8 f 6 0 0 0 0 0 
+r n b q k b 0 r 
+p p p 0 p p p p 
+0 0 0 0 0 n 0 0 
+0 0 0 P 0 0 0 0 
+0 0 P 0 0 0 0 0 
+0 0 0 0 0 0 0 0 
+P P 0 P 0 P P P 
+R N B Q K B N R 
+c 7 c 6 0 0 0 0 0 
+r n b q k b 0 r 
+p p 0 0 p p p p 
+0 0 P 0 0 n 0 0 
+0 0 0 0 0 0 0 0 
+0 0 P 0 0 0 0 0 
+0 0 0 0 0 0 0 0 
+P P 0 P 0 P P P 
+R N B Q K B N R 
+b 8 c 6 0 0 0 0 0 
+r n b q k b 0 r 
+p p 0 0 p p p p 
+0 0 p 0 0 n 0 0 
+0 0 0 P 0 0 0 0 
+0 0 P P 0 0 0 0 
+0 0 0 0 0 0 0 0 
+P P 0 0 0 P P P 
+R N B Q K B N R 
+c 6 d 5 0 0 0 0 0 
+r n b q k b 0 r 
+p p p 0 p p p p 
+0 0 0 0 0 n 0 0 
+0 0 0 P 0 0 0 0 
+0 0 0 P 0 0 0 0 
+0 0 0 0 0 0 0 0 
+P P P 0 0 P P P 
+R N B Q K B N R 
+f 6 d 5 0 0 0 0 0 
+r n b q k b 0 r 
+p p p 0 p p p p 
+0 0 0 0 0 n 0 0 
+0 B 0 P 0 0 0 0 
+0 0 0 0 0 0 0 0 
+0 0 0 0 0 0 0 0 
+P P P P 0 P P P 
+R N B Q K 0 N R 
+c 8 d 7 0 0 0 0 0 
+r n b q k b n r 
+p p p p p p p p 
+0 0 0 0 0 0 0 0 
+0 0 0 0 0 0 0 0 
+0 0 0 0 P 0 0 0 
+0 0 0 0 0 0 0 0 
+P P P P 0 P P P 
+R N B Q K B N R 
+e 7 e 6 0 0 0 0 0 
+r n b q k b n r 
+p p p p 0 p p p 
+0 0 0 0 p 0 0 0 
+0 0 0 0 0 0 0 0 
+0 0 0 P P 0 0 0 
+0 0 0 0 0 0 0 0 
+P P P 0 0 P P P 
+R N B Q K B N R 
+d 7 d 5 0 0 0 0 0 
+r n b q k b n r 
+p p p 0 0 p p p 
+0 0 0 0 p 0 0 0 
+0 0 0 p P 0 0 0 
+0 0 0 P 0 0 0 0 
+0 0 0 0 0 0 0 0 
+P P P 0 0 P P P 
+R N B Q K B N R 
+c 7 c 5 0 0 0 0 0 
+r n b q k b n r 
+p p p 0 0 p p p 
+0 0 0 0 p 0 0 0 
+0 0 0 p 0 0 0 Q 
+0 0 0 P P 0 0 0 
+0 0 0 0 0 0 0 0 
+P P P 0 0 P P P 
+R N B 0 K B N R 
+g 7 g 6 0 0 0 0 0 
+r n b q k b n r 
+p p p 0 0 p 0 p 
+0 0 0 0 p 0 p 0 
+0 0 0 p Q 0 0 0 
+0 0 0 P P 0 0 0 
+0 0 0 0 0 0 0 0 
+P P P 0 0 P P P 
+R N B 0 K B N R 
+g 8 f 6 0 0 0 0 0 
+r n b q k b 0 r 
+p p p 0 0 p 0 p 
+0 0 0 0 p n p 0 
+0 0 0 p Q 0 B 0 
+0 0 0 P P 0 0 0 
+0 0 0 0 0 0 0 0 
+P P P 0 0 P P P 
+R N 0 0 K B N R 
+f 8 e 7 0 0 0 0 0 
+r n b q k 0 0 r 
+p p p 0 b p 0 p 
+0 0 0 0 p n p 0 
+0 B 0 p Q 0 B 0 
+0 0 0 P P 0 0 0 
+0 0 0 0 0 0 0 0 
+P P P 0 0 P P P 
+R N 0 0 K 0 N R 
+c 7 c 6 0 0 0 0 0 
+r n b q k b n r 
+p p p 0 0 p p p 
+0 0 0 0 p 0 0 0 
+0 0 0 p 0 0 0 0 
+0 0 0 P P 0 0 0 
+0 0 N 0 0 0 0 0 
+P P P 0 0 P P P 
+R 0 B Q K B N R 
+b 8 c 6 0 0 0 0 0 
+r n b q k b n r 
+p p p 0 0 p p p 
+0 0 0 0 p 0 0 0 
+0 0 0 p 0 0 0 0 
+0 0 0 P P 0 0 0 
+0 0 N 0 0 0 0 0 
+P P P 0 0 P P P 
+R 0 B Q K B N R 
+d 5 e 4 0 0 0 0 0 
+r n b q k b n r 
+p p p 0 0 p p p 
+0 0 0 0 p 0 0 0 
+0 0 0 p 0 0 0 0 
+0 0 0 P P 0 0 0 
+0 0 N 0 0 0 0 0 
+P P P 0 0 P P P 
+R 0 B Q K B N R 
+f 8 b 4 0 0 0 0 0 
+r n b q k b n r 
+p p p p p p p p 
+0 0 0 0 0 0 0 0 
+0 0 0 0 0 0 0 0 
+0 0 0 0 P 0 0 0 
+0 0 0 0 0 0 0 0 
+P P P P 0 P P P 
+R N B Q K B N R 
+c 7 c 5 0 0 0 0 0 
+r n b q k b n r 
+p p 0 p p p p p 
+0 0 0 0 0 0 0 0 
+0 0 p 0 0 0 0 0 
+0 0 0 0 P 0 0 0 
+0 0 0 0 0 N 0 0 
+P P P P 0 P P P 
+R N B Q K B 0 R 
+g 7 g 6 0 0 0 0 0 
+r n b q k b n r 
+p p 0 p p p 0 p 
+0 0 0 0 0 0 p 0 
+0 0 p 0 0 0 0 0 
+0 0 0 P P 0 0 0 
+0 0 0 0 0 N 0 0 
+P P P 0 0 P P P 
+R N B Q K B 0 R 
+c 5 d 4 0 0 0 0 0 
+r n b q k b n r 
+p p 0 p p p 0 p 
+0 0 0 0 0 0 p 0 
+0 0 p 0 0 0 0 0 
+0 0 0 P P 0 0 0 
+0 0 0 0 0 N 0 0 
+P P P 0 0 P P P 
+R N B Q K B 0 R 
+f 8 g 7 0 0 0 0 0 
+r n b q k 0 n r 
+p p 0 p p p b p 
+0 0 0 0 0 0 p 0 
+0 0 p 0 0 0 0 0 
+0 0 0 P P 0 0 0 
+0 0 N 0 0 N 0 0 
+P P P 0 0 P P P 
+R 0 B Q K B 0 R 
+c 5 d 4 0 0 0 0 0 
+r n b q k 0 n r 
+p p 0 p p p b p 
+0 0 0 0 0 0 p 0 
+0 0 0 0 0 0 0 0 
+0 0 0 N P 0 0 0 
+0 0 N 0 0 0 0 0 
+P P P 0 0 P P P 
+R 0 B Q K B 0 R 
+b 8 c 6 0 0 0 0 0 
+r 0 b q k 0 0 r 
+p p 0 p p p b p 
+0 0 n 0 0 n p 0 
+0 0 0 0 0 0 0 0 
+0 0 0 0 P 0 0 0 
+0 N N 0 0 0 0 0 
+P P P 0 B P P P 
+R 0 B Q K 0 0 R 
+e 1 g 1 1 0 0 0 0 
+r 0 b q 0 r k 0 
+p p 0 p p p b p 
+0 0 n 0 0 n p 0 
+0 0 0 0 0 0 0 0 
+0 0 0 0 P 0 0 0 
+0 N N 0 0 0 0 0 
+P P P 0 B P P P 
+R 0 B Q 0 R K 0 
+d 7 d 6 0 0 0 0 0 
+r 0 b q 0 r k 0 
+p p 0 0 p p b p 
+0 0 n p 0 n p 0 
+0 0 0 0 0 0 0 0 
+0 0 0 0 P 0 0 0 
+0 N N 0 B 0 0 0 
+P P P 0 B P P P 
+R 0 0 Q 0 R K 0 
+c 8 e 6 0 0 0 0 0 
+r 0 0 q 0 r k 0 
+p p 0 0 p p b p 
+0 0 n p b n p 0 
+0 0 0 0 0 0 0 0 
+0 0 0 0 P P 0 0 
+0 N N 0 B 0 0 0 
+P P P 0 B 0 P P 
+R 0 0 Q 0 R K 0 
+a 8 c 8 0 0 0 0 0 
+r n b q k b n r 
+p p 0 p p p 0 p 
+0 0 0 0 0 0 p 0 
+0 0 0 0 0 0 0 0 
+0 0 0 N P 0 0 0 
+0 0 0 0 0 0 0 0 
+P P P 0 0 P P P 
+R N B Q K B 0 R 
+f 8 g 7 0 0 0 0 0 
+r n b q k b n r 
+p p p p p p p p 
+0 0 0 0 0 0 0 0 
+0 0 0 0 0 0 0 0 
+0 0 0 P 0 0 0 0 
+0 0 0 0 0 0 0 0 
+P P P 0 P P P P 
+R N B Q K B N R 
+g 8 f 6 0 0 0 0 0 
+r n b q k b 0 r 
+p p p p p p p p 
+0 0 0 0 0 n 0 0 
+0 0 0 0 0 0 0 0 
+0 0 P P 0 0 0 0 
+0 0 0 0 0 0 0 0 
+P P 0 0 P P P P 
+R N B Q K B N R 
+e 7 e 6 0 0 0 0 0 
+r n b q k b 0 r 
+p p p p 0 p p p 
+0 0 0 0 p n 0 0 
+0 0 0 0 0 0 0 0 
+0 0 P P 0 0 0 0 
+0 0 N 0 0 0 0 0 
+P P 0 0 P P P P 
+R 0 B Q K B N R 
+f 8 b 4 0 0 0 0 0 
+r n b q k 0 0 r 
+p p p p 0 p p p 
+0 0 0 0 p n 0 0 
+0 0 0 0 0 0 B 0 
+0 b P P 0 0 0 0 
+0 0 N 0 0 0 0 0 
+P P 0 0 P P P P 
+R 0 0 Q K B N R 
+h 7 h 6 0 0 0 0 0 
+r n b q k 0 0 r 
+p p p p 0 p p p 
+0 0 0 0 p n 0 0 
+0 0 0 0 0 0 0 0 
+0 b P P 0 0 0 0 
+P 0 N 0 0 0 0 0 
+0 P 0 0 P P P P 
+R 0 B Q K B N R 
+b 4 c 3 0 0 0 0 0 
+r n b q k 0 0 r 
+p p p p 0 p p p 
+0 0 0 0 p n 0 0 
+0 0 0 0 0 0 0 0 
+0 b P P 0 0 0 0 
+0 Q N 0 0 0 0 0 
+P P 0 0 P P P P 
+R 0 B 0 K B N R 
+c 7 c 5 0 0 0 0 0 
+r n b q k 0 0 r 
+p p p p 0 p p p 
+0 0 0 0 p n 0 0 
+0 0 0 0 0 0 0 0 
+0 b P P 0 0 0 0 
+0 0 N 0 0 0 0 0 
+P P Q 0 P P P P 
+R 0 B 0 K B N R 
+c 7 c 5 0 0 0 0 0 
+r n b q k 0 0 r 
+p p p p 0 p p p 
+0 0 0 0 p n 0 0 
+0 0 0 0 0 0 0 0 
+0 b P P 0 0 0 0 
+0 0 N 0 0 0 0 0 
+P P Q 0 P P P P 
+R 0 B 0 K B N R 
+d 7 d 5 0 0 0 0 0 
+r n b q k 0 0 r 
+p p p p 0 p p p 
+0 0 0 0 p n 0 0 
+0 0 0 0 0 0 0 0 
+0 b P P 0 0 0 0 
+0 0 N 0 0 0 0 0 
+P P Q 0 P P P P 
+R 0 B 0 K B N R 
+b 8 c 6 0 0 0 0 0 
+r n b q k 0 0 r 
+p p p p 0 p p p 
+0 0 0 0 p n 0 0 
+0 0 0 0 0 0 0 0 
+0 b P P 0 0 0 0 
+0 0 N 0 P 0 0 0 
+P P 0 0 0 P P P 
+R 0 B Q K B N R 
+c 7 c 5 0 0 0 0 0 
+r n b q k 0 0 r 
+p p p p 0 p p p 
+0 0 0 0 p n 0 0 
+0 0 0 0 0 0 0 0 
+0 b P P 0 0 0 0 
+0 0 N 0 P 0 0 0 
+P P 0 0 0 P P P 
+R 0 B Q K B N R 
+b 8 c 6 0 0 0 0 0 
+r n b q k 0 0 r 
+p p p p 0 p p p 
+0 0 0 0 p n 0 0 
+0 0 0 0 0 0 0 0 
+0 b P P 0 0 0 0 
+0 0 N 0 P 0 0 0 
+P P 0 0 0 P P P 
+R 0 B Q K B N R 
+b 7 b 6 0 0 0 0 0 
