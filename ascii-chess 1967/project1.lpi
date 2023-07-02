@@ -135,6 +135,7 @@
         <Filename Value="unitbotsettings.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="FormBotSettings"/>
+        <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="unitBotSettings"/>
       </Unit3>

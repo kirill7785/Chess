@@ -1,4 +1,5 @@
 unit Unit1;
+// 11.06.2023 Сообщено об ошибке. Первый ход Kf3 потом любой ход чёрных и пешка может перепрыгнуть через коня. Ошибка.
 // Графический интерфейс для шахмат в среде разработке на Паскаль  Лазарь v2.2.4.
 // 4.01.2023 начало 733 строки кода.
 // Взятие на проходе.
@@ -1872,8 +1873,9 @@ begin
                                        vacantmove_for_detect_game_over[i-1][j]:=true;
                                     end;
                              end;
-                             if (i=7) and (WhotisPole(i-2,j)=cempty) then
+                             if (i=7) and (WhotisPole(i-1,j)=cempty) and (WhotisPole(i-2,j)=cempty) then
                              begin
+                                // Пешка не может перепрыгнуть через фигуру.
                                 CopyList();
                                     if (WhotisPoledetector(i-2,j)=cblack) then DeleteFigdetector(i-2,j);  // скушали фигурку.
                                     arrwdetector[i_1].i:=i-2;
@@ -2608,8 +2610,9 @@ begin
                                        vacantmove_for_detect_game_over[i+1][j]:=true;
                                    end;
                              end;
-                             if (i=2) and (WhotisPole(i+2,j)=cempty) then
+                             if (i=2) and (WhotisPole(i+1,j)=cempty) and (WhotisPole(i+2,j)=cempty) then
                              begin
+                                // Пешка не может перепрыгнуть через фигуру.
                                 CopyList();
                                    if (WhotisPoledetector(i+2,j)=cwhite) then DeleteFigdetector(i+2,j);  // скушали фигурку.
                                    arrbdetector[i_1].i:=i+2;
@@ -3923,8 +3926,9 @@ begin
                                        vacantmove[i-1][j]:=true;
                                     end;
                              end;
-                             if (i=7) and (WhotisPole(i-2,j)=cempty) then
+                             if (i=7) and (WhotisPole(i-1,j)=cempty) and (WhotisPole(i-2,j)=cempty) then
                              begin
+                               // Пешка не может перепрыгнуть через фигуру.
                                 CopyList();
                                     if (WhotisPoledetector(i-2,j)=cblack) then DeleteFigdetector(i-2,j);  // скушали фигурку.
                                     arrwdetector[i_1].i:=i-2;
@@ -4654,8 +4658,9 @@ begin
                                        vacantmove[i+1][j]:=true;
                                    end;
                              end;
-                             if (i=2) and (WhotisPole(i+2,j)=cempty) then
+                             if (i=2) and (WhotisPole(i+1,j)=cempty) and (WhotisPole(i+2,j)=cempty) then
                              begin
+                                // Пешка не может перепрыгнуть через фигуру.
                                 CopyList();
                                    if (WhotisPoledetector(i+2,j)=cwhite) then DeleteFigdetector(i+2,j);  // скушали фигурку.
                                    arrbdetector[i_1].i:=i+2;
