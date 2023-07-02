@@ -7,7 +7,7 @@ uses
   cthreads,
   {$ENDIF}{$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms, Unit1, unitGameMode, unitBotSettings
+  Forms, Unit1, unitGameMode, unitBotSettings, unit_eatingFigures
   { you can add units after this };
 
 {$R *.res}
@@ -18,6 +18,7 @@ begin
   Application.CreateForm(TForm1, Form1);
   Application.CreateForm(TFormGamemode, FormGamemode);
   Application.CreateForm(TFormBotSettings, FormBotSettings);
+  Application.CreateForm(TFormeatingFigures, FormeatingFigures);
   Application.Run;
 end.
 

@@ -1,11 +1,11 @@
 object Form1: TForm1
-  Left = 383
+  Left = 742
   Height = 323
-  Top = 235
-  Width = 346
+  Top = 140
+  Width = 586
   AutoSize = True
   Caption = 'chess'
-  Color = clBtnFace
+  Color = clSilver
   Menu = MainMenu1
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
@@ -55,6 +55,10 @@ object Form1: TForm1
       object MenuItem10: TMenuItem
         Caption = 'picture figures'
         OnClick = MenuItem10Click
+      end
+      object MenuItem_eatingFigures: TMenuItem
+        Caption = 'eating figures'
+        OnClick = MenuItem_eatingFiguresClick
       end
     end
   end

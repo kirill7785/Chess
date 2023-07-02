@@ -1,4 +1,5 @@
 unit Unit1;
+// 11.06.2023 Сообщено об ошибке. Kf3 любой ход чёрных и пешка может перепрыгнуть через коня.
 // Графический интерфейс для шахмат в среде разработке на Паскаль  Лазарь v2.2.4.
 // 4.01.2023 начало 733 строки кода.
 // Взятие на проходе.
@@ -85,6 +86,7 @@ type
     MainMenu1: TMainMenu;
     MenuItem1: TMenuItem;
     MenuItem10: TMenuItem;
+    MenuItem_eatingFigures: TMenuItem;
     MenuItem2: TMenuItem;
     MenuItem3: TMenuItem;
     MenuItem4: TMenuItem;
@@ -104,6 +106,7 @@ type
       Shift: TShiftState; X, Y: Integer);
     procedure FormPaint(Sender: TObject);
     procedure MenuItem10Click(Sender: TObject);
+
     // Вернутся на один полуход назад
     procedure MenuItem3Click(Sender: TObject);
     // Сохранение позиции на доске в двоичный файл.
@@ -117,6 +120,7 @@ type
     // Выбор опонента человек с человеком или человек с движком.
     procedure MenuItem8Click(Sender: TObject);
     procedure MenuItem9Click(Sender: TObject);
+    procedure MenuItem_eatingFiguresClick(Sender: TObject);
 
   private
     { private declarations }
@@ -151,6 +155,7 @@ type
     current_item, current_item1 : Integer; // Номер текущей записи в двоичном файле. Позиция состоит из 66 записей.
     b_continue_Draw : Boolean; // рисовать ли доску с фигурами. Это ресурсоёмкая операция.
     BitMap : TBitMap;
+    bvisible_eating : Boolean;
 
     // Возвращает цвет фигуры на поле или пустую клетку.
     function WhotisPoledetector(i0,j0 : Integer): Integer;   // Для копии доски.
@@ -195,7 +200,7 @@ var
 
 implementation
 
-uses unitGameMode, unitBotSettings;
+uses unitGameMode, unitBotSettings, unit_eatingFigures;
 
 {$R *.lfm}
 
@@ -1744,6 +1749,8 @@ var
   i,j : Integer;
 begin
 
+    bvisible_eating:=true;
+
     ipic_fig:=1;
 
     b_continue_Draw:=true; // рисовать ли доску с фигурами. Это ресурсоёмкая операция.
@@ -1752,7 +1759,7 @@ begin
     current_item:=0; // номер позиций накапливаемых в логе.
     current_item1:=0;
 
-    clientwidth:=540;
+    clientwidth:=540+240;
     clientheight:=560;
     position:=poScreenCenter;
     bPress:=false;
@@ -1981,8 +1988,9 @@ begin
                                        vacantmove_for_detect_game_over[i-1][j]:=true;
                                     end;
                              end;
-                             if (i=7) and (WhotisPole(i-2,j)=cempty) then
+                             if (i=7) and (WhotisPole(i-1,j)=cempty) and (WhotisPole(i-2,j)=cempty) then
                              begin
+                                // пешка не может перепрыгнуть через фигуру.
                                 CopyList();
                                     if (WhotisPoledetector(i-2,j)=cblack) then DeleteFigdetector(i-2,j);  // скушали фигурку.
                                     arrwdetector[i_1].i:=i-2;
@@ -2717,8 +2725,9 @@ begin
                                        vacantmove_for_detect_game_over[i+1][j]:=true;
                                    end;
                              end;
-                             if (i=2) and (WhotisPole(i+2,j)=cempty) then
+                             if (i=2) and (WhotisPole(i+1,j)=cempty) and (WhotisPole(i+2,j)=cempty) then
                              begin
+                                // пешка не может перепрыгнуть через фигуру.
                                 CopyList();
                                    if (WhotisPoledetector(i+2,j)=cwhite) then DeleteFigdetector(i+2,j);  // скушали фигурку.
                                    arrbdetector[i_1].i:=i+2;
@@ -4032,8 +4041,9 @@ begin
                                        vacantmove[i-1][j]:=true;
                                     end;
                              end;
-                             if (i=7) and (WhotisPole(i-2,j)=cempty) then
+                             if (i=7) and (WhotisPole(i-1,j)=cempty) and (WhotisPole(i-2,j)=cempty) then
                              begin
+                               // пешка не может перепрыгнуть через фигуру.
                                 CopyList();
                                     if (WhotisPoledetector(i-2,j)=cblack) then DeleteFigdetector(i-2,j);  // скушали фигурку.
                                     arrwdetector[i_1].i:=i-2;
@@ -4763,8 +4773,9 @@ begin
                                        vacantmove[i+1][j]:=true;
                                    end;
                              end;
-                             if (i=2) and (WhotisPole(i+2,j)=cempty) then
+                             if (i=2) and (WhotisPole(i+1,j)=cempty) and (WhotisPole(i+2,j)=cempty) then
                              begin
+                                // пешка не может перепрыгнуть через фигуру.
                                 CopyList();
                                    if (WhotisPoledetector(i+2,j)=cwhite) then DeleteFigdetector(i+2,j);  // скушали фигурку.
                                    arrbdetector[i_1].i:=i+2;
@@ -5508,6 +5519,8 @@ begin
    Draw(Sender);
 end;
 
+
+
 // Откат на любое количество ходов назад.
 procedure TForm1.MenuItem3Click(Sender: TObject);
 begin
@@ -5762,6 +5775,31 @@ begin
   FormBotSettings.ShowModal;
   b_continue_Draw:=true; // Дочерняя форма успешно вызвана, снова отрисовываем доску.
   Draw(Sender);
+end;
+
+procedure TForm1.MenuItem_eatingFiguresClick(Sender: TObject);
+begin
+  FormeatingFigures.ShowModal();
+
+  if (FormeatingFigures.RadioGroupEatingFigures.ItemIndex=1) then
+  begin
+     bvisible_eating:=true;
+  end
+  else
+  begin
+     bvisible_eating:=false;
+  end;
+
+  case   FormeatingFigures.RadioGroupEatingFigures.ItemIndex of
+   0 : begin
+          // none
+         clientwidth:=540;
+       end;
+   1 : begin
+          // visible
+          clientwidth:=540+240;
+       end;
+   end;
 end;
 
 // Добавление шахматной позиции в конец двоичного файла логирования ходов.
@@ -6046,12 +6084,13 @@ const n=8;
       kr=clTeal; // цвет темных клеток
       kw=clSilver; // цвет светлых клеток
       uclr=clWhite; // Цвет белых фигур.
-var i,j:Integer;
+var i,j, ic0,  j0, iq0 :Integer;
 begin
 
  with BitMap.Canvas do
  begin
-    brush.color:=clBtnFace;
+    // Чтобы съеденные фигуры выделялись на фоне формы.
+    brush.color:=clSilver;//clBtnFace;
     rectangle(0,0,clientwidth,clientheight);
  end;
 
@@ -6231,6 +6270,903 @@ begin
  end;
  end;
 end;
+
+
+if (bvisible_eating) then
+begin
+
+iq0:=0;
+
+// считаем количество ферзей на доске.
+for j:=0 to High(arrw) do
+begin
+ if (arrw[j].fig = cqueen) then
+ begin
+    inc(iq0);
+ end;
+end;
+
+ic0:=0;
+
+// считаем количество пешек на доске.
+for j:=0 to High(arrw) do
+begin
+ if (arrw[j].fig = cpawn) then
+ begin
+    inc(ic0);
+ end;
+end;
+
+// считаем количество съеденных пешек на доске.
+ic0:=8-ic0;
+if (iq0>0) then
+begin
+   ic0:=ic0-(iq0-1);
+end;
+
+// отображаем съеденные пешки справа.
+if (ic0>=4) then
+begin
+   for i:=0 to 3 do
+   begin
+      Pawn(40+8*60,20+(i)*60,60,uclr,kr);
+   end;
+   for i:=0 to ic0-5 do
+   begin
+      Pawn(40+9*60,20+(i)*60,60,uclr,kr);
+   end;
+   j0:=ic0-4;
+
+
+     ic0:=0;
+
+   // считаем количество лощадей на доске.
+   for j:=0 to High(arrw) do
+   begin
+      if (arrw[j].fig = cknight) then
+      begin
+         inc(ic0);
+      end;
+   end;
+
+   // считаем количество съеденных лошадей на доске.
+   ic0:=2-ic0;
+
+   // отображаем съеденные лошади справа.
+   if ((j0+ic0)<=4) then
+   begin
+      for i:=0 to ic0-1 do
+      begin
+         Knight(40+9*60,20+(j0+i)*60,60,uclr,kr);
+      end;
+      j0:=j0+ic0;
+   end
+   else
+   begin
+      if ((ic0=2)and ((j0+ic0)=5)) then
+      begin
+         Knight(40+9*60,20+3*60,60,uclr,kr);
+         Knight(40+10*60,20+(0)*60,60,uclr,kr);
+         j0:=j0+2;
+      end
+      else
+      begin
+         for i:=0 to ic0-1 do
+         begin
+            Knight(40+10*60,20+(i+(j0 mod 4))*60,60,uclr,kr);
+         end;
+         j0:=j0+ic0;
+      end;
+   end;
+
+   ic0:=0;
+
+   // считаем количество офицеров на доске.
+   for j:=0 to High(arrw) do
+   begin
+      if (arrw[j].fig = cbishop) then
+      begin
+         inc(ic0);
+      end;
+   end;
+
+   // считаем количество съеденных офицеров на доске.
+   ic0:=2-ic0;
+
+   // отображаем съеденные офицеров справа.
+   if ((j0+ic0)<=4) then
+   begin
+      for i:=0 to ic0-1 do
+      begin
+         Bishop(40+9*60,20+(j0+i)*60,60,uclr,kr);
+      end;
+      j0:=j0+ic0;
+   end
+   else
+   begin
+      if (j0+ic0<=8) then
+      begin
+         if ((ic0=2)and ((j0+ic0)=5)) then
+         begin
+            Bishop(40+9*60,20+3*60,60,uclr,kr);
+            Bishop(40+10*60,20+(0)*60,60,uclr,kr);
+            j0:=j0+2;
+         end
+          else
+         begin
+            for i:=0 to ic0-1 do
+            begin
+               Bishop(40+10*60,20+(i+(j0 mod 4))*60,60,uclr,kr);
+            end;
+            j0:=j0+ic0;
+         end;
+      end
+      else   if ((ic0=2)and ((j0+ic0)=9)) then
+         begin
+            Bishop(40+10*60,20+(3)*60,60,uclr,kr);
+            Bishop(40+11*60,20+(0)*60,60,uclr,kr);
+            j0:=j0+2;
+         end
+          else
+         begin
+            for i:=0 to ic0-1 do
+            begin
+               Bishop(40+11*60,20+(i+(j0 mod 4))*60,60,uclr,kr);
+            end;
+            j0:=j0+ic0;
+         end;
+   end;
+
+    ic0:=0;
+
+   // считаем количество ладей на доске.
+   for j:=0 to High(arrw) do
+   begin
+      if (arrw[j].fig = crook) then
+      begin
+         inc(ic0);
+      end;
+   end;
+
+   // считаем количество съеденных ладей на доске.
+   ic0:=2-ic0;
+
+   // отображаем съеденные ладей справа.
+   if ((j0+ic0)<=4) then
+   begin
+      for i:=0 to ic0-1 do
+      begin
+         Rook(40+9*60,20+(j0+i)*60,60,uclr,kr);
+      end;
+      j0:=j0+ic0;
+   end
+   else
+   begin
+      if (j0+ic0<=8) then
+      begin
+         if ((ic0=2)and ((j0+ic0)=5)) then
+         begin
+            Rook(40+9*60,20+3*60,60,uclr,kr);
+            Rook(40+10*60,20+(0)*60,60,uclr,kr);
+            j0:=j0+2;
+         end
+          else
+         begin
+            for i:=0 to ic0-1 do
+            begin
+               Rook(40+10*60,20+(i+(j0 mod 4))*60,60,uclr,kr);
+            end;
+            j0:=j0+ic0;
+         end;
+      end
+      else   if ((ic0=2)and ((j0+ic0)=9)) then
+         begin
+            Rook(40+10*60,20+(3)*60,60,uclr,kr);
+            Rook(40+11*60,20+(0)*60,60,uclr,kr);
+            j0:=j0+2;
+         end
+          else
+         begin
+            for i:=0 to ic0-1 do
+            begin
+               Rook(40+11*60,20+(i+(j0 mod 4))*60,60,uclr,kr);
+            end;
+            j0:=j0+ic0;
+         end;
+   end;
+
+    ic0:=1;
+
+   if (iq0=0) then
+   begin
+       // отображаем съеденные ладей справа.
+       if ((j0+ic0)<=4) then
+       begin
+          for i:=0 to ic0-1 do
+          begin
+             Queen(40+9*60,20+(j0+i)*60,60,uclr,kr);
+          end;
+          j0:=j0+ic0;
+       end
+        else
+       begin
+          if (j0+ic0<=8) then
+          begin
+
+             begin
+                for i:=0 to ic0-1 do
+                begin
+                   Queen(40+10*60,20+(i+(j0 mod 4))*60,60,uclr,kr);
+                end;
+                j0:=j0+ic0;
+             end;
+           end
+           else
+              begin
+                 for i:=0 to ic0-1 do
+                 begin
+                    Queen(40+11*60,20+(i+(j0 mod 4))*60,60,uclr,kr);
+                 end;
+                 j0:=j0+ic0;
+              end;
+        end;
+   end;
+
+end
+else
+begin
+   for i:=0 to ic0-1 do
+   begin
+      Pawn(40+8*60,20+(i)*60,60,uclr,kr);
+   end;
+   j0:=ic0;
+
+
+
+   ic0:=0;
+
+   // считаем количество лощадей на доске.
+   for j:=0 to High(arrw) do
+   begin
+      if (arrw[j].fig = cknight) then
+      begin
+         inc(ic0);
+      end;
+   end;
+
+   // считаем количество съеденных лошадей на доске.
+   ic0:=2-ic0;
+
+   // отображаем съеденные лошади справа.
+   if ((j0+ic0)<=4) then
+   begin
+      for i:=0 to ic0-1 do
+      begin
+         Knight(40+8*60,20+(j0+i)*60,60,uclr,kr);
+      end;
+      j0:=j0+ic0;
+   end
+   else
+   begin
+      if ((ic0=2)and ((j0+ic0)=5)) then
+      begin
+         Knight(40+8*60,20+3*60,60,uclr,kr);
+         Knight(40+9*60,20+(0)*60,60,uclr,kr);
+         j0:=j0+2;
+      end
+      else
+      begin
+         for i:=0 to ic0-1 do
+         begin
+            Knight(40+9*60,20+(i+(j0 mod 4))*60,60,uclr,kr);
+         end;
+         j0:=j0+ic0;
+      end;
+   end;
+
+   ic0:=0;
+
+   // считаем количество офицеров на доске.
+   for j:=0 to High(arrw) do
+   begin
+      if (arrw[j].fig = cbishop) then
+      begin
+         inc(ic0);
+      end;
+   end;
+
+   // считаем количество съеденных офицеров на доске.
+   ic0:=2-ic0;
+
+   // отображаем съеденные офицеров справа.
+   if ((j0+ic0)<=4) then
+   begin
+      for i:=0 to ic0-1 do
+      begin
+         Bishop(40+8*60,20+(j0+i)*60,60,uclr,kr);
+      end;
+      j0:=j0+ic0;
+   end
+   else
+   begin
+      if (j0+ic0<=8) then
+      begin
+         if ((ic0=2)and ((j0+ic0)=5)) then
+         begin
+            Bishop(40+8*60,20+3*60,60,uclr,kr);
+            Bishop(40+9*60,20+(0)*60,60,uclr,kr);
+            j0:=j0+2;
+         end
+          else
+         begin
+            for i:=0 to ic0-1 do
+            begin
+               Bishop(40+9*60,20+(i+(j0 mod 4))*60,60,uclr,kr);
+            end;
+            j0:=j0+ic0;
+         end;
+      end
+      else   if ((ic0=2)and ((j0+ic0)=9)) then
+         begin
+            Bishop(40+9*60,20+(3)*60,60,uclr,kr);
+            Bishop(40+10*60,20+(0)*60,60,uclr,kr);
+            j0:=j0+2;
+         end
+          else
+         begin
+            for i:=0 to ic0-1 do
+            begin
+               Bishop(40+10*60,20+(i+(j0 mod 4))*60,60,uclr,kr);
+            end;
+            j0:=j0+ic0;
+         end;
+   end;
+
+    ic0:=0;
+
+   // считаем количество ладей на доске.
+   for j:=0 to High(arrw) do
+   begin
+      if (arrw[j].fig = crook) then
+      begin
+         inc(ic0);
+      end;
+   end;
+
+   // считаем количество съеденных ладей на доске.
+   ic0:=2-ic0;
+
+   // отображаем съеденные ладей справа.
+   if ((j0+ic0)<=4) then
+   begin
+      for i:=0 to ic0-1 do
+      begin
+         Rook(40+8*60,20+(j0+i)*60,60,uclr,kr);
+      end;
+      j0:=j0+ic0;
+   end
+   else
+   begin
+      if (j0+ic0<=8) then
+      begin
+         if ((ic0=2)and ((j0+ic0)=5)) then
+         begin
+            Rook(40+8*60,20+3*60,60,uclr,kr);
+            Rook(40+9*60,20+(0)*60,60,uclr,kr);
+            j0:=j0+2;
+         end
+          else
+         begin
+            for i:=0 to ic0-1 do
+            begin
+               Rook(40+9*60,20+(i+(j0 mod 4))*60,60,uclr,kr);
+            end;
+            j0:=j0+ic0;
+         end;
+      end
+      else   if ((ic0=2)and ((j0+ic0)=9)) then
+         begin
+            Rook(40+9*60,20+(3)*60,60,uclr,kr);
+            Rook(40+10*60,20+(0)*60,60,uclr,kr);
+            j0:=j0+2;
+         end
+          else
+         begin
+            for i:=0 to ic0-1 do
+            begin
+               Rook(40+10*60,20+(i+(j0 mod 4))*60,60,uclr,kr);
+            end;
+            j0:=j0+ic0;
+         end;
+   end;
+
+   ic0:=1;
+
+   if (iq0=0) then
+   begin
+       // отображаем съеденные ладей справа.
+       if ((j0+ic0)<=4) then
+       begin
+          for i:=0 to ic0-1 do
+          begin
+             Queen(40+8*60,20+(j0+i)*60,60,uclr,kr);
+          end;
+          j0:=j0+ic0;
+       end
+        else
+       begin
+          if (j0+ic0<=8) then
+          begin
+
+             begin
+                for i:=0 to ic0-1 do
+                begin
+                   Queen(40+9*60,20+(i+(j0 mod 4))*60,60,uclr,kr);
+                end;
+                j0:=j0+ic0;
+             end;
+           end
+           else
+              begin
+                 for i:=0 to ic0-1 do
+                 begin
+                    Queen(40+10*60,20+(i+(j0 mod 4))*60,60,uclr,kr);
+                 end;
+                 j0:=j0+ic0;
+              end;
+        end;
+   end;
+
+end;
+
+
+iq0:=0;
+
+// считаем количество ферзей на доске.
+for j:=0 to High(arrb) do
+begin
+ if (arrb[j].fig = cqueen) then
+ begin
+    inc(iq0);
+ end;
+end;
+
+ic0:=0;
+
+// считаем количество пешек на доске.
+for j:=0 to High(arrb) do
+begin
+ if (arrb[j].fig = cpawn) then
+ begin
+    inc(ic0);
+ end;
+end;
+
+// считаем количество съеденных пешек на доске.
+ic0:=8-ic0;
+
+
+if (iq0>0) then
+begin
+   ic0:=ic0-(iq0-1);
+end;
+
+// отображаем съеденные пешки справа.
+if (ic0>=4) then
+begin
+   for i:=0 to 3 do
+   begin
+      Pawn(40+8*60,240+20+(i)*60,60,clBlack,kr);
+   end;
+   for i:=0 to ic0-5 do
+   begin
+      Pawn(40+9*60,240+20+(i)*60,60,clBlack,kr);
+   end;
+   j0:=ic0-4;
+
+
+     ic0:=0;
+
+   // считаем количество лощадей на доске.
+   for j:=0 to High(arrb) do
+   begin
+      if (arrb[j].fig = cknight) then
+      begin
+         inc(ic0);
+      end;
+   end;
+
+   // считаем количество съеденных лошадей на доске.
+   ic0:=2-ic0;
+
+   // отображаем съеденные лошади справа.
+   if ((j0+ic0)<=4) then
+   begin
+      for i:=0 to ic0-1 do
+      begin
+         Knight(40+9*60,240+20+(j0+i)*60,60,clBlack,kr);
+      end;
+      j0:=j0+ic0;
+   end
+   else
+   begin
+      if ((ic0=2)and ((j0+ic0)=5)) then
+      begin
+         Knight(40+9*60,240+20+3*60,60,clBlack,kr);
+         Knight(40+10*60,240+20+(0)*60,60,clBlack,kr);
+         j0:=j0+2;
+      end
+      else
+      begin
+         for i:=0 to ic0-1 do
+         begin
+            Knight(40+10*60,240+20+(i+(j0 mod 4))*60,60,clBlack,kr);
+         end;
+         j0:=j0+ic0;
+      end;
+   end;
+
+   ic0:=0;
+
+   // считаем количество офицеров на доске.
+   for j:=0 to High(arrb) do
+   begin
+      if (arrb[j].fig = cbishop) then
+      begin
+         inc(ic0);
+      end;
+   end;
+
+   // считаем количество съеденных офицеров на доске.
+   ic0:=2-ic0;
+
+   // отображаем съеденные офицеров справа.
+   if ((j0+ic0)<=4) then
+   begin
+      for i:=0 to ic0-1 do
+      begin
+         Bishop(40+9*60,240+20+(j0+i)*60,60,clBlack,kr);
+      end;
+      j0:=j0+ic0;
+   end
+   else
+   begin
+      if (j0+ic0<=8) then
+      begin
+         if ((ic0=2)and ((j0+ic0)=5)) then
+         begin
+            Bishop(40+9*60,240+20+3*60,60,clBlack,kr);
+            Bishop(40+10*60,240+20+(0)*60,60,clBlack,kr);
+            j0:=j0+2;
+         end
+          else
+         begin
+            for i:=0 to ic0-1 do
+            begin
+               Bishop(40+10*60,240+20+(i+(j0 mod 4))*60,60,clBlack,kr);
+            end;
+            j0:=j0+ic0;
+         end;
+      end
+      else   if ((ic0=2)and ((j0+ic0)=9)) then
+         begin
+            Bishop(40+10*60,240+20+(3)*60,60,clBlack,kr);
+            Bishop(40+11*60,240+20+(0)*60,60,clBlack,kr);
+            j0:=j0+2;
+         end
+          else
+         begin
+            for i:=0 to ic0-1 do
+            begin
+               Bishop(40+11*60,240+20+(i+(j0 mod 4))*60,60,clBlack,kr);
+            end;
+            j0:=j0+ic0;
+         end;
+   end;
+
+    ic0:=0;
+
+   // считаем количество ладей на доске.
+   for j:=0 to High(arrb) do
+   begin
+      if (arrb[j].fig = crook) then
+      begin
+         inc(ic0);
+      end;
+   end;
+
+   // считаем количество съеденных ладей на доске.
+   ic0:=2-ic0;
+
+   // отображаем съеденные ладей справа.
+   if ((j0+ic0)<=4) then
+   begin
+      for i:=0 to ic0-1 do
+      begin
+         Rook(40+9*60,240+20+(j0+i)*60,60,clBlack,kr);
+      end;
+      j0:=j0+ic0;
+   end
+   else
+   begin
+      if (j0+ic0<=8) then
+      begin
+         if ((ic0=2)and ((j0+ic0)=5)) then
+         begin
+            Rook(40+9*60,240+20+3*60,60,clBlack,kr);
+            Rook(40+10*60,240+20+(0)*60,60,clBlack,kr);
+            j0:=j0+2;
+         end
+          else
+         begin
+            for i:=0 to ic0-1 do
+            begin
+               Rook(40+10*60,240+20+(i+(j0 mod 4))*60,60,clBlack,kr);
+            end;
+            j0:=j0+ic0;
+         end;
+      end
+      else   if ((ic0=2)and ((j0+ic0)=9)) then
+         begin
+            Rook(40+10*60,240+20+(3)*60,60,clBlack,kr);
+            Rook(40+11*60,240+20+(0)*60,60,clBlack,kr);
+            j0:=j0+2;
+         end
+          else
+         begin
+            for i:=0 to ic0-1 do
+            begin
+               Rook(40+11*60,240+20+(i+(j0 mod 4))*60,60,clBlack,kr);
+            end;
+            j0:=j0+ic0;
+         end;
+   end;
+
+    ic0:=1;
+
+   if (iq0=0) then
+   begin
+       // отображаем съеденные ладей справа.
+       if ((j0+ic0)<=4) then
+       begin
+          for i:=0 to ic0-1 do
+          begin
+             Queen(40+9*60,240+20+(j0+i)*60,60,clBlack,kr);
+          end;
+          j0:=j0+ic0;
+       end
+        else
+       begin
+          if (j0+ic0<=8) then
+          begin
+
+             begin
+                for i:=0 to ic0-1 do
+                begin
+                   Queen(40+10*60,240+20+(i+(j0 mod 4))*60,60,clBlack,kr);
+                end;
+                j0:=j0+ic0;
+             end;
+           end
+           else
+              begin
+                 for i:=0 to ic0-1 do
+                 begin
+                    Queen(40+11*60,240+20+(i+(j0 mod 4))*60,60,clBlack,kr);
+                 end;
+                 j0:=j0+ic0;
+              end;
+        end;
+   end;
+
+end
+else
+begin
+   for i:=0 to ic0-1 do
+   begin
+      Pawn(40+8*60,240+20+(i)*60,60,clBlack,kr);
+   end;
+   j0:=ic0;
+
+
+
+   ic0:=0;
+
+   // считаем количество лощадей на доске.
+   for j:=0 to High(arrb) do
+   begin
+      if (arrb[j].fig = cknight) then
+      begin
+         inc(ic0);
+      end;
+   end;
+
+   // считаем количество съеденных лошадей на доске.
+   ic0:=2-ic0;
+
+   // отображаем съеденные лошади справа.
+   if ((j0+ic0)<=4) then
+   begin
+      for i:=0 to ic0-1 do
+      begin
+         Knight(40+8*60,240+20+(j0+i)*60,60,clBlack,kr);
+      end;
+      j0:=j0+ic0;
+   end
+   else
+   begin
+      if ((ic0=2)and ((j0+ic0)=5)) then
+      begin
+         Knight(40+8*60,240+20+3*60,60,clBlack,kr);
+         Knight(40+9*60,240+20+(0)*60,60,clBlack,kr);
+         j0:=j0+2;
+      end
+      else
+      begin
+         for i:=0 to ic0-1 do
+         begin
+            Knight(40+9*60,240+20+(i+(j0 mod 4))*60,60,clBlack,kr);
+         end;
+         j0:=j0+ic0;
+      end;
+   end;
+
+   ic0:=0;
+
+   // считаем количество офицеров на доске.
+   for j:=0 to High(arrb) do
+   begin
+      if (arrb[j].fig = cbishop) then
+      begin
+         inc(ic0);
+      end;
+   end;
+
+   // считаем количество съеденных офицеров на доске.
+   ic0:=2-ic0;
+
+   // отображаем съеденные офицеров справа.
+   if ((j0+ic0)<=4) then
+   begin
+      for i:=0 to ic0-1 do
+      begin
+         Bishop(40+8*60,240+20+(j0+i)*60,60,clBlack,kr);
+      end;
+      j0:=j0+ic0;
+   end
+   else
+   begin
+      if (j0+ic0<=8) then
+      begin
+         if ((ic0=2)and ((j0+ic0)=5)) then
+         begin
+            Bishop(40+8*60,240+20+3*60,60,clBlack,kr);
+            Bishop(40+9*60,240+20+(0)*60,60,clBlack,kr);
+            j0:=j0+2;
+         end
+          else
+         begin
+            for i:=0 to ic0-1 do
+            begin
+               Bishop(40+9*60,240+20+(i+(j0 mod 4))*60,60,clBlack,kr);
+            end;
+            j0:=j0+ic0;
+         end;
+      end
+      else   if ((ic0=2)and ((j0+ic0)=9)) then
+         begin
+            Bishop(40+9*60,240+20+(3)*60,60,clBlack,kr);
+            Bishop(40+10*60,240+20+(0)*60,60,clBlack,kr);
+            j0:=j0+2;
+         end
+          else
+         begin
+            for i:=0 to ic0-1 do
+            begin
+               Bishop(40+10*60,240+20+(i+(j0 mod 4))*60,60,clBlack,kr);
+            end;
+            j0:=j0+ic0;
+         end;
+   end;
+
+    ic0:=0;
+
+   // считаем количество ладей на доске.
+   for j:=0 to High(arrb) do
+   begin
+      if (arrb[j].fig = crook) then
+      begin
+         inc(ic0);
+      end;
+   end;
+
+   // считаем количество съеденных ладей на доске.
+   ic0:=2-ic0;
+
+   // отображаем съеденные ладей справа.
+   if ((j0+ic0)<=4) then
+   begin
+      for i:=0 to ic0-1 do
+      begin
+         Rook(40+8*60,240+20+(j0+i)*60,60,clBlack,kr);
+      end;
+      j0:=j0+ic0;
+   end
+   else
+   begin
+      if (j0+ic0<=8) then
+      begin
+         if ((ic0=2)and ((j0+ic0)=5)) then
+         begin
+            Rook(40+8*60,240+20+3*60,60,clBlack,kr);
+            Rook(40+9*60,240+20+(0)*60,60,clBlack,kr);
+            j0:=j0+2;
+         end
+          else
+         begin
+            for i:=0 to ic0-1 do
+            begin
+               Rook(40+9*60,240+20+(i+(j0 mod 4))*60,60,clBlack,kr);
+            end;
+            j0:=j0+ic0;
+         end;
+      end
+      else   if ((ic0=2)and ((j0+ic0)=9)) then
+         begin
+            Rook(40+9*60,240+20+(3)*60,60,clBlack,kr);
+            Rook(40+10*60,240+20+(0)*60,60,clBlack,kr);
+            j0:=j0+2;
+         end
+          else
+         begin
+            for i:=0 to ic0-1 do
+            begin
+               Rook(40+10*60,240+20+(i+(j0 mod 4))*60,60,clBlack,kr);
+            end;
+            j0:=j0+ic0;
+         end;
+   end;
+
+   ic0:=1;
+
+   if (iq0=0) then
+   begin
+       // отображаем съеденные ладей справа.
+       if ((j0+ic0)<=4) then
+       begin
+          for i:=0 to ic0-1 do
+          begin
+             Queen(40+8*60,240+20+(j0+i)*60,60,clBlack,kr);
+          end;
+          j0:=j0+ic0;
+       end
+        else
+       begin
+          if (j0+ic0<=8) then
+          begin
+
+             begin
+                for i:=0 to ic0-1 do
+                begin
+                   Queen(40+9*60,240+20+(i+(j0 mod 4))*60,60,clBlack,kr);
+                end;
+                j0:=j0+ic0;
+             end;
+           end
+           else
+              begin
+                 for i:=0 to ic0-1 do
+                 begin
+                    Queen(40+10*60,240+20+(i+(j0 mod 4))*60,60,clBlack,kr);
+                 end;
+                 j0:=j0+ic0;
+              end;
+        end;
+   end;
+
+end;
+
+ end;
 
 {i:=7;
 for j:=1 to n do

@@ -110,7 +110,7 @@
         <PackageName Value="LCL"/>
       </Item1>
     </RequiredPackages>
-    <Units Count="4">
+    <Units Count="5">
       <Unit0>
         <Filename Value="project1.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -139,6 +139,14 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="unitBotSettings"/>
       </Unit3>
+      <Unit4>
+        <Filename Value="unit_eatingfigures.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="FormeatingFigures"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="unit_eatingFigures"/>
+      </Unit4>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

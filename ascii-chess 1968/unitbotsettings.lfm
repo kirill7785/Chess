@@ -1,7 +1,7 @@
 object FormBotSettings: TFormBotSettings
-  Left = 256
+  Left = 247
   Height = 428
-  Top = 145
+  Top = 318
   Width = 418
   Caption = 'Minimax Setting'
   ClientHeight = 428
