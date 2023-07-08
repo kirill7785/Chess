@@ -1855,7 +1855,7 @@ begin
                                        vacantmove_for_detect_game_over[i-1][j]:=true;
                                     end;
                              end;
-                             if (i=7) and (WhotisPole(i-2,j)=cempty) then
+                             if (i=7) and (WhotisPole(i-1,j)=cempty) and (WhotisPole(i-2,j)=cempty) then
                              begin
                                 CopyList();
                                     if (WhotisPoledetector(i-2,j)=cblack) then DeleteFigdetector(i-2,j);  // скушали фигурку.
@@ -2591,7 +2591,7 @@ begin
                                        vacantmove_for_detect_game_over[i+1][j]:=true;
                                    end;
                              end;
-                             if (i=2) and (WhotisPole(i+2,j)=cempty) then
+                             if (i=2) and (WhotisPole(i+1,j)=cempty) and (WhotisPole(i+2,j)=cempty) then
                              begin
                                 CopyList();
                                    if (WhotisPoledetector(i+2,j)=cwhite) then DeleteFigdetector(i+2,j);  // скушали фигурку.
@@ -3667,7 +3667,7 @@ begin
                                        vacantmove[i-1][j]:=true;
                                     end;
                              end;
-                             if (i=7) and (WhotisPole(i-2,j)=cempty) then
+                             if (i=7) and (WhotisPole(i-1,j)=cempty) and (WhotisPole(i-2,j)=cempty) then
                              begin
                                 CopyList();
                                     if (WhotisPoledetector(i-2,j)=cblack) then DeleteFigdetector(i-2,j);  // скушали фигурку.
@@ -4398,7 +4398,7 @@ begin
                                        vacantmove[i+1][j]:=true;
                                    end;
                              end;
-                             if (i=2) and (WhotisPole(i+2,j)=cempty) then
+                             if (i=2) and (WhotisPole(i+1,j)=cempty) and (WhotisPole(i+2,j)=cempty) then
                              begin
                                 CopyList();
                                    if (WhotisPoledetector(i+2,j)=cwhite) then DeleteFigdetector(i+2,j);  // скушали фигурку.

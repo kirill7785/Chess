@@ -5647,6 +5647,13 @@ const n=8;
       uclr=clWhite; // Цвет белых фигур.
 var i,j:Integer;
 begin
+
+with BitMap.Canvas do
+begin
+   brush.color:=clBtnFace;
+   rectangle(0,0,clientwidth,clientheight);
+end;
+
 for i:=1 to n do
 for j:=1 to n do
 begin
