@@ -43,10 +43,6 @@ object Form1: TForm1
         Caption = 'Next move'
         OnClick = MenuItem7Click
       end
-      object MenuItem8: TMenuItem
-        Caption = 'picture figures'
-        OnClick = MenuItem8Click
-      end
     end
   end
   object SaveDialog1: TSaveDialog

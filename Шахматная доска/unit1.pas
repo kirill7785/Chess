@@ -21,6 +21,7 @@ unit Unit1;
 // партию мат Легаля 44Кб. В интерфейсе 5835 строк кода.
 // 11.01.2023 Исправлена ошибка при взятии на проходе.
 // 11.01.2023 Переход на BitMap. Форма больше не тормозит при закрытиии.
+// 11.06.2023 Сообщено об ошибке. Kf3 любой ход чёрных и пешка может перепрыгнуть через коня. 7.07.2023 ошибка исправлена.
 
 {$mode objfpc}{$H+}
 
@@ -47,6 +48,7 @@ uses
        cblack=1;
        cwhite=2;
 
+       ifigsize=26;
 
 type
 
@@ -85,6 +87,7 @@ type
     MenuItem5: TMenuItem;
     MenuItem6: TMenuItem;
     MenuItem7: TMenuItem;
+    MenuItem8: TMenuItem;
     OpenDialog1: TOpenDialog;
     SaveDialog1: TSaveDialog;
     Timer1: TTimer;
@@ -105,9 +108,11 @@ type
     procedure MenuItem6Click(Sender: TObject);
     // Перейти на один полуход вперёд
     procedure MenuItem7Click(Sender: TObject);
+    procedure MenuItem8Click(Sender: TObject);
 
   private
     { private declarations }
+    ipic_fig : Integer;
     xmouse, ymouse : Integer;
     bPress : Boolean;
     arrw : array of Figure; // Список белых фигур
@@ -622,6 +627,9 @@ var k, fig : Integer;
 begin
    found:=false;
 
+   fig:=cemptyfig;
+
+
    for k:=0 to High(arrw) do
    begin
       if ((arrw[k].i=i0)and(arrw[k].j=j0)) then
@@ -682,8 +690,26 @@ with BitMap.Canvas do
     Color:=c2;
     cmem2:=font.Color;
     font.Color:=c1;
-    textout(xc-13,yc-2*s,'_o_');
-    textout(xc-s,yc,'(_)');
+
+     if (ipic_fig=0) then
+    begin
+       font.size:=14;
+       textout(xc-13,yc-2*s,'_o_');
+       textout(xc-s,yc,'(_)');
+    end
+    else
+    begin
+        font.size:=18;
+        if (c2=clWhite) then
+        begin
+           textout(xc-13,yc-s,'♙');
+        end
+         else
+        begin
+           textout(xc-13,yc-s,'♟');
+        end;
+    end;
+
     font.Color:=cmem2;
     Color:=cmem1;
  end;
@@ -702,8 +728,27 @@ with BitMap.Canvas do
     Color:=c2;
     cmem2:=font.Color;
     font.Color:=c1;
-    textout(xc-s,yc-2*s,'["]');
-    textout(xc-s,yc,'(_)');
+
+
+    if (ipic_fig=0) then
+    begin
+       font.size:=14;
+       textout(xc-s,yc-2*s,'["]');
+       textout(xc-s,yc,'(_)');
+    end
+    else
+    begin
+        font.size:=ifigsize;
+        if (c2=clWhite) then
+        begin
+           textout(xc-13,yc-2*s,'♖');
+        end
+         else
+        begin
+           textout(xc-13,yc-2*s,'♜');
+        end;
+    end;
+
     font.Color:=cmem2;
     Color:=cmem1;
  end;
@@ -722,8 +767,26 @@ with BitMap.Canvas do
     Color:=c2;
     cmem2:=font.Color;
     font.Color:=c1;
-    textout(xc-13,yc-2*s,'\+/');
-    textout(xc-s,yc,'(_)');
+
+    if (ipic_fig=0) then
+    begin
+       font.size:=14;
+       textout(xc-13,yc-2*s,'\+/');
+       textout(xc-s,yc,'(_)');
+    end
+    else
+    begin
+       font.size:=ifigsize;
+       if (c2=clWhite) then
+       begin
+          textout(xc-13,yc-2*s,'♔');
+       end
+        else
+       begin
+          textout(xc-13,yc-2*s,'♚');
+       end;
+    end;
+
     font.Color:=cmem2;
     Color:=cmem1;
  end;
@@ -742,8 +805,27 @@ with BitMap.Canvas do
     Color:=c2;
     cmem2:=font.Color;
     font.Color:=c1;
-    textout(xc-13,yc-2*s,'\^/');
-    textout(xc-s,yc,'(_)');
+
+
+    if (ipic_fig=0) then
+    begin
+       font.size:=14;
+       textout(xc-13,yc-2*s,'\^/');
+       textout(xc-s,yc,'(_)');
+    end
+    else
+    begin
+       font.size:=ifigsize;
+       if (c2=clWhite) then
+       begin
+          textout(xc-13,yc-2*s,'♕');
+       end
+        else
+       begin
+          textout(xc-13,yc-2*s,'♛');
+       end;
+    end;
+
     font.Color:=cmem2;
     Color:=cmem1;
  end;
@@ -762,8 +844,26 @@ with BitMap.Canvas do
     Color:=c2;
     cmem2:=font.Color;
     font.Color:=c1;
-    textout(xc-s,yc-2*s,'(\)');
-    textout(xc-s,yc,'(_)');
+
+    if (ipic_fig=0) then
+    begin
+       font.size:=14;
+       textout(xc-s,yc-2*s,'(\)');
+       textout(xc-s,yc,'(_)');
+    end
+    else
+    begin
+       font.size:=ifigsize;
+       if (c2=clWhite) then
+       begin
+          textout(xc-13,yc-2*s,'♗');
+       end
+        else
+       begin
+          textout(xc-13,yc-2*s,'♝');
+       end;
+    end;
+
     font.Color:=cmem2;
     Color:=cmem1;
  end;
@@ -782,8 +882,27 @@ with BitMap.Canvas do
     Color:=c2;
     cmem2:=font.Color;
     font.Color:=c1;
-    textout(xc-s,yc-2*s,'{o\');
-    textout(xc-s,yc,'(_)');
+
+
+    if (ipic_fig=0) then
+    begin
+       font.size:=14;
+       textout(xc-s,yc-2*s,'{o\');
+       textout(xc-s,yc,'(_)');
+    end
+    else
+    begin
+       font.size:=ifigsize;
+       if (c2=clWhite) then
+       begin
+          textout(xc-13,yc-2*s,'♘');
+       end
+        else
+       begin
+          textout(xc-13,yc-2*s,'♞');
+       end;
+    end;
+
     font.Color:=cmem2;
     Color:=cmem1;
  end;
@@ -1619,6 +1738,8 @@ procedure TForm1.FormCreate(Sender: TObject);
 var
   i,j : Integer;
 begin
+
+    ipic_fig:=1;
 
     Assignfile(datFile_gl,'temp'); // Играемая партия будет логироваться в файл temp на диске.
     ReWrite (datFile_gl); // Очистка файла лога. Файл будет писаться по новой.
@@ -5361,6 +5482,20 @@ begin
       end;
       Draw(Sender);
    end;
+end;
+
+// Смена картинок для фигур
+procedure TForm1.MenuItem8Click(Sender: TObject);
+begin
+   if (ipic_fig=1) then
+   begin
+      ipic_fig:=0;
+   end
+   else
+   begin
+      ipic_fig:=1;
+   end;
+   Draw(Sender);
 end;
 
 // Добавление шахматной позиции в конец двоичного файла логирования ходов.
