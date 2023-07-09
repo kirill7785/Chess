@@ -1,0 +1,180 @@
+object FormCompleateCreationChessStudy: TFormCompleateCreationChessStudy
+  Left = 256
+  Height = 357
+  Top = 127
+  Width = 390
+  Caption = 'complete the creation of a chess study'
+  ClientHeight = 357
+  ClientWidth = 390
+  LCLVersion = '2.2.4.0'
+  object RadioGroup1: TRadioGroup
+    Left = 8
+    Height = 65
+    Top = 8
+    Width = 152
+    AutoFill = True
+    Caption = 'whose move is it now ?'
+    ChildSizing.LeftRightSpacing = 6
+    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+    ChildSizing.EnlargeVertical = crsHomogenousChildResize
+    ChildSizing.ShrinkHorizontal = crsScaleChilds
+    ChildSizing.ShrinkVertical = crsScaleChilds
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 1
+    ClientHeight = 45
+    ClientWidth = 148
+    ItemIndex = 0
+    Items.Strings = (
+      'white'
+      'black'
+    )
+    TabOrder = 0
+  end
+  object RadioGroup2: TRadioGroup
+    Left = 8
+    Height = 64
+    Top = 88
+    Width = 152
+    AutoFill = True
+    Caption = 'did the white king go ?'
+    ChildSizing.LeftRightSpacing = 6
+    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+    ChildSizing.EnlargeVertical = crsHomogenousChildResize
+    ChildSizing.ShrinkHorizontal = crsScaleChilds
+    ChildSizing.ShrinkVertical = crsScaleChilds
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 1
+    ClientHeight = 44
+    ClientWidth = 148
+    ItemIndex = 0
+    Items.Strings = (
+      'yes'
+      'no'
+    )
+    TabOrder = 1
+  end
+  object RadioGroup3: TRadioGroup
+    Left = 176
+    Height = 57
+    Top = 96
+    Width = 152
+    AutoFill = True
+    Caption = 'did the black king go ?'
+    ChildSizing.LeftRightSpacing = 6
+    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+    ChildSizing.EnlargeVertical = crsHomogenousChildResize
+    ChildSizing.ShrinkHorizontal = crsScaleChilds
+    ChildSizing.ShrinkVertical = crsScaleChilds
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 1
+    ClientHeight = 37
+    ClientWidth = 148
+    ItemIndex = 0
+    Items.Strings = (
+      'yes'
+      'no'
+    )
+    TabOrder = 2
+  end
+  object RadioGroup4: TRadioGroup
+    Left = 8
+    Height = 73
+    Top = 160
+    Width = 160
+    AutoFill = True
+    Caption = 'did the white left rook go ?'
+    ChildSizing.LeftRightSpacing = 6
+    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+    ChildSizing.EnlargeVertical = crsHomogenousChildResize
+    ChildSizing.ShrinkHorizontal = crsScaleChilds
+    ChildSizing.ShrinkVertical = crsScaleChilds
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 1
+    ClientHeight = 53
+    ClientWidth = 156
+    ItemIndex = 0
+    Items.Strings = (
+      'yes'
+      'no'
+    )
+    TabOrder = 3
+  end
+  object RadioGroup5: TRadioGroup
+    Left = 176
+    Height = 65
+    Top = 168
+    Width = 185
+    AutoFill = True
+    Caption = 'did the black left rook go ?'
+    ChildSizing.LeftRightSpacing = 6
+    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+    ChildSizing.EnlargeVertical = crsHomogenousChildResize
+    ChildSizing.ShrinkHorizontal = crsScaleChilds
+    ChildSizing.ShrinkVertical = crsScaleChilds
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 1
+    ClientHeight = 45
+    ClientWidth = 181
+    ItemIndex = 0
+    Items.Strings = (
+      'yes'
+      'no'
+    )
+    TabOrder = 4
+  end
+  object RadioGroup6: TRadioGroup
+    Left = 8
+    Height = 73
+    Top = 240
+    Width = 161
+    AutoFill = True
+    Caption = 'did the white right rook go ?'
+    ChildSizing.LeftRightSpacing = 6
+    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+    ChildSizing.EnlargeVertical = crsHomogenousChildResize
+    ChildSizing.ShrinkHorizontal = crsScaleChilds
+    ChildSizing.ShrinkVertical = crsScaleChilds
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 1
+    ClientHeight = 53
+    ClientWidth = 157
+    ItemIndex = 0
+    Items.Strings = (
+      'yes'
+      'no'
+    )
+    TabOrder = 5
+  end
+  object RadioGroup7: TRadioGroup
+    Left = 176
+    Height = 73
+    Top = 240
+    Width = 185
+    AutoFill = True
+    Caption = 'did the black right rook go ?'
+    ChildSizing.LeftRightSpacing = 6
+    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+    ChildSizing.EnlargeVertical = crsHomogenousChildResize
+    ChildSizing.ShrinkHorizontal = crsScaleChilds
+    ChildSizing.ShrinkVertical = crsScaleChilds
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 1
+    ClientHeight = 53
+    ClientWidth = 181
+    ItemIndex = 0
+    Items.Strings = (
+      'yes'
+      'no'
+    )
+    TabOrder = 6
+  end
+  object Button1: TButton
+    Left = 249
+    Height = 25
+    Top = 323
+    Width = 75
+    Caption = 'Apply'
+    OnClick = Button1Click
+    TabOrder = 7
+  end
+end

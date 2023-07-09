@@ -47,6 +47,10 @@ object Form1: TForm1
         Caption = 'picture figures'
         OnClick = MenuItem8Click
       end
+      object MenuItem9: TMenuItem
+        Caption = 'set empty board'
+        OnClick = MenuItem9Click
+      end
     end
   end
   object SaveDialog1: TSaveDialog

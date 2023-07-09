@@ -22,6 +22,8 @@ unit Unit1;
 // 11.01.2023 Исправлена ошибка при взятии на проходе.
 // 11.01.2023 Переход на BitMap. Форма больше не тормозит при закрытиии.
 // 11.06.2023 Сообщено об ошибке. Kf3 любой ход чёрных и пешка может перепрыгнуть через коня. 7.07.2023 ошибка исправлена.
+// 8.07.2023 Добавлены улучшенные картинки фигур.
+// 9.07.2023 Добавлена возможность расстановки пользовательской начальной позиции.
 
 {$mode objfpc}{$H+}
 
@@ -87,6 +89,8 @@ type
     MenuItem5: TMenuItem;
     MenuItem6: TMenuItem;
     MenuItem7: TMenuItem;
+    MenuItem8: TMenuItem;
+    MenuItem9: TMenuItem;
     OpenDialog1: TOpenDialog;
     SaveDialog1: TSaveDialog;
     Timer1: TTimer;
@@ -107,9 +111,12 @@ type
     procedure MenuItem6Click(Sender: TObject);
     // Перейти на один полуход вперёд
     procedure MenuItem7Click(Sender: TObject);
+    procedure MenuItem8Click(Sender: TObject);
+    procedure MenuItem9Click(Sender: TObject);
 
   private
     { private declarations }
+    bMatOrPatdetect : Boolean;
     ipic_fig : Integer;
     xmouse, ymouse : Integer;
     bPress : Boolean;
@@ -179,6 +186,8 @@ var
   Form1: TForm1;
 
 implementation
+
+uses unitNewFigure, unitCompleteChessState;
 
 {$R *.lfm}
 
@@ -436,27 +445,41 @@ var
     flag : Boolean;
 begin
 
-  // Заполняем все поля куда можно пойти.
-  Fill_vacant_move_for_detect_game_over(Sender);
+  if (bMatOrPatdetect=true) then
+  begin
+     // Детектируем мат или пат только в том случае если мы не начали процедуру расстановки
+     // фигур на доске для решения этюда
 
-  flag:=false;
-   for i:=1 to 8 do
-   for j:=1 to 8 do
-   if (vacantmove_for_detect_game_over[i,j]) then flag:=true;
+     // Заполняем все поля куда можно пойти.
+     Fill_vacant_move_for_detect_game_over(Sender);
 
-   if (flag) then
-   begin
-      Result:=false;
+      flag:=false;
+
+     for i:=1 to 8 do
+       for j:=1 to 8 do
+         if (vacantmove_for_detect_game_over[i,j]) then flag:=true;
+
+      if (flag) then
+      begin
+         Result:=false;
+      end
+       else
+      begin
+          Result:=true; // Некуда идти
+
+      end;
+       // Чтобы правильно детектировать что некуда ходить нужно
+       // перебрать все фигуры а не только ту по которой пользователь
+       // Щёлкнул мышкой.
+       //Result:=false;
+
    end
-    else
-   begin
-      Result:=true; // Некуда идти
+  else
+  begin
+     Result:=false;
+  end;
 
-   end;
-    // Чтобы правильно детектировать что некуда ходить нужно
-    // перебрать все фигуры а не только ту по которой пользователь
-    // Щёлкнул мышкой.
-    //Result:=false;
+
 end;
 
 procedure TForm1.DeleteFig(i0,j0 : Integer);
@@ -665,7 +688,7 @@ begin
    end;
 end;
 
-procedure TForm1.kletka(x,y,a:integer;cl:TColor);
+procedure TForm1.Kletka(x,y,a:integer;cl:TColor);
 begin
 with BitMap.Canvas do
  begin
@@ -1737,6 +1760,8 @@ var
   i,j : Integer;
 begin
 
+    bMatOrPatdetect:=true;
+
     ipic_fig:=1;
 
     Assignfile(datFile_gl,'temp'); // Играемая партия будет логироваться в файл temp на диске.
@@ -1801,117 +1826,126 @@ vacantmove1[i][j]:=false;
 cMove:=cwhite; //  Белые начинают.
 
 // Начальная расстановка войск.
-
-SetLength(arrw,16);
-SetLength(arrb,16);
-
-arrw[0].fig:=cpawn;
-arrw[0].i:=7;
-arrw[0].j:=1;
-arrw[1].fig:=cpawn;
-arrw[1].i:=7;
-arrw[1].j:=2;
-arrw[2].fig:=cpawn;
-arrw[2].i:=7;
-arrw[2].j:=3;
-arrw[3].fig:=cpawn;
-arrw[3].i:=7;
-arrw[3].j:=4;
-arrw[4].fig:=cpawn;
-arrw[4].i:=7;
-arrw[4].j:=5;
-arrw[5].fig:=cpawn;
-arrw[5].i:=7;
-arrw[5].j:=6;
-arrw[6].fig:=cpawn;
-arrw[6].i:=7;
-arrw[6].j:=7;
-arrw[7].fig:=cpawn;
-arrw[7].i:=7;
-arrw[7].j:=8;
-arrw[8].fig:=crook;
-arrw[8].i:=8;
-arrw[8].j:=1;
-arrw[9].fig:=crook;
-arrw[9].i:=8;
-arrw[9].j:=8;
-arrw[10].fig:=cknight;
-arrw[10].i:=8;
-arrw[10].j:=2;
-arrw[11].fig:=cknight;
-arrw[11].i:=8;
-arrw[11].j:=7;
-arrw[12].fig:=cbishop;
-arrw[12].i:=8;
-arrw[12].j:=3;
-arrw[13].fig:=cbishop;
-arrw[13].i:=8;
-arrw[13].j:=6;
-arrw[14].fig:=cqueen;
-arrw[14].i:=8;
-arrw[14].j:=4;
-arrw[15].fig:=cking;
-arrw[15].i:=8;
-arrw[15].j:=5;
-
-
-arrb[0].fig:=cpawn;
-arrb[0].i:=2;
-arrb[0].j:=1;
-arrb[1].fig:=cpawn;
-arrb[1].i:=2;
-arrb[1].j:=2;
-arrb[2].fig:=cpawn;
-arrb[2].i:=2;
-arrb[2].j:=3;
-arrb[3].fig:=cpawn;
-arrb[3].i:=2;
-arrb[3].j:=4;
-arrb[4].fig:=cpawn;
-arrb[4].i:=2;
-arrb[4].j:=5;
-arrb[5].fig:=cpawn;
-arrb[5].i:=2;
-arrb[5].j:=6;
-arrb[6].fig:=cpawn;
-arrb[6].i:=2;
-arrb[6].j:=7;
-arrb[7].fig:=cpawn;
-arrb[7].i:=2;
-arrb[7].j:=8;
-arrb[8].fig:=crook;
-arrb[8].i:=1;
-arrb[8].j:=1;
-arrb[9].fig:=crook;
-arrb[9].i:=1;
-arrb[9].j:=8;
-arrb[10].fig:=cknight;
-arrb[10].i:=1;
-arrb[10].j:=2;
-arrb[11].fig:=cknight;
-arrb[11].i:=1;
-arrb[11].j:=7;
-arrb[12].fig:=cbishop;
-arrb[12].i:=1;
-arrb[12].j:=3;
-arrb[13].fig:=cbishop;
-arrb[13].i:=1;
-arrb[13].j:=6;
-arrb[14].fig:=cqueen;
-arrb[14].i:=1;
-arrb[14].j:=4;
-arrb[15].fig:=cking;
-arrb[15].i:=1;
-arrb[15].j:=5;
-
-SetLength(arrw1,16);
-SetLength(arrb1,16);
-
-for i:=0 to 15 do
+//if (1) then
 begin
-   arrw1[i]:=arrw[i];
-   arrb1[i]:=arrb[i];
+   SetLength(arrw,16);
+   SetLength(arrb,16);
+
+   arrw[0].fig:=cpawn;
+   arrw[0].i:=7;
+   arrw[0].j:=1;
+   arrw[1].fig:=cpawn;
+   arrw[1].i:=7;
+   arrw[1].j:=2;
+   arrw[2].fig:=cpawn;
+   arrw[2].i:=7;
+   arrw[2].j:=3;
+   arrw[3].fig:=cpawn;
+   arrw[3].i:=7;
+   arrw[3].j:=4;
+   arrw[4].fig:=cpawn;
+   arrw[4].i:=7;
+   arrw[4].j:=5;
+   arrw[5].fig:=cpawn;
+   arrw[5].i:=7;
+   arrw[5].j:=6;
+   arrw[6].fig:=cpawn;
+   arrw[6].i:=7;
+   arrw[6].j:=7;
+   arrw[7].fig:=cpawn;
+   arrw[7].i:=7;
+   arrw[7].j:=8;
+   arrw[8].fig:=crook;
+   arrw[8].i:=8;
+   arrw[8].j:=1;
+   arrw[9].fig:=crook;
+   arrw[9].i:=8;
+   arrw[9].j:=8;
+   arrw[10].fig:=cknight;
+   arrw[10].i:=8;
+   arrw[10].j:=2;
+   arrw[11].fig:=cknight;
+   arrw[11].i:=8;
+   arrw[11].j:=7;
+   arrw[12].fig:=cbishop;
+   arrw[12].i:=8;
+   arrw[12].j:=3;
+   arrw[13].fig:=cbishop;
+   arrw[13].i:=8;
+   arrw[13].j:=6;
+   arrw[14].fig:=cqueen;
+   arrw[14].i:=8;
+   arrw[14].j:=4;
+   arrw[15].fig:=cking;
+   arrw[15].i:=8;
+   arrw[15].j:=5;
+
+
+   arrb[0].fig:=cpawn;
+   arrb[0].i:=2;
+   arrb[0].j:=1;
+   arrb[1].fig:=cpawn;
+   arrb[1].i:=2;
+   arrb[1].j:=2;
+   arrb[2].fig:=cpawn;
+   arrb[2].i:=2;
+   arrb[2].j:=3;
+   arrb[3].fig:=cpawn;
+   arrb[3].i:=2;
+   arrb[3].j:=4;
+   arrb[4].fig:=cpawn;
+   arrb[4].i:=2;
+   arrb[4].j:=5;
+   arrb[5].fig:=cpawn;
+   arrb[5].i:=2;
+   arrb[5].j:=6;
+   arrb[6].fig:=cpawn;
+   arrb[6].i:=2;
+   arrb[6].j:=7;
+   arrb[7].fig:=cpawn;
+   arrb[7].i:=2;
+   arrb[7].j:=8;
+   arrb[8].fig:=crook;
+   arrb[8].i:=1;
+   arrb[8].j:=1;
+   arrb[9].fig:=crook;
+   arrb[9].i:=1;
+   arrb[9].j:=8;
+   arrb[10].fig:=cknight;
+   arrb[10].i:=1;
+   arrb[10].j:=2;
+   arrb[11].fig:=cknight;
+   arrb[11].i:=1;
+   arrb[11].j:=7;
+   arrb[12].fig:=cbishop;
+   arrb[12].i:=1;
+   arrb[12].j:=3;
+   arrb[13].fig:=cbishop;
+   arrb[13].i:=1;
+   arrb[13].j:=6;
+   arrb[14].fig:=cqueen;
+   arrb[14].i:=1;
+   arrb[14].j:=4;
+   arrb[15].fig:=cking;
+   arrb[15].i:=1;
+   arrb[15].j:=5;
+
+   SetLength(arrw1,16);
+   SetLength(arrb1,16);
+
+   for i:=0 to 15 do
+   begin
+      arrw1[i]:=arrw[i];
+      arrb1[i]:=arrb[i];
+   end;
+
 end;
+//else
+//begin
+
+//end;
+
+
 
   AddPositon_in_Log(); //  Добавление начальной расстановки фигур в файл на диске.
   Draw(Sender);
@@ -3743,9 +3777,11 @@ begin
 
     xmouse:=X;
     ymouse:=Y;
-    bPress:=not(bPress);
+    if (bMatOrPatdetect) then
+    begin
+       bPress:=not(bPress);
 
-    if (bPress) then
+       if (bPress) then
     begin
        for i:=1 to 8 do
        for j:=1 to 8 do
@@ -5233,7 +5269,284 @@ begin
           end;
     end;
 
+
+    end
+    else
+    begin
+       bPress:=true;
+
+       // Рисуем выделенную клетку
+       Draw(Sender);
+       if (bMatOrPatdetect=false) then
+       begin
+          FormPaint(Sender);
+       end;
+       // Здесь должна быть вставка фигуры в список фигур.
+
+       FormNewFigure.ShowModal;
+       if (FormNewFigure.RadioGroup1.ItemIndex=0) then
+       begin
+          // continue
+
+          for i:=1 to n do
+             for j:=1 to n do
+             begin
+                if (bPress and ((xmouse>40+(j-1)*60)and(xmouse<40+(j-1)*60+60)and(
+                    ymouse>20+(i-1)*60)and(ymouse<20+(i-1)*60+60))) then
+                begin
+                   if (FormNewFigure.RadioGroup2.ItemIndex=0) then
+                   begin
+                      // Белые
+                      for i_1:=0 to High(arrw) do
+                      begin
+                         if (arrw[i_1].fig=cemptyfig) then
+                         begin
+                            case FormNewFigure.RadioGroup3.ItemIndex of
+                             0 : begin
+                                    // пешка
+                                    arrw[i_1].fig:=cpawn;
+                                    arrw[i_1].i:=i;
+                                    arrw[i_1].j:=j;
+
+                                    arrw1[i_1].fig:=cpawn;
+                                    arrw1[i_1].i:=i;
+                                    arrw1[i_1].j:=j;
+                                 end;
+                             1 : begin
+                                    // Конь
+                                    arrw[i_1].fig:=cknight;
+                                    arrw[i_1].i:=i;
+                                    arrw[i_1].j:=j;
+
+                                    arrw1[i_1].fig:=cknight;
+                                    arrw1[i_1].i:=i;
+                                    arrw1[i_1].j:=j;
+                                 end;
+                             2 : begin
+                                    // Слон
+                                    arrw[i_1].fig:=cbishop;
+                                    arrw[i_1].i:=i;
+                                    arrw[i_1].j:=j;
+
+                                    arrw1[i_1].fig:=cbishop;
+                                    arrw1[i_1].i:=i;
+                                    arrw1[i_1].j:=j;
+                                 end;
+                             3 : begin
+                                    // Ладья
+                                    arrw[i_1].fig:=crook;
+                                    arrw[i_1].i:=i;
+                                    arrw[i_1].j:=j;
+
+                                    arrw1[i_1].fig:=crook;
+                                    arrw1[i_1].i:=i;
+                                    arrw1[i_1].j:=j;
+                                 end;
+                             4 : begin
+                                    // Ферзь
+                                    arrw[i_1].fig:=cqueen;
+                                    arrw[i_1].i:=i;
+                                    arrw[i_1].j:=j;
+
+                                    arrw1[i_1].fig:=cqueen;
+                                    arrw1[i_1].i:=i;
+                                    arrw1[i_1].j:=j;
+                                 end;
+                             5 : begin
+                                    // Король
+                                    arrw[i_1].fig:=cking;
+                                    arrw[i_1].i:=i;
+                                    arrw[i_1].j:=j;
+
+                                    arrw1[i_1].fig:=cking;
+                                    arrw1[i_1].i:=i;
+                                    arrw1[i_1].j:=j;
+                                 end;
+                            end;
+                            break;
+                       end;
+                    end;
+                 end
+                 else
+                 begin
+                    // Чёрные
+                    for i_1:=0 to High(arrb) do
+                    begin
+                       if (arrb[i_1].fig=cemptyfig) then
+                       begin
+                          case FormNewFigure.RadioGroup3.ItemIndex of
+                          0 : begin
+                                  // пешка
+                                  arrb[i_1].fig:=cpawn;
+                                  arrb[i_1].i:=i;
+                                  arrb[i_1].j:=j;
+
+                                  arrb1[i_1].fig:=cpawn;
+                                  arrb1[i_1].i:=i;
+                                  arrb1[i_1].j:=j;
+                              end;
+                            1 : begin
+                                   // Конь
+                                   arrb[i_1].fig:=cknight;
+                                   arrb[i_1].i:=i;
+                                   arrb[i_1].j:=j;
+
+                                   arrb1[i_1].fig:=cknight;
+                                   arrb1[i_1].i:=i;
+                                   arrb1[i_1].j:=j;
+                              end;
+                            2 : begin
+                                   // Слон
+                                   arrb[i_1].fig:=cbishop;
+                                   arrb[i_1].i:=i;
+                                   arrb[i_1].j:=j;
+
+                                   arrb1[i_1].fig:=cbishop;
+                                   arrb1[i_1].i:=i;
+                                   arrb1[i_1].j:=j;
+                              end;
+                             3 : begin
+                                    // Ладья
+                                    arrb[i_1].fig:=crook;
+                                    arrb[i_1].i:=i;
+                                    arrb[i_1].j:=j;
+
+                                    arrb1[i_1].fig:=crook;
+                                    arrb1[i_1].i:=i;
+                                    arrb1[i_1].j:=j;
+                              end;
+                             4 : begin
+                                    // Ферзь
+                                    arrb[i_1].fig:=cqueen;
+                                    arrb[i_1].i:=i;
+                                    arrb[i_1].j:=j;
+
+                                    arrb1[i_1].fig:=cqueen;
+                                    arrb1[i_1].i:=i;
+                                    arrb1[i_1].j:=j;
+                              end;
+                              5 : begin
+                                     // Король
+                                     arrb[i_1].fig:=cking;
+                                     arrb[i_1].i:=i;
+                                     arrb[i_1].j:=j;
+
+                                     arrb1[i_1].fig:=cking;
+                                     arrb1[i_1].i:=i;
+                                     arrb1[i_1].j:=j;
+                                  end;
+                          end;
+                          break;
+                       end;
+                    end;
+                 end;
+
+              end;
+          end;
+       end
+       else
+       begin
+          // stop - Закончили формировать пользовательскую начальную  расстановку фигур на доске;
+
+          // Завершаем установку шахматной расстановки фигур:
+          // Нужно спросить чей ход и была ли рокировка.
+          FormCompleateCreationChessStudy.ShowModal;
+
+          if (FormCompleateCreationChessStudy.RadioGroup1.ItemIndex=0) then
+          begin
+             cMove:=cwhite; //  Белые начинают.
+          end
+           else
+          begin
+             cMove:=cblack; //  Чёрные начинают.
+          end;
+
+          if (FormCompleateCreationChessStudy.RadioGroup6.ItemIndex=0) then
+          begin
+             did_the_white_right_rook_move:=true;  // ходили ли белые ладьи
+             did_the_white_right_rook_move1:=true;
+          end
+           else
+           begin
+              did_the_white_right_rook_move:=false;  // ходили ли белые ладьи
+              did_the_white_right_rook_move1:=false;
+           end;
+
+          if (FormCompleateCreationChessStudy.RadioGroup4.ItemIndex=0) then
+          begin
+             did_the_white_left_rook_move :=true;
+             did_the_white_left_rook_move1 :=true; // ходили ли белые ладьи
+          end
+           else
+          begin
+             did_the_white_left_rook_move :=false;
+             did_the_white_left_rook_move1 :=false; // ходили ли белые ладьи
+          end;
+
+          if (FormCompleateCreationChessStudy.RadioGroup7.ItemIndex=0) then
+          begin
+              did_the_black_right_rook_move:=true; // ходили ли чёрные ладьи
+              did_the_black_right_rook_move1:=true;
+          end
+            else
+           begin
+              did_the_black_right_rook_move:=false; // ходили ли чёрные ладьи
+              did_the_black_right_rook_move1:=false;
+           end;
+
+          if (FormCompleateCreationChessStudy.RadioGroup5.ItemIndex=0) then
+          begin
+             did_the_black_left_rook_move :=true;
+              did_the_black_left_rook_move1 :=true; // ходили ли чёрные ладьи
+          end
+           else
+           begin
+              did_the_black_left_rook_move :=false;
+              did_the_black_left_rook_move1 :=false; // ходили ли чёрные ладьи
+          end;
+
+          if (FormCompleateCreationChessStudy.RadioGroup2.ItemIndex=0) then
+          begin
+             did_the_white_king_move:=true;    // ходили ли короли.
+             did_the_white_king_move1:=true;
+          end
+          else
+          begin
+             did_the_white_king_move:=false;    // ходили ли короли.
+             did_the_white_king_move1:=false;
+          end;
+
+           if (FormCompleateCreationChessStudy.RadioGroup3.ItemIndex=0) then
+          begin
+             did_the_black_king_move:=true;
+             did_the_black_king_move1:=true; // ходили ли короли.
+          end
+            else
+          begin
+             did_the_black_king_move:=false;
+             did_the_black_king_move1:=false; // ходили ли короли.
+          end;
+
+          bMatOrPatdetect:=true;
+
+          CopyList();
+
+          ReWrite (datFile_gl); // Очистка файла лога. Файл будет писаться по новой.
+          current_item:=0; // номер позиций накапливаемых в логе.
+          current_item1:=0;
+
+          AddPositon_in_Log(); //  Добавление пользовательской начальной расстановки фигур в файл на диске.
+
+
+       end;
+    end;
+
+
      Draw(Sender);
+     if (bMatOrPatdetect=false) then
+     begin
+        FormPaint(Sender);
+     end;
 
    end;
 end;
@@ -5480,6 +5793,101 @@ begin
       end;
       Draw(Sender);
    end;
+end;
+
+// Смена картинок для фигур
+procedure TForm1.MenuItem8Click(Sender: TObject);
+begin
+   if (ipic_fig=1) then
+   begin
+      ipic_fig:=0;
+   end
+   else
+   begin
+      ipic_fig:=1;
+   end;
+   Draw(Sender);
+end;
+
+// Полная очистка доски от фигур 09.07.2023.
+procedure TForm1.MenuItem9Click(Sender: TObject);
+var
+     i, j : Integer;
+begin
+   bMatOrPatdetect:=false;
+
+   // Фигуру которую нужно вернуть при операции UNDO.
+   white_eating.fig:=cemptyfig;
+   black_eating.fig:=cemptyfig;
+   white_eating.i:=-1;
+   white_eating.j:=-1;
+   black_eating.i:=-1;
+   black_eating.j:=-1;
+
+   did_the_white_right_rook_move:=false;
+   did_the_white_left_rook_move :=false; // ходили ли белые ладьи
+   did_the_black_right_rook_move:=false;
+   did_the_black_left_rook_move :=false; // ходили ли чёрные ладьи
+   did_the_white_king_move:=false;
+   did_the_black_king_move:=false; // ходили ли короли.
+
+   did_the_white_right_rook_move1:=false;
+   did_the_white_left_rook_move1 :=false; // ходили ли белые ладьи
+   did_the_black_right_rook_move1:=false;
+   did_the_black_left_rook_move1 :=false; // ходили ли чёрные ладьи
+   did_the_white_king_move1:=false;
+   did_the_black_king_move1:=false; // ходили ли короли.
+
+   white_previos_move.from.i:=-1;
+   white_previos_move.from.j:=-1;
+   white_previos_move.to_.i:=-1;
+   white_previos_move.to_.j:=-1;
+   white_previos_move.fig:=cemptyfig;
+
+   black_previos_move.from.i:=-1;
+   black_previos_move.from.j:=-1;
+   black_previos_move.to_.i:=-1;
+   black_previos_move.to_.j:=-1;
+   black_previos_move.fig:=cemptyfig;
+
+   white_previos_move1:=white_previos_move;
+   black_previos_move1:=black_previos_move;
+
+   for i:=1 to 8 do
+     for j:=1 to 8 do
+        vacantmove[i][j]:=false;
+   for i:=1 to 8 do
+     for j:=1 to 8 do
+        vacantmove1[i][j]:=false;
+
+   cMove:=cwhite; //  Белые начинают.
+
+   for i:=0 to High(arrw) do
+   begin
+       arrw[i].fig:=cemptyfig;
+       arrw[i].i:=-1;
+       arrw[i].j:=-1;
+   end;
+   for i:=0 to High(arrb) do
+   begin
+       arrb[i].fig:=cemptyfig;
+       arrb[i].i:=-1;
+       arrb[i].j:=-1;
+   end;
+   for i:=0 to High(arrw1) do
+   begin
+       arrw1[i].fig:=cemptyfig;
+       arrw1[i].i:=-1;
+       arrw1[i].j:=-1;
+   end;
+   for i:=0 to High(arrb1) do
+   begin
+       arrb1[i].fig:=cemptyfig;
+       arrb1[i].i:=-1;
+       arrb1[i].j:=-1;
+   end;
+   Draw(Sender);
+   FormPaint(Sender);
 end;
 
 // Добавление шахматной позиции в конец двоичного файла логирования ходов.
@@ -5930,7 +6338,7 @@ begin
  cqueen : begin
     if (odd(arrb[i].i+arrb[i].j)) then
     begin
-        Queen(40+(arrb[i].j-1)*60,20+(arrb[i].i-1)*60,60,clBlack,kr);
+       Queen(40+(arrb[i].j-1)*60,20+(arrb[i].i-1)*60,60,clBlack,kr);
     end
     else
     begin
