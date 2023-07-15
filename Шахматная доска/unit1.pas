@@ -116,6 +116,8 @@ type
 
   private
     { private declarations }
+    m : Real;// масштаб
+
     bMatOrPatdetect : Boolean;
     ipic_fig : Integer;
     xmouse, ymouse : Integer;
@@ -704,7 +706,7 @@ var xc,yc,s:integer;
 begin
 xc:=x+a div 2;
 yc:=y+a div 2;
-s:=10;
+s:=round(m*10);
 with BitMap.Canvas do
  begin
     cmem1:=Color;
@@ -714,20 +716,20 @@ with BitMap.Canvas do
 
      if (ipic_fig=0) then
     begin
-       font.size:=14;
-       textout(xc-13,yc-2*s,'_o_');
+       font.size:=round(m*14);
+       textout(xc-round(m*13),yc-2*s,'_o_');
        textout(xc-s,yc,'(_)');
     end
     else
     begin
-        font.size:=18;
+        font.size:=round(m*18);
         if (c2=clWhite) then
         begin
-           textout(xc-13,yc-s,'♙');
+           textout(xc-round(m*13),yc-s,'♙');
         end
          else
         begin
-           textout(xc-13,yc-s,'♟');
+           textout(xc-round(m*13),yc-s,'♟');
         end;
     end;
 
@@ -742,7 +744,7 @@ var xc,yc,s:integer;
 begin
 xc:=x+a div 2;
 yc:=y+a div 2;
-s:=10;
+s:=round(m*10);
 with BitMap.Canvas do
  begin
     cmem1:=Color;
@@ -753,20 +755,20 @@ with BitMap.Canvas do
 
     if (ipic_fig=0) then
     begin
-       font.size:=14;
+       font.size:=round(m*14);
        textout(xc-s,yc-2*s,'["]');
        textout(xc-s,yc,'(_)');
     end
     else
     begin
-        font.size:=ifigsize;
+        font.size:=round(m*ifigsize);
         if (c2=clWhite) then
         begin
-           textout(xc-13,yc-2*s,'♖');
+           textout(xc-round(m*13),yc-2*s,'♖');
         end
          else
         begin
-           textout(xc-13,yc-2*s,'♜');
+           textout(xc-round(m*13),yc-2*s,'♜');
         end;
     end;
 
@@ -781,7 +783,7 @@ var xc,yc,s:integer;
 begin
 xc:=x+a div 2;
 yc:=y+a div 2;
-s:=10;
+s:=round(m*10);
 with BitMap.Canvas do
  begin
     cmem1:=Color;
@@ -791,20 +793,20 @@ with BitMap.Canvas do
 
     if (ipic_fig=0) then
     begin
-       font.size:=14;
-       textout(xc-13,yc-2*s,'\+/');
+       font.size:=round(m*14);
+       textout(xc-round(m*13),yc-2*s,'\+/');
        textout(xc-s,yc,'(_)');
     end
     else
     begin
-       font.size:=ifigsize;
+       font.size:=round(m*ifigsize);
        if (c2=clWhite) then
        begin
-          textout(xc-13,yc-2*s,'♔');
+          textout(xc-round(m*13),yc-2*s,'♔');
        end
         else
        begin
-          textout(xc-13,yc-2*s,'♚');
+          textout(xc-round(m*13),yc-2*s,'♚');
        end;
     end;
 
@@ -819,7 +821,7 @@ var xc,yc,s:integer;
 begin
 xc:=x+a div 2;
 yc:=y+a div 2;
-s:=10;
+s:=round(m*10);
 with BitMap.Canvas do
  begin
     cmem1:=Color;
@@ -830,20 +832,20 @@ with BitMap.Canvas do
 
     if (ipic_fig=0) then
     begin
-       font.size:=14;
-       textout(xc-13,yc-2*s,'\^/');
+       font.size:=round(m*14);
+       textout(xc-round(m*13),yc-2*s,'\^/');
        textout(xc-s,yc,'(_)');
     end
     else
     begin
-       font.size:=ifigsize;
+       font.size:=round(m*ifigsize);
        if (c2=clWhite) then
        begin
-          textout(xc-13,yc-2*s,'♕');
+          textout(xc-round(m*13),yc-2*s,'♕');
        end
         else
        begin
-          textout(xc-13,yc-2*s,'♛');
+          textout(xc-round(m*13),yc-2*s,'♛');
        end;
     end;
 
@@ -858,7 +860,7 @@ var xc,yc,s:integer;
 begin
 xc:=x+a div 2;
 yc:=y+a div 2;
-s:=10;
+s:=round(m*10);
 with BitMap.Canvas do
  begin
     cmem1:=Color;
@@ -868,20 +870,20 @@ with BitMap.Canvas do
 
     if (ipic_fig=0) then
     begin
-       font.size:=14;
+       font.size:=round(m*14);
        textout(xc-s,yc-2*s,'(\)');
        textout(xc-s,yc,'(_)');
     end
     else
     begin
-       font.size:=ifigsize;
+       font.size:=round(m*ifigsize);
        if (c2=clWhite) then
        begin
-          textout(xc-13,yc-2*s,'♗');
+          textout(xc-round(m*13),yc-2*s,'♗');
        end
         else
        begin
-          textout(xc-13,yc-2*s,'♝');
+          textout(xc-round(m*13),yc-2*s,'♝');
        end;
     end;
 
@@ -896,7 +898,7 @@ var xc,yc,s:integer;
 begin
 xc:=x+a div 2;
 yc:=y+a div 2;
-s:=10;
+s:=round(m*10);
 with BitMap.Canvas do
  begin
     cmem1:=Color;
@@ -907,20 +909,20 @@ with BitMap.Canvas do
 
     if (ipic_fig=0) then
     begin
-       font.size:=14;
+       font.size:=round(m*14);
        textout(xc-s,yc-2*s,'{o\');
        textout(xc-s,yc,'(_)');
     end
     else
     begin
-       font.size:=ifigsize;
+       font.size:=round(m*ifigsize);
        if (c2=clWhite) then
        begin
-          textout(xc-13,yc-2*s,'♘');
+          textout(xc-round(m*13),yc-2*s,'♘');
        end
         else
        begin
-          textout(xc-13,yc-2*s,'♞');
+          textout(xc-round(m*13),yc-2*s,'♞');
        end;
     end;
 
@@ -1760,6 +1762,8 @@ var
   i,j : Integer;
 begin
 
+    m:=1.0; // Масштаб.
+
     bMatOrPatdetect:=true;
 
     ipic_fig:=1;
@@ -1769,8 +1773,8 @@ begin
     current_item:=0; // номер позиций накапливаемых в логе.
     current_item1:=0;
 
-    clientwidth:=540;
-    clientheight:=560;
+    clientwidth:=round(m*540);
+    clientheight:=round(m*560);
     position:=poScreenCenter;
     bPress:=false;
 
@@ -1965,6 +1969,39 @@ begin
         // Перейти на один полуход вперёд
         MenuItem7Click(Sender);
     end;
+    if (Key=VK_UP) then
+    begin
+        // увеличить масштаб в 1.05 раза.
+        m:=1.05*m;
+        clientwidth:=round(m*540);
+        clientheight:=round(m*560);
+
+        BitMap.Free;
+        BitMap:=Graphics.TBitmap.Create;
+        BitMap.Width:=clientwidth;
+        BitMap.Height:=clientheight;
+        Draw(Sender);
+        FormPaint(Sender);
+    end;
+    if (Key=VK_DOWN) then
+    begin
+        // уменьщить масштаб в 1.05 раза.
+        m:=m/1.05;
+        if (m<1.0) then
+        begin
+           m:=1.0;
+        end;
+        clientwidth:=round(m*540);
+        clientheight:=round(m*560);
+
+        BitMap.Free;
+        BitMap:=Graphics.TBitmap.Create;
+        BitMap.Width:=clientwidth;
+        BitMap.Height:=clientheight;
+        Draw(Sender);
+        FormPaint(Sender);
+    end;
+    //Form1.caption:=FloatToStr(m);
 end;
 
 
@@ -3526,8 +3563,8 @@ begin
        for i:=1 to n do
           for j:=1 to n do
           begin
-              if (bPress and ((xmouse>40+(j-1)*60)and(xmouse<40+(j-1)*60+60)and(
-                   ymouse>20+(i-1)*60)and(ymouse<20+(i-1)*60+60))) then
+              if (bPress and ((xmouse>round(m*40)+(j-1)*round(m*60))and(xmouse<round(m*40)+(j-1)*round(m*60)+round(m*60))and(
+                   ymouse>round(m*20)+(i-1)*round(m*60))and(ymouse<round(m*20)+(i-1)*round(m*60)+round(m*60)))) then
               begin
                  // откуда
                  if (cMove=cwhite) then
@@ -3539,8 +3576,8 @@ begin
                           for i_2:=1 to n do
                             for j_2:=1 to n do
                             begin
-                               if (bPress and ((X>40+(j_2-1)*60)and(X<40+(j_2-1)*60+60)and(
-                                    Y>20+(i_2-1)*60)and(Y<20+(i_2-1)*60+60))) then
+                               if (bPress and ((X>round(m*40)+(j_2-1)*round(m*60))and(X<round(m*40)+(j_2-1)*round(m*60)+round(m*60))and(
+                                    Y>round(m*20)+(i_2-1)*round(m*60))and(Y<round(m*20)+(i_2-1)*round(m*60)+round(m*60)))) then
                                begin
                                   // куда
                                   if ((WhotisPole(i_2,j_2)<>cwhite)and(vacantmove[i_2,j_2])) then
@@ -3658,8 +3695,8 @@ begin
                           for i_2:=1 to n do
                              for j_2:=1 to n do
                              begin
-                                if (bPress and ((X>40+(j_2-1)*60)and(X<40+(j_2-1)*60+60)and(
-                                     Y>20+(i_2-1)*60)and(Y<20+(i_2-1)*60+60))) then
+                                if (bPress and ((X>round(m*40)+(j_2-1)*round(m*60))and(X<round(m*40)+(j_2-1)*round(m*60)+round(m*60))and(
+                                     Y>round(m*20)+(i_2-1)*round(m*60))and(Y<round(m*20)+(i_2-1)*round(m*60)+round(m*60)))) then
                                 begin
                                    // куда
                                    if ((WhotisPole(i_2,j_2)<>cblack)and(vacantmove[i_2,j_2])) then
@@ -3794,8 +3831,8 @@ begin
        for i:=1 to n do
           for j:=1 to n do
           begin
-              if (bPress and ((xmouse>40+(j-1)*60)and(xmouse<40+(j-1)*60+60)and(
-                   ymouse>20+(i-1)*60)and(ymouse<20+(i-1)*60+60))) then
+              if (bPress and ((xmouse>round(m*40)+(j-1)*round(m*60))and(xmouse<round(m*40)+(j-1)*round(m*60)+round(m*60))and(
+                   ymouse>round(m*20)+(i-1)*round(m*60))and(ymouse<round(m*20)+(i-1)*round(m*60)+round(m*60)))) then
               begin
                  // откуда
                  if (cMove=cwhite) then
@@ -5291,8 +5328,8 @@ begin
           for i:=1 to n do
              for j:=1 to n do
              begin
-                if (bPress and ((xmouse>40+(j-1)*60)and(xmouse<40+(j-1)*60+60)and(
-                    ymouse>20+(i-1)*60)and(ymouse<20+(i-1)*60+60))) then
+                if (bPress and ((xmouse>round(m*40)+(j-1)*round(m*60))and(xmouse<round(m*40)+(j-1)*round(m*60)+round(m*60))and(
+                    ymouse>round(m*20)+(i-1)*round(m*60))and(ymouse<round(m*20)+(i-1)*round(m*60)+round(m*60)))) then
                 begin
                    if (FormNewFigure.RadioGroup2.ItemIndex=0) then
                    begin
@@ -6184,11 +6221,11 @@ end;
 for i:=1 to n do
 for j:=1 to n do
 begin
-   if (bPress and ((xmouse>40+(j-1)*60)and(xmouse<40+(j-1)*60+60)and(
-   ymouse>20+(i-1)*60)and(ymouse<20+(i-1)*60+60))) then
+   if (bPress and ((xmouse>round(m*40)+(j-1)*round(m*60))and(xmouse<round(m*40)+(j-1)*round(m*60)+round(m*60))and(
+   ymouse>round(m*20)+(i-1)*round(m*60))and(ymouse<round(m*20)+(i-1)*round(m*60)+round(m*60)))) then
    begin
       // Подсвечиваем какой фигурой пошли.
-      Kletka(40+(j-1)*60,20+(i-1)*60,60,clYellow);
+      Kletka(round(m*40)+(j-1)*round(m*60),round(m*20)+(i-1)*round(m*60),round(m*60),clYellow);
    end
    else if  (bPress and (vacantmove[i,j] or vacantmove1[i,j])) then
    begin
@@ -6196,33 +6233,33 @@ begin
       if (vacantmove1[i,j]) then
       begin
           // Поля атаки.
-          Kletka(40+(j-1)*60,20+(i-1)*60,60,clRed);
+          Kletka(round(m*40)+(j-1)*round(m*60),round(m*20)+(i-1)*round(m*60),round(m*60),clRed);
       end
        else
       begin
-         if odd(i+j) then  Kletka(40+(j-1)*60,20+(i-1)*60,60,clMoneyGreen)
-         else Kletka(40+(j-1)*60,20+(i-1)*60,60,clAqua);
+         if odd(i+j) then  Kletka(round(m*40)+(j-1)*round(m*60),round(m*20)+(i-1)*round(m*60),round(m*60),clMoneyGreen)
+         else Kletka(round(m*40)+(j-1)*round(m*60),round(m*20)+(i-1)*round(m*60),round(m*60),clAqua);
       end;
    end
    else
    begin
-      if odd(i+j) then Kletka(40+(j-1)*60,20+(i-1)*60,60,kr)
-      else Kletka(40+(j-1)*60,20+(i-1)*60,60,kw);
+      if odd(i+j) then Kletka(round(m*40)+(j-1)*round(m*60),round(m*20)+(i-1)*round(m*60),round(m*60),kr)
+      else Kletka(round(m*40)+(j-1)*round(m*60),round(m*20)+(i-1)*round(m*60),round(m*60),kw);
    end;
 end;
 with BitMap.Canvas do
- begin
+begin
   pen.Color:=kr;
   pen.Width:=3;
   brush.Style:=bsClear;
-  rectangle(40,20,520,500);
-font.Size:=12;
-font.Style:=[fsBold];
-for i:=1 to n do
- begin
-  textout(20,i*60-20,inttostr(n-i+1));
-  textout(i*60+10,510,chr(i+96));
- end;
+  rectangle(round(m*40),round(m*20),round(m*520),round(m*500));
+  font.Size:=round(m*12);
+  font.Style:=[fsBold];
+  for i:=1 to n do
+  begin
+     textout(round(m*20),i*round(m*60)-round(m*20),inttostr(n-i+1));
+     textout(i*round(m*60)+round(m*10),round(m*510),chr(i+96));
+  end;
 end;
 
 
@@ -6232,61 +6269,61 @@ begin
  cpawn : begin
     if (odd(arrw[i].i+arrw[i].j)) then
     begin
-        Pawn(40+(arrw[i].j-1)*60,20+(arrw[i].i-1)*60,60,uclr,kr);
+        Pawn(round(m*40)+(arrw[i].j-1)*round(m*60),round(m*20)+(arrw[i].i-1)*round(m*60),round(m*60),uclr,kr);
     end
     else
     begin
-       Pawn(40+(arrw[i].j-1)*60,20+(arrw[i].i-1)*60,60,uclr,kw);
+       Pawn(round(m*40)+(arrw[i].j-1)*round(m*60),round(m*20)+(arrw[i].i-1)*round(m*60),round(m*60),uclr,kw);
     end;
  end;
  crook : begin
     if (odd(arrw[i].i+arrw[i].j)) then
     begin
-        Rook(40+(arrw[i].j-1)*60,20+(arrw[i].i-1)*60,60,uclr,kr);
+        Rook(round(m*40)+(arrw[i].j-1)*round(m*60),round(m*20)+(arrw[i].i-1)*round(m*60),round(m*60),uclr,kr);
     end
     else
     begin
-       Rook(40+(arrw[i].j-1)*60,20+(arrw[i].i-1)*60,60,uclr,kw);
+       Rook(round(m*40)+(arrw[i].j-1)*round(m*60),round(m*20)+(arrw[i].i-1)*round(m*60),round(m*60),uclr,kw);
     end;
  end;
  cknight : begin
     if (odd(arrw[i].i+arrw[i].j)) then
     begin
-        Knight(40+(arrw[i].j-1)*60,20+(arrw[i].i-1)*60,60,uclr,kr);
+        Knight(round(m*40)+(arrw[i].j-1)*round(m*60),round(m*20)+(arrw[i].i-1)*round(m*60),round(m*60),uclr,kr);
     end
     else
     begin
-       Knight(40+(arrw[i].j-1)*60,20+(arrw[i].i-1)*60,60,uclr,kw);
+       Knight(round(m*40)+(arrw[i].j-1)*round(m*60),round(m*20)+(arrw[i].i-1)*round(m*60),round(m*60),uclr,kw);
     end;
  end;
  cbishop : begin
     if (odd(arrw[i].i+arrw[i].j)) then
     begin
-        Bishop(40+(arrw[i].j-1)*60,20+(arrw[i].i-1)*60,60,uclr,kr);
+        Bishop(round(m*40)+(arrw[i].j-1)*round(m*60),round(m*20)+(arrw[i].i-1)*round(m*60),round(m*60),uclr,kr);
     end
     else
     begin
-       Bishop(40+(arrw[i].j-1)*60,20+(arrw[i].i-1)*60,60,uclr,kw);
+       Bishop(round(m*40)+(arrw[i].j-1)*round(m*60),round(m*20)+(arrw[i].i-1)*round(m*60),round(m*60),uclr,kw);
     end;
  end;
  cqueen : begin
     if (odd(arrw[i].i+arrw[i].j)) then
     begin
-        Queen(40+(arrw[i].j-1)*60,20+(arrw[i].i-1)*60,60,uclr,kr);
+        Queen(round(m*40)+(arrw[i].j-1)*round(m*60),round(m*20)+(arrw[i].i-1)*round(m*60),round(m*60),uclr,kr);
     end
     else
     begin
-       Queen(40+(arrw[i].j-1)*60,20+(arrw[i].i-1)*60,60,uclr,kw);
+       Queen(round(m*40)+(arrw[i].j-1)*round(m*60),round(m*20)+(arrw[i].i-1)*round(m*60),round(m*60),uclr,kw);
     end;
  end;
  cking : begin
     if (odd(arrw[i].i+arrw[i].j)) then
     begin
-        King(40+(arrw[i].j-1)*60,20+(arrw[i].i-1)*60,60,uclr,kr);
+        King(round(m*40)+(arrw[i].j-1)*round(m*60),round(m*20)+(arrw[i].i-1)*round(m*60),round(m*60),uclr,kr);
     end
     else
     begin
-       King(40+(arrw[i].j-1)*60,20+(arrw[i].i-1)*60,60,uclr,kw);
+       King(round(m*40)+(arrw[i].j-1)*round(m*60),round(m*20)+(arrw[i].i-1)*round(m*60),round(m*60),uclr,kw);
     end;
  end;
  end;
@@ -6298,61 +6335,61 @@ begin
  cpawn : begin
     if (odd(arrb[i].i+arrb[i].j)) then
     begin
-        Pawn(40+(arrb[i].j-1)*60,20+(arrb[i].i-1)*60,60,clBlack,kr);
+        Pawn(round(m*40)+(arrb[i].j-1)*round(m*60),round(m*20)+(arrb[i].i-1)*round(m*60),round(m*60),clBlack,kr);
     end
     else
     begin
-       Pawn(40+(arrb[i].j-1)*60,20+(arrb[i].i-1)*60,60,clBlack,kw);
+       Pawn(round(m*40)+(arrb[i].j-1)*round(m*60),round(m*20)+(arrb[i].i-1)*round(m*60),round(m*60),clBlack,kw);
     end;
  end;
  crook : begin
     if (odd(arrb[i].i+arrb[i].j)) then
     begin
-        Rook(40+(arrb[i].j-1)*60,20+(arrb[i].i-1)*60,60,clBlack,kr);
+        Rook(round(m*40)+(arrb[i].j-1)*round(m*60),round(m*20)+(arrb[i].i-1)*round(m*60),round(m*60),clBlack,kr);
     end
     else
     begin
-       Rook(40+(arrb[i].j-1)*60,20+(arrb[i].i-1)*60,60,clBlack,kw);
+       Rook(round(m*40)+(arrb[i].j-1)*round(m*60),round(m*20)+(arrb[i].i-1)*round(m*60),round(m*60),clBlack,kw);
     end;
  end;
  cknight : begin
     if (odd(arrb[i].i+arrb[i].j)) then
     begin
-        Knight(40+(arrb[i].j-1)*60,20+(arrb[i].i-1)*60,60,clBlack,kr);
+        Knight(round(m*40)+(arrb[i].j-1)*round(m*60),round(m*20)+(arrb[i].i-1)*round(m*60),round(m*60),clBlack,kr);
     end
     else
     begin
-       Knight(40+(arrb[i].j-1)*60,20+(arrb[i].i-1)*60,60,clBlack,kw);
+       Knight(round(m*40)+(arrb[i].j-1)*round(m*60),round(m*20)+(arrb[i].i-1)*round(m*60),round(m*60),clBlack,kw);
     end;
  end;
  cbishop : begin
     if (odd(arrb[i].i+arrb[i].j)) then
     begin
-        Bishop(40+(arrb[i].j-1)*60,20+(arrb[i].i-1)*60,60,clBlack,kr);
+        Bishop(round(m*40)+(arrb[i].j-1)*round(m*60),round(m*20)+(arrb[i].i-1)*round(m*60),round(m*60),clBlack,kr);
     end
     else
     begin
-       Bishop(40+(arrb[i].j-1)*60,20+(arrb[i].i-1)*60,60,clBlack,kw);
+       Bishop(round(m*40)+(arrb[i].j-1)*round(m*60),round(m*20)+(arrb[i].i-1)*round(m*60),round(m*60),clBlack,kw);
     end;
  end;
  cqueen : begin
     if (odd(arrb[i].i+arrb[i].j)) then
     begin
-       Queen(40+(arrb[i].j-1)*60,20+(arrb[i].i-1)*60,60,clBlack,kr);
+       Queen(round(m*40)+(arrb[i].j-1)*round(m*60),round(m*20)+(arrb[i].i-1)*round(m*60),round(m*60),clBlack,kr);
     end
     else
     begin
-       Queen(40+(arrb[i].j-1)*60,20+(arrb[i].i-1)*60,60,clBlack,kw);
+       Queen(round(m*40)+(arrb[i].j-1)*round(m*60),round(m*20)+(arrb[i].i-1)*round(m*60),round(m*60),clBlack,kw);
     end;
  end;
  cking : begin
     if (odd(arrb[i].i+arrb[i].j)) then
     begin
-        King(40+(arrb[i].j-1)*60,20+(arrb[i].i-1)*60,60,clBlack,kr);
+        King(round(m*40)+(arrb[i].j-1)*round(m*60),round(m*20)+(arrb[i].i-1)*round(m*60),round(m*60),clBlack,kr);
     end
     else
     begin
-       King(40+(arrb[i].j-1)*60,20+(arrb[i].i-1)*60,60,clBlack,kw);
+       King(round(m*40)+(arrb[i].j-1)*round(m*60),round(m*20)+(arrb[i].i-1)*round(m*60),round(m*60),clBlack,kw);
     end;
  end;
  end;
@@ -6363,59 +6400,59 @@ for j:=1 to n do
 begin
    if odd(j) then
    begin
-      Pawn(40+(j-1)*60,20+(i-1)*60,60,uclr,kw);
+      Pawn(round(m*40)+(j-1)*round(m*60),round(m*20)+(i-1)*round(m*60),round(m*60),uclr,kw);
    end
     else
    begin
-      Pawn(40+(j-1)*60,20+(i-1)*60,60,uclr,kr);
+      Pawn(round(m*40)+(j-1)*round(m*60),round(m*20)+(i-1)*round(m*60),round(m*60),uclr,kr);
    end;
 end;
 i:=8;
 j:=1;
-Rook(40+(j-1)*60,20+(i-1)*60,60,uclr,kr);
+Rook(round(m*40)+(j-1)*round(m*60),round(m*20)+(i-1)*round(m*60),round(m*60),uclr,kr);
 j:=8;
-Rook(40+(j-1)*60,20+(i-1)*60,60,uclr,kw);
+Rook(round(m*40)+(j-1)*round(m*60),round(m*20)+(i-1)*round(m*60),round(m*60),uclr,kw);
 j:=4;
-Queen(40+(j-1)*60,20+(i-1)*60,60,uclr,kw);
+Queen(round(m*40)+(j-1)*round(m*60),round(m*20)+(i-1)*round(m*60),round(m*60),uclr,kw);
 j:=5;
-King(40+(j-1)*60,20+(i-1)*60,60,uclr,kr);
+King(round(m*40)+(j-1)*round(m*60),round(m*20)+(i-1)*round(m*60),round(m*60),uclr,kr);
 j:=3;
-Bishop(40+(j-1)*60,20+(i-1)*60,60,uclr,kr);
+Bishop(round(m*40)+(j-1)*round(m*60),round(m*20)+(i-1)*round(m*60),round(m*60),uclr,kr);
 j:=6;
-Bishop(40+(j-1)*60,20+(i-1)*60,60,uclr,kw);
+Bishop(round(m*40)+(j-1)*round(m*60),round(m*20)+(i-1)*round(m*60),round(m*60),uclr,kw);
 j:=2;
-Knight(40+(j-1)*60,20+(i-1)*60,60,uclr,kw);
+Knight(round(m*40)+(j-1)*round(m*60),round(m*20)+(i-1)*round(m*60),round(m*60),uclr,kw);
 j:=7;
-Knight(40+(j-1)*60,20+(i-1)*60,60,uclr,kr);
+Knight(round(m*40)+(j-1)*round(m*60),round(m*20)+(i-1)*round(m*60),round(m*60),uclr,kr);
 i:=2;
 for j:=1 to n do
 begin
    if odd(j) then
    begin
-      Pawn(40+(j-1)*60,20+(i-1)*60,60,clBlack,kr);
+      Pawn(round(m*40)+(j-1)*round(m*60),round(m*20)+(i-1)*round(m*60),round(m*60),clBlack,kr);
    end
     else
    begin
-      Pawn(40+(j-1)*60,20+(i-1)*60,60,clBlack,kw);
+      Pawn(round(m*40)+(j-1)*round(m*60),round(m*20)+(i-1)*round(m*60),round(m*60),clBlack,kw);
    end;
 end;
 i:=1;
 j:=1;
-Rook(40+(j-1)*60,20+(i-1)*60,60,clBlack,kw);
+Rook(round(m*40)+(j-1)*round(m*60),round(m*20)+(i-1)*round(m*60),round(m*60),clBlack,kw);
 j:=8;
-Rook(40+(j-1)*60,20+(i-1)*60,60,clBlack,kr);
+Rook(round(m*40)+(j-1)*round(m*60),round(m*20)+(i-1)*round(m*60),round(m*60),clBlack,kr);
 j:=4;
-Queen(40+(j-1)*60,20+(i-1)*60,60,clBlack,kr);
+Queen(round(m*40)+(j-1)*round(m*60),round(m*20)+(i-1)*round(m*60),round(m*60),clBlack,kr);
 j:=5;
-King(40+(j-1)*60,20+(i-1)*60,60,clBlack,kw);
+King(round(m*40)+(j-1)*round(m*60),round(m*20)+(i-1)*round(m*60),round(m*60),clBlack,kw);
 j:=3;
-Bishop(40+(j-1)*60,20+(i-1)*60,60,clBlack,kw);
+Bishop(round(m*40)+(j-1)*round(m*60),round(m*20)+(i-1)*round(m*60),round(m*60),clBlack,kw);
 j:=6;
-Bishop(40+(j-1)*60,20+(i-1)*60,60,clBlack,kr);
+Bishop(round(m*40)+(j-1)*round(m*60),round(m*20)+(i-1)*round(m*60),round(m*60),clBlack,kr);
 j:=2;
-Knight(40+(j-1)*60,20+(i-1)*60,60,clBlack,kr);
+Knight(round(m*40)+(j-1)*round(m*60),round(m*20)+(i-1)*round(m*60),round(m*60),clBlack,kr);
 j:=7;
-Knight(40+(j-1)*60,20+(i-1)*60,60,clBlack,kw);  }
+Knight(round(m*40)+(j-1)*round(m*60),round(m*20)+(i-1)*round(m*60),round(m*60),clBlack,kw);  }
 end;
 
 end.

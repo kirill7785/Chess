@@ -58,6 +58,7 @@
         <Filename Value="unitcompletechessstate.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="FormCompleateCreationChessStudy"/>
+        <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="unitCompleteChessState"/>
       </Unit3>

@@ -33,7 +33,7 @@
         <PackageName Value="LCL"/>
       </Item1>
     </RequiredPackages>
-    <Units Count="3">
+    <Units Count="4">
       <Unit0>
         <Filename Value="project1.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -54,6 +54,14 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="unitNewFigure"/>
       </Unit2>
+      <Unit3>
+        <Filename Value="unitcompletechessstate.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="FormCompleateCreationChessStudy"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="unitCompleteChessState"/>
+      </Unit3>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
