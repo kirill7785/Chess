@@ -761,7 +761,7 @@ with BitMap.Canvas do
     end
     else
     begin
-        font.size:=ifigsize;
+        font.size:=round(m*ifigsize);
         if (c2=clWhite) then
         begin
            textout(xc-round(m*13),yc-2*s,'♖');
@@ -799,7 +799,7 @@ with BitMap.Canvas do
     end
     else
     begin
-       font.size:=ifigsize;
+       font.size:=round(m*ifigsize);
        if (c2=clWhite) then
        begin
           textout(xc-round(m*13),yc-2*s,'♔');
@@ -838,7 +838,7 @@ with BitMap.Canvas do
     end
     else
     begin
-       font.size:=ifigsize;
+       font.size:=round(m*ifigsize);
        if (c2=clWhite) then
        begin
           textout(xc-round(m*13),yc-2*s,'♕');
@@ -876,7 +876,7 @@ with BitMap.Canvas do
     end
     else
     begin
-       font.size:=ifigsize;
+       font.size:=round(m*ifigsize);
        if (c2=clWhite) then
        begin
           textout(xc-round(m*13),yc-2*s,'♗');
@@ -915,7 +915,7 @@ with BitMap.Canvas do
     end
     else
     begin
-       font.size:=ifigsize;
+       font.size:=round(m*ifigsize);
        if (c2=clWhite) then
        begin
           textout(xc-round(m*13),yc-2*s,'♘');
@@ -5255,7 +5255,7 @@ begin
                                     begin
                                        // рокировка невозможна.
                                        // если поле, пройденное королём во время рокировки, находится под боем противника;
-                                       //если король перед началом рокировки находится под шахом или после её осуществления попадает под шах;
+                                       // если король перед началом рокировки находится под шахом или после её осуществления попадает под шах;
                                        // ходила правая ладья или уже ходил король.
                                     end
                                     else
@@ -5404,7 +5404,7 @@ begin
                        end;
                     end;
                  end
-                 else
+                 else  if (FormNewFigure.RadioGroup2.ItemIndex=1) then
                  begin
                     // Чёрные
                     for i_1:=0 to High(arrb) do
@@ -5476,6 +5476,37 @@ begin
                           break;
                        end;
                     end;
+                 end;
+                 else
+                 begin
+                    // стираем белую фигуру
+                    for i_1:=0 to High(arrw) do
+                      begin
+                         if ((arrw[i_1].i=i)and (arrw[i_1].j=j)) then
+                         begin
+                            for i_3:=i_1 to High(arrw)-1 do
+                            begin
+                               arrw[i_3]:=arrw[i_3+1];
+                            end;
+                            arrw[High(arrw)].fig:=cemptyfig;
+                            arrw[High(arrw)].i:=-1;
+                            arrw[High(arrw)].j:=-1;
+                         end;
+                      end;
+                    // стираем чёрную фигуру
+                    for i_1:=0 to High(arrb) do
+                      begin
+                         if ((arrb[i_1].i=i)and (arrb[i_1].j=j)) then
+                         begin
+                            for i_3:=i_1 to High(arrb)-1 do
+                            begin
+                               arrb[i_3]:=arrb[i_3+1];
+                            end;
+                            arrb[High(arrb)].fig:=cemptyfig;
+                            arrb[High(arrb)].i:=-1;
+                            arrb[High(arrb)].j:=-1;
+                         end;
+                      end;
                  end;
 
               end;
