@@ -14228,5 +14228,12 @@ object FormBotSettings: TFormBotSettings
       Caption = 'Два полухода без форсированного варианта.'
       ParentColor = False
     end
+    object LabelELO: TLabel
+      Left = 10
+      Height = 1
+      Top = 344
+      Width = 1
+      ParentColor = False
+    end
   end
 end

@@ -19,6 +19,7 @@ type
     Image3: TImage;
     Image4: TImage;
     Image5: TImage;
+    LabelELO: TLabel;
     Label_info: TLabel;
     procedure ComboBoxBotOpponentChange(Sender: TObject);
   private
@@ -49,6 +50,7 @@ begin
       Image4.Visible:=false;
       Image5.Visible:=false;
       Label_info.Caption:='Два полухода без форсированного варианта.';
+      LabelELO.Caption:='';
     end;
   1 : // Клод Шеннон
     begin
@@ -60,6 +62,7 @@ begin
       Image4.Visible:=false;
       Image5.Visible:=false;
       Label_info.Caption:='Четыре полухода без форсированного варианта. ';
+      LabelELO.Caption:='';
     end;
   2 : // Джон фон Нейман
     begin
@@ -71,6 +74,7 @@ begin
       Image4.Visible:=true;
       Image5.Visible:=false;
       Label_info.Caption:='Два полухода с форсированным вариантом.';
+      LabelELO.Caption:='';
     end;
   3 : // Кен Томпсон
     begin
@@ -82,27 +86,29 @@ begin
       // Третий уровень игры.  Шесть полуходов c форсированным вариантом.
       // Только  шесть полуходов с форсированым вариантом.
       // В действительности интересен только форсированный вариант иначе программа просто не видит разменов и тривиально проигрывает.
-      // После включения форсажа alpha -beta чрезвычайно сильно ускорилась вероятно потому что  отсечения заработали особенно хорошо.
+      // После включения форсажа alpha - beta чрезвычайно сильно ускорилась вероятно потому что  отсечения заработали особенно хорошо.
       // Вариант не кастированный а полный и время расчёта приемлемо. несколько секунд.
       Image1.Visible:=false;
       Image2.Visible:=false;
       Image3.Visible:=false;
       Image4.Visible:=false;
       Image5.Visible:=true;
-      Label_info.Caption:='Шесть полуходов c форсированным вариантом.';
+      Label_info.Caption:='Шесть полуходов с форсированным вариантом. ';
+      LabelELO.Caption:='StockFish level 2. ELO 950. ';
     end;
   4 : // Каиса Адельсон-Вельский, Арлазоров  ...
     // Это разумеется не сама Каисса это просто название тут.
     begin
       // Четвёртый (наивысший 13.09.2022) уровень игры. В честь советской программы Каисса и первого чемпионата мира среди машин.
-      //  Четыре полухода с форсированным вариантом.
+      // Четыре полухода с форсированным вариантом.
       // Только четыре полухода с форсированым вариантом. На фотографии Михаил Донской.
       Image1.Visible:=false;
       Image2.Visible:=false;
       Image3.Visible:=true;
       Image4.Visible:=false;
       Image5.Visible:=false;
-      Label_info.Caption:='Четыре полухода с форсированным вариантом.';
+      Label_info.Caption:='Четыре полухода с форсированным вариантом. ';
+      LabelELO.Caption:='StockFish level 2. ELO 950. ';
     end;
   end;
 end;
