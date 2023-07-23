@@ -5476,7 +5476,7 @@ begin
                           break;
                        end;
                     end;
-                 end;
+                 end
                  else
                  begin
                     // стираем белую фигуру

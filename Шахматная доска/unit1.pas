@@ -5745,6 +5745,10 @@ var
 
 begin
 
+   // 23.07.2023
+  bMatOrPatdetect:=true; // Мы уже точно не в режиме расстановки фигур на пустой доске.
+
+
   if OpenDialog1.Execute then
   begin
      if fileExists(OpenDialog1.Filename) then

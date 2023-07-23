@@ -20,11 +20,12 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="Unit1"/>
         <IsVisibleTab Value="True"/>
-        <TopLine Value="5465"/>
-        <CursorPos X="14" Y="5467"/>
-        <FoldState Value=" TM HtL01 T3kjC0{901]C0.RQ91s28181 pmKiwHH{a0F1J1I1S p-ZtQQ{00C1O1W1G p@MtcQ{G0G1C1C1+ poCwQM. p0w6E399B Pi2k7H/"/>
+        <TopLine Value="5737"/>
+        <CursorPos X="88" Y="5749"/>
+        <FoldState Value=" TM HtL01 T3kjC0{901]C0.RQ91s28181 pmKiwHH{a0F1J1I1S p-ZtQQ{00C1O1W1G p@MtcQ{G0G1C1C1+ poCwQM. p0wAE399B Pi2k7Ht"/>
         <UsageCount Value="106"/>
         <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
       </Unit1>
       <Unit2>
         <Filename Value="unitnewfigure.pas"/>
@@ -51,7 +52,7 @@
         <UsageCount Value="30"/>
       </Unit3>
     </Units>
-    <JumpHistory Count="2" HistoryIndex="1">
+    <JumpHistory Count="3" HistoryIndex="2">
       <Position1>
         <Filename Value="unit1.pas"/>
         <Caret Line="933" Column="7" TopLine="924"/>
@@ -60,6 +61,10 @@
         <Filename Value="unit1.pas"/>
         <Caret Line="5505" Column="43" TopLine="5484"/>
       </Position2>
+      <Position3>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="5467" Column="14" TopLine="5465"/>
+      </Position3>
     </JumpHistory>
     <RunParams>
       <FormatVersion Value="2"/>

@@ -10,7 +10,7 @@
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos Y="20"/>
-        <UsageCount Value="104"/>
+        <UsageCount Value="106"/>
       </Unit0>
       <Unit1>
         <Filename Value="unit1.pas"/>
@@ -21,9 +21,9 @@
         <UnitName Value="Unit1"/>
         <IsVisibleTab Value="True"/>
         <TopLine Value="5465"/>
-        <CursorPos X="21" Y="5479"/>
+        <CursorPos X="14" Y="5467"/>
         <FoldState Value=" TM HtL01 T3kjC0{901]C0.RQ91s28181 pmKiwHH{a0F1J1I1S p-ZtQQ{00C1O1W1G p@MtcQ{G0G1C1C1+ poCwQM. p0w6E399B Pi2k7H/"/>
-        <UsageCount Value="104"/>
+        <UsageCount Value="106"/>
         <Loaded Value="True"/>
       </Unit1>
       <Unit2>
@@ -36,7 +36,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="22"/>
         <CursorPos X="33" Y="53"/>
-        <UsageCount Value="32"/>
+        <UsageCount Value="34"/>
       </Unit2>
       <Unit3>
         <Filename Value="unitcompletechessstate.pas"/>
@@ -48,7 +48,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="7"/>
         <CursorPos X="34" Y="31"/>
-        <UsageCount Value="28"/>
+        <UsageCount Value="30"/>
       </Unit3>
     </Units>
     <JumpHistory Count="2" HistoryIndex="1">
