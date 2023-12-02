@@ -1,70 +1,70 @@
-rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1 e7e5
-rnbqkbnr/pppp1ppp/8/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 0 2 b8c6
-r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 0 3 g8f6
-r1bqkb1r/pppp1ppp/2n2n2/1B2p3/4P3/5N2/PPPP1PPP/RNBQ1RK1 b - kq 0 4 f6e4
-r1bqkb1r/pppp1ppp/2n5/1B2p3/3Pn3/5N2/PPP2PPP/RNBQ1RK1 b - kq 0 5 e4d6
-r1bqkb1r/pppp1ppp/2Bn4/4p3/3P4/5N2/PPP2PPP/RNBQ1RK1 b - kq 0 6 d7c6
-r1bqkb1r/ppp2ppp/2pn4/4P3/8/5N2/PPP2PPP/RNBQ1RK1 b - kq 0 7 d6f5
-r1bQkb1r/ppp2ppp/2p5/4Pn2/8/5N2/PPP2PPP/RNB2RK1 b - kq 0 8 e8d8
-r1bqkb1r/pppp1ppp/2n2n2/1B2p3/4P3/3P1N2/PPP2PPP/RNBQK2R b KQkq - 0 4 f8c5
-r1bqk2r/pppp1ppp/2B2n2/2b1p3/4P3/3P1N2/PPP2PPP/RNBQK2R b KQkq - 0 5 d7c6
-r1bqk2r/ppp2ppp/2p2n2/2b1p3/4P3/2PP1N2/PP3PPP/RNBQK2R b KQkq - 0 6 c5d6
-r1bqk2r/ppp2ppp/2pb1n2/4p3/4P3/2PP1N2/PP3PPP/RNBQ1RK1 b - kq 0 7 c8e6
-r2qk2r/ppp2ppp/2pbbn2/4p3/4P3/1PPP1N2/P4PPP/RNBQ1RK1 b - kq 0 8 h7h6
-r2qk2r/ppp2pp1/2pbbn1p/4p3/4P3/1PPP1N2/P2N1PPP/R1BQ1RK1 b - kq 0 9 f6d7
-rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1 d7d6
-rnbqkbnr/ppp1pppp/3p4/8/3PP3/8/PPP2PPP/RNBQKBNR b KQkq - 0 2 g8f6
-rnbqkb1r/ppp1pppp/3p1n2/8/3PP3/2N5/PPP2PPP/R1BQKBNR b KQkq - 0 3 g7g6
-rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1 d7d5
-rnbqkbnr/ppp1pppp/8/3P4/8/8/PPPP1PPP/RNBQKBNR b KQkq - 0 2 d8d5
-rnb1kbnr/ppp1pppp/8/3q4/8/2N5/PPPP1PPP/R1BQKBNR b KQkq - 0 3 d5d6
-rnb1kbnr/ppp1pppp/8/3q4/8/2N5/PPPP1PPP/R1BQKBNR b KQkq - 0 3 d5d8
-rnb1kbnr/ppp1pppp/8/3q4/8/2N5/PPPP1PPP/R1BQKBNR b KQkq - 0 3 d5a5
-rnb1kbnr/ppp1pppp/3q4/8/3P4/2N5/PPP2PPP/R1BQKBNR b KQkq d3 0 4 g8f6
-rnbqkbnr/ppp1pppp/8/8/3P4/2N5/PPP2PPP/R1BQKBNR b KQkq d3 0 4 g8f6
-rnb1kbnr/ppp1pppp/8/q7/3P4/2N5/PPP2PPP/R1BQKBNR b KQkq d3 0 4 g8f6
-rnb1kb1r/ppp1pppp/3q1n2/8/3P4/2N2N2/PPP2PPP/R1BQKB1R b KQkq - 0 5 c8g4
-rnbqkb1r/ppp1pppp/5n2/8/3P4/2N2N2/PPP2PPP/R1BQKB1R b KQkq - 0 5 c8g4
-rnb1kb1r/ppp1pppp/5n2/q7/3P4/2N2N2/PPP2PPP/R1BQKB1R b KQkq - 0 5 c8g4
-rnb1kb1r/ppp1pppp/3q1n2/8/3P4/2N2N2/PPP2PPP/R1BQKB1R b KQkq - 0 5 b8c6
-rnbqkb1r/ppp1pppp/5n2/8/3P4/2N2N2/PPP2PPP/R1BQKB1R b KQkq - 0 5 b8c6
-rnb1kb1r/ppp1pppp/5n2/q7/3P4/2N2N2/PPP2PPP/R1BQKB1R b KQkq - 0 5 b8c6
-rnbqkbnr/ppp1pppp/8/3P4/8/8/PPPP1PPP/RNBQKBNR b KQkq - 0 2 g8f6
-rnbqkb1r/ppp1pppp/5n2/3P4/2P5/8/PP1P1PPP/RNBQKBNR b KQkq - 0 3 c7c6
-rnbqkb1r/pp2pppp/2P2n2/8/2P5/8/PP1P1PPP/RNBQKBNR b KQkq - 0 4 b8c6
-rnbqkb1r/pp2pppp/2p2n2/3P4/2PP4/8/PP3PPP/RNBQKBNR b KQkq - 0 1 c6d5
-rnbqkb1r/ppp1pppp/5n2/3P4/3P4/8/PPP2PPP/RNBQKBNR b KQkq - 0 1 f6d5
-rnbqkb1r/ppp1pppp/5n2/1B1P4/8/8/PPPP1PPP/RNBQK1NR b KQkq - 0 1 c8d7
-rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1 e7e6
-rnbqkbnr/pppp1ppp/4p3/8/3PP3/8/PPP2PPP/RNBQKBNR b KQkq d3 0 2 d7d5
-rnbqkbnr/ppp2ppp/4p3/3pP3/3P4/8/PPP2PPP/RNBQKBNR b KQkq - 0 3 c7c5
-rnbqkbnr/ppp2ppp/4p3/3p3Q/3PP3/8/PPP2PPP/RNB1KBNR b KQkq - 0 3 g7g6
-rnbqkbnr/ppp2p1p/4p1p1/3pQ3/3PP3/8/PPP2PPP/RNB1KBNR b KQkq - 0 4 g8f6
-rnbqkb1r/ppp2p1p/4pnp1/3pQ1B1/3PP3/8/PPP2PPP/RN2KBNR b KQkq - 0 5 f8e7
-rnbqk2r/ppp1bp1p/4pnp1/1B1pQ1B1/3PP3/8/PPP2PPP/RN2K1NR b KQkq - 0 6 c7c6
-rnbqkbnr/ppp2ppp/4p3/3p4/3PP3/2N5/PPP2PPP/R1BQKBNR b KQkq - 0 3 b8c6
-rnbqkbnr/ppp2ppp/4p3/3p4/3PP3/2N5/PPP2PPP/R1BQKBNR b KQkq - 0 3 d5e4
-rnbqkbnr/ppp2ppp/4p3/3p4/3PP3/2N5/PPP2PPP/R1BQKBNR b KQkq - 0 3 f8b4
-rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1 c7c5
-rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 0 2 g7g6
-rnbqkbnr/pp1ppp1p/6p1/2p5/3PP3/5N2/PPP2PPP/RNBQKB1R b KQkq d3 0 3 c5d4
-rnbqkbnr/pp1ppp1p/6p1/2p5/3PP3/5N2/PPP2PPP/RNBQKB1R b KQkq d3 0 3 f8g7
-rnbqk1nr/pp1pppbp/6p1/2p5/3PP3/2N2N2/PPP2PPP/R1BQKB1R b KQkq - 0 4 c5d4
-rnbqk1nr/pp1pppbp/6p1/8/3NP3/2N5/PPP2PPP/R1BQKB1R b KQkq - 0 5 b8c6
-r1bqk2r/pp1pppbp/2n2np1/8/4P3/1NN5/PPP1BPPP/R1BQK2R b KQkq - 0 6 e1g1
-r1bq1rk1/pp1pppbp/2n2np1/8/4P3/1NN5/PPP1BPPP/R1BQ1RK1 b - - 0 7 d7d6
-r1bq1rk1/pp2ppbp/2np1np1/8/4P3/1NN1B3/PPP1BPPP/R2Q1RK1 b - - 0 8 c8e6
-r2q1rk1/pp2ppbp/2npbnp1/8/4PP2/1NN1B3/PPP1B1PP/R2Q1RK1 b - - 0 9 a8c8
-rnbqkbnr/pp1ppp1p/6p1/8/3NP3/8/PPP2PPP/RNBQKB1R b KQkq - 0 1 f8g7
-rnbqkbnr/pppppppp/8/8/3P4/8/PPP1PPPP/RNBQKBNR b KQkq d3 0 1 g8f6
-rnbqkb1r/pppppppp/5n2/8/2PP4/8/PP2PPPP/RNBQKBNR b KQkq c3 0 2 e7e6
-rnbqkb1r/pppp1ppp/4pn2/8/2PP4/2N5/PP2PPPP/R1BQKBNR b KQkq - 0 3 f8b4
-rnbqk2r/pppp1ppp/4pn2/6B1/1bPP4/2N5/PP2PPPP/R2QKBNR b KQkq - 0 4 h7h6
-rnbqk2r/pppp1ppp/4pn2/8/1bPP4/P1N5/1P2PPPP/R1BQKBNR b KQkq - 0 4 b4c3
-rnbqk2r/pppp1ppp/4pn2/8/1bPP4/1QN5/PP2PPPP/R1B1KBNR b KQkq - 0 4 c7c5
-rnbqk2r/pppp1ppp/4pn2/8/1bPP4/2N5/PPQ1PPPP/R1B1KBNR b KQkq - 0 4 c7c5
-rnbqk2r/pppp1ppp/4pn2/8/1bPP4/2N5/PPQ1PPPP/R1B1KBNR b KQkq - 0 4 d7d5
-rnbqk2r/pppp1ppp/4pn2/8/1bPP4/2N5/PPQ1PPPP/R1B1KBNR b KQkq - 0 4 b8c6
-rnbqk2r/pppp1ppp/4pn2/8/1bPP4/2N1P3/PP3PPP/R1BQKBNR b KQkq - 0 4 c7c5
-rnbqk2r/pppp1ppp/4pn2/8/1bPP4/2N1P3/PP3PPP/R1BQKBNR b KQkq - 0 4 b8c6
-rnbqk2r/pppp1ppp/4pn2/8/1bPP4/2N1P3/PP3PPP/R1BQKBNR b KQkq - 0 4 b7b6
+rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1 e7e5 # открытый дебют
+rnbqkbnr/pppp1ppp/8/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 0 2 b8c6 # итальянская партия
+r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 0 3 g8f6 # Берлинская защита. Одна из самых устойчивых защит испанской партии.
+r1bqkb1r/pppp1ppp/2n2n2/1B2p3/4P3/5N2/PPPP1PPP/RNBQ1RK1 b - kq 0 4 f6e4 # Берлинский эндшпиль. Испанская партия.
+r1bqkb1r/pppp1ppp/2n5/1B2p3/3Pn3/5N2/PPP2PPP/RNBQ1RK1 b - kq 0 5 e4d6 # Берлинский эндшпиль.  Испанская партия.
+r1bqkb1r/pppp1ppp/2Bn4/4p3/3P4/5N2/PPP2PPP/RNBQ1RK1 b - kq 0 6 d7c6 # Берлинский эндшпиль.  Испанская партия.
+r1bqkb1r/ppp2ppp/2pn4/4P3/8/5N2/PPP2PPP/RNBQ1RK1 b - kq 0 7 d6f5 # Берлинский эндшпиль.  Испанская партия.
+r1bQkb1r/ppp2ppp/2p5/4Pn2/8/5N2/PPP2PPP/RNB2RK1 b - kq 0 8 e8d8 # Берлинский эндшпиль.  Испанская партия.
+r1bqkb1r/pppp1ppp/2n2n2/1B2p3/4P3/3P1N2/PPP2PPP/RNBQK2R b KQkq - 0 4 f8c5 # Анти-Берлин (основной вариант) берлинского эндшпиля.  Испанская партия.
+r1bqk2r/pppp1ppp/2B2n2/2b1p3/4P3/3P1N2/PPP2PPP/RNBQK2R b KQkq - 0 5 d7c6 # Анти-Берлин (Ruy Lopez) ? Это не дебют т.е. не является основной линией.
+r1bqk2r/ppp2ppp/2p2n2/2b1p3/4P3/2PP1N2/PP3PPP/RNBQK2R b KQkq - 0 6 c5d6 # Анти-Берлин (Ruy Lopez) ? Это не дебют т.е. не является основной линией.
+r1bqk2r/ppp2ppp/2pb1n2/4p3/4P3/2PP1N2/PP3PPP/RNBQ1RK1 b - kq 0 7 c8e6 # Анти-Берлин (Ruy Lopez) ? Это не дебют т.е. не является основной линией.
+r2qk2r/ppp2ppp/2pbbn2/4p3/4P3/1PPP1N2/P4PPP/RNBQ1RK1 b - kq 0 8 h7h6 # Анти-Берлин (Ruy Lopez) ? Это не дебют т.е. не является основной линией.
+r2qk2r/ppp2pp1/2pbbn1p/4p3/4P3/1PPP1N2/P2N1PPP/R1BQ1RK1 b - kq 0 9 f6d7 # Анти-Берлин (Ruy Lopez) ? Это не дебют т.е. не является основной линией.
+rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1 d7d6 # Защи́та Пи́рца — Уфи́мцева
+rnbqkbnr/ppp1pppp/3p4/8/3PP3/8/PPP2PPP/RNBQKBNR b KQkq - 0 2 g8f6 # Защи́та Пи́рца — Уфи́мцева
+rnbqkb1r/ppp1pppp/3p1n2/8/3PP3/2N5/PPP2PPP/R1BQKBNR b KQkq - 0 3 g7g6 # Защи́та Пи́рца — Уфи́мцева
+rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1 d7d5 # Скандина́вская защи́та/Центральный контр-гамбит
+rnbqkbnr/ppp1pppp/8/3P4/8/8/PPPP1PPP/RNBQKBNR b KQkq - 0 2 d8d5 # Скандина́вская защи́та
+rnb1kbnr/ppp1pppp/8/3q4/8/2N5/PPPP1PPP/R1BQKBNR b KQkq - 0 3 d5d6 # Скандина́вская защи́та
+rnb1kbnr/ppp1pppp/8/3q4/8/2N5/PPPP1PPP/R1BQKBNR b KQkq - 0 3 d5d8 # Скандина́вская защи́та
+rnb1kbnr/ppp1pppp/8/3q4/8/2N5/PPPP1PPP/R1BQKBNR b KQkq - 0 3 d5a5 # Скандина́вская защи́та
+rnb1kbnr/ppp1pppp/3q4/8/3P4/2N5/PPP2PPP/R1BQKBNR b KQkq d3 0 4 g8f6 # Скандина́вская защи́та
+rnbqkbnr/ppp1pppp/8/8/3P4/2N5/PPP2PPP/R1BQKBNR b KQkq d3 0 4 g8f6 # Скандина́вская защи́та
+rnb1kbnr/ppp1pppp/8/q7/3P4/2N5/PPP2PPP/R1BQKBNR b KQkq d3 0 4 g8f6 # Скандина́вская защи́та
+rnb1kb1r/ppp1pppp/3q1n2/8/3P4/2N2N2/PPP2PPP/R1BQKB1R b KQkq - 0 5 c8g4 # Скандина́вская защи́та
+rnbqkb1r/ppp1pppp/5n2/8/3P4/2N2N2/PPP2PPP/R1BQKB1R b KQkq - 0 5 c8g4 # Скандина́вская защи́та
+rnb1kb1r/ppp1pppp/5n2/q7/3P4/2N2N2/PPP2PPP/R1BQKB1R b KQkq - 0 5 c8g4 # Скандина́вская защи́та
+rnb1kb1r/ppp1pppp/3q1n2/8/3P4/2N2N2/PPP2PPP/R1BQKB1R b KQkq - 0 5 b8c6 # Скандина́вская защи́та
+rnbqkb1r/ppp1pppp/5n2/8/3P4/2N2N2/PPP2PPP/R1BQKB1R b KQkq - 0 5 b8c6 # Скандина́вская защи́та
+rnb1kb1r/ppp1pppp/5n2/q7/3P4/2N2N2/PPP2PPP/R1BQKB1R b KQkq - 0 5 b8c6 # Скандина́вская защи́та
+rnbqkbnr/ppp1pppp/8/3P4/8/8/PPPP1PPP/RNBQKBNR b KQkq - 0 2 g8f6 # Скандина́вская защи́та
+rnbqkb1r/ppp1pppp/5n2/3P4/2P5/8/PP1P1PPP/RNBQKBNR b KQkq - 0 3 c7c6 # Скандина́вская защи́та
+rnbqkb1r/pp2pppp/2P2n2/8/2P5/8/PP1P1PPP/RNBQKBNR b KQkq - 0 4 b8c6 # Скандина́вская защи́та
+rnbqkb1r/pp2pppp/2p2n2/3P4/2PP4/8/PP3PPP/RNBQKBNR b KQkq - 0 4 c6d5 # Скандина́вская защи́та
+rnbqkb1r/ppp1pppp/5n2/3P4/3P4/8/PPP2PPP/RNBQKBNR b KQkq - 0 3 f6d5 # Скандина́вская защи́та
+rnbqkb1r/ppp1pppp/5n2/1B1P4/8/8/PPPP1PPP/RNBQK1NR b KQkq - 0 3 c8d7 # Скандина́вская защи́та 
+rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1 e7e6 # Французская защита
+rnbqkbnr/pppp1ppp/4p3/8/3PP3/8/PPP2PPP/RNBQKBNR b KQkq d3 0 2 d7d5 # Французская защита
+rnbqkbnr/ppp2ppp/4p3/3pP3/3P4/8/PPP2PPP/RNBQKBNR b KQkq - 0 3 c7c5 # Французская защита. Вариант Маршалла
+rnbqkbnr/ppp2ppp/4p3/3p3Q/3PP3/8/PPP2PPP/RNB1KBNR b KQkq - 0 3 g7g6 # Французская защита ? Чёрные защищаются от атаки ферзя белых. Это не дебют т.е. не является основной линией.
+rnbqkbnr/ppp2p1p/4p1p1/3pQ3/3PP3/8/PPP2PPP/RNB1KBNR b KQkq - 0 4 g8f6 # Французская защита ? Чёрные защищаются от атаки ферзя белых. Это не дебют т.е. не является основной линией.
+rnbqkb1r/ppp2p1p/4pnp1/3pQ1B1/3PP3/8/PPP2PPP/RN2KBNR b KQkq - 0 5 f8e7 # Французская защита ? Чёрные защищаются от атаки ферзя белых. Это не дебют т.е. не является основной линией.
+rnbqk2r/ppp1bp1p/4pnp1/1B1pQ1B1/3PP3/8/PPP2PPP/RN2K1NR b KQkq - 0 6 c7c6 # Французская защита ? Чёрные защищаются от атаки ферзя белых. Это не дебют т.е. не является основной линией.
+rnbqkbnr/ppp2ppp/4p3/3p4/3PP3/2N5/PPP2PPP/R1BQKBNR b KQkq - 0 3 b8c6 # Французская защита
+rnbqkbnr/ppp2ppp/4p3/3p4/3PP3/2N5/PPP2PPP/R1BQKBNR b KQkq - 0 3 d5e4 # Французская защита. вариант Рубинштейна. 
+rnbqkbnr/ppp2ppp/4p3/3p4/3PP3/2N5/PPP2PPP/R1BQKBNR b KQkq - 0 3 f8b4 # Французская защита. вариант Винавера (Система Нимцовича — Ботвинника).
+rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1 c7c5 # Сицилиа́нская защи́та
+rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 0 2 g7g6 # Венгерский вариант. Сицилиа́нская защи́та. Похож на ранний дракон. 
+rnbqkbnr/pp1ppp1p/6p1/2p5/3PP3/5N2/PPP2PPP/RNBQKB1R b KQkq d3 0 3 c5d4 # Венгерский вариант. Сицилиа́нская защи́та. Похож на ранний дракон.
+rnbqkbnr/pp1ppp1p/6p1/2p5/3PP3/5N2/PPP2PPP/RNBQKB1R b KQkq d3 0 3 f8g7 # Сицилиа́нская защи́та. Вариант дракона.
+rnbqk1nr/pp1pppbp/6p1/2p5/3PP3/2N2N2/PPP2PPP/R1BQKB1R b KQkq - 0 4 c5d4 # Сицилиа́нская защи́та. Вариант дракона.
+rnbqk1nr/pp1pppbp/6p1/8/3NP3/2N5/PPP2PPP/R1BQKB1R b KQkq - 0 5 b8c6 # Сицилиа́нская защи́та. Вариант дракона.
+r1bqk2r/pp1pppbp/2n2np1/8/4P3/1NN5/PPP1BPPP/R1BQK2R b KQkq - 0 6 e1g1 # Сицилиа́нская защи́та. Вариант дракона.
+r1bq1rk1/pp1pppbp/2n2np1/8/4P3/1NN5/PPP1BPPP/R1BQ1RK1 b - - 0 7 d7d6 # Сицилиа́нская защи́та. Вариант дракона.
+r1bq1rk1/pp2ppbp/2np1np1/8/4P3/1NN1B3/PPP1BPPP/R2Q1RK1 b - - 0 8 c8e6 # Сицилиа́нская защи́та. Вариант дракона.
+r2q1rk1/pp2ppbp/2npbnp1/8/4PP2/1NN1B3/PPP1B1PP/R2Q1RK1 b - - 0 9 a8c8 # Сицилиа́нская защи́та. Вариант дракона.
+rnbqkbnr/pp1ppp1p/6p1/8/3NP3/8/PPP2PPP/RNBQKB1R b KQkq - 0 4 f8g7 # Сицилиа́нская защи́та. Вариант дракона.
+rnbqkbnr/pppppppp/8/8/3P4/8/PPP1PPPP/RNBQKBNR b KQkq d3 0 1 g8f6 # Защита Нимцовича
+rnbqkb1r/pppppppp/5n2/8/2PP4/8/PP2PPPP/RNBQKBNR b KQkq c3 0 2 e7e6 # Защита Нимцовича
+rnbqkb1r/pppp1ppp/4pn2/8/2PP4/2N5/PP2PPPP/R1BQKBNR b KQkq - 0 3 f8b4 # Защита Нимцовича
+rnbqk2r/pppp1ppp/4pn2/6B1/1bPP4/2N5/PP2PPPP/R2QKBNR b KQkq - 0 4 h7h6 # Защита Нимцовича
+rnbqk2r/pppp1ppp/4pn2/8/1bPP4/P1N5/1P2PPPP/R1BQKBNR b KQkq - 0 4 b4c3  # Защита Нимцовича
+rnbqk2r/pppp1ppp/4pn2/8/1bPP4/1QN5/PP2PPPP/R1B1KBNR b KQkq - 0 4 c7c5  # Защита Нимцовича
+rnbqk2r/pppp1ppp/4pn2/8/1bPP4/2N5/PPQ1PPPP/R1B1KBNR b KQkq - 0 4 c7c5  # Защита Нимцовича
+rnbqk2r/pppp1ppp/4pn2/8/1bPP4/2N5/PPQ1PPPP/R1B1KBNR b KQkq - 0 4 d7d5  # Защита Нимцовича
+rnbqk2r/pppp1ppp/4pn2/8/1bPP4/2N5/PPQ1PPPP/R1B1KBNR b KQkq - 0 4 b8c6  # Защита Нимцовича
+rnbqk2r/pppp1ppp/4pn2/8/1bPP4/2N1P3/PP3PPP/R1BQKBNR b KQkq - 0 4 c7c5  # Защита Нимцовича
+rnbqk2r/pppp1ppp/4pn2/8/1bPP4/2N1P3/PP3PPP/R1BQKBNR b KQkq - 0 4 b8c6  # Защита Нимцовича
+rnbqk2r/pppp1ppp/4pn2/8/1bPP4/2N1P3/PP3PPP/R1BQKBNR b KQkq - 0 4 b7b6  # Защита Нимцовича
