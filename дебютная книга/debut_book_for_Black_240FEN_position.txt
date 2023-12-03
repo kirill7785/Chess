@@ -1,0 +1,240 @@
+rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1 e7e5 # открытый дебют
+rnbqkbnr/pppp1ppp/8/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 0 2 b8c6 # итальянская партия
+r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 0 3 g8f6 # Берлинская защита. Одна из самых устойчивых защит испанской партии.
+r1bqkb1r/pppp1ppp/2n2n2/1B2p3/4P3/5N2/PPPP1PPP/RNBQ1RK1 b - kq 0 4 f6e4 # Берлинский эндшпиль. Испанская партия.
+r1bqkb1r/pppp1ppp/2n5/1B2p3/3Pn3/5N2/PPP2PPP/RNBQ1RK1 b - kq 0 5 e4d6 # Берлинский эндшпиль.  Испанская партия.
+r1bqkb1r/pppp1ppp/2Bn4/4p3/3P4/5N2/PPP2PPP/RNBQ1RK1 b - kq 0 6 d7c6 # Берлинский эндшпиль.  Испанская партия.
+r1bqkb1r/ppp2ppp/2pn4/4P3/8/5N2/PPP2PPP/RNBQ1RK1 b - kq 0 7 d6f5 # Берлинский эндшпиль.  Испанская партия.
+r1bQkb1r/ppp2ppp/2p5/4Pn2/8/5N2/PPP2PPP/RNB2RK1 b - kq 0 8 e8d8 # Берлинский эндшпиль.  Испанская партия.
+r1bqkb1r/pppp1ppp/2n2n2/1B2p3/4P3/3P1N2/PPP2PPP/RNBQK2R b KQkq - 0 4 f8c5 # Анти-Берлин (основной вариант) берлинского эндшпиля.  Испанская партия.
+rnbqkbnr/pppp1ppp/8/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 0 2 d7d6 # защита Филидора
+rnbqkbnr/ppp2ppp/3p4/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 0 3 f8e7 # защита Филидора
+rnbqk1nr/ppp1bppp/3p4/4p3/2BPP3/5N2/PPP2PPP/RNBQK2R b KQkq d3 0 4 e5d4 # защита Филидора
+rnbqk1nr/ppp1bppp/3p4/8/2BNP3/8/PPP2PPP/RNBQK2R b KQkq - 0 5 g8f6 # защита Филидора
+rnbqk2r/ppp1bppp/3p1n2/8/2BNP3/2N5/PPP2PPP/R1BQK2R b KQkq - 0 6 e8g8 # защита Филидора
+rnbq1rk1/ppp1bppp/3p1n2/8/2BNP3/2N5/PPP2PPP/R1BQ1RK1 b  - 0 7 c7c5 # защита Филидора
+rnbqkbnr/ppp2ppp/3p4/4p3/3PP3/5N2/PPP2PPP/RNBQKB1R b KQkq d3 0 3 b8d7 # защита Филидора/ вариант Хэнема
+rnbqkbnr/ppp2ppp/3p4/4p3/3PP3/5N2/PPP2PPP/RNBQKB1R b KQkq d3 0 3 g8f6 # защита Филидора/ ход А. Нимцовича
+rnbqkbnr/ppp2ppp/3p4/4p3/3PP3/5N2/PPP2PPP/RNBQKB1R b KQkq d3 0 3 e5d4 # защита Филидора/ вариант со сдачей центра.
+rnbqkbnr/pppp1ppp/8/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 0 2 b8c6 # дебют четырёх коней
+r1bqkbnr/pppp1ppp/2n5/4p3/4P3/2N2N2/PPPP1PPP/R1BQKB1R b KQkq - 0 3 g8f6 # дебют четырёх коней
+rnbqkbnr/pppp1ppp/8/4p3/4P3/2N5/PPPP1PPP/R1BQKBNR b KQkq - 0 2 g8f6 # дебют четырёх коней/перестановка ходов
+rnbqkbnr/pppp1ppp/8/4p3/4P3/2N5/PPPP1PPP/R1BQKBNR b KQkq - 0 3 b8c6 # дебют четырёх коней/перестановка ходов
+r1bqkb1r/pppp1ppp/2n2n2/1B2p3/4P3/2N2N2/PPPP1PPP/R1BQK2R b KQkq - 0 4 f8b4 # дебют четырёх коней/симметричный вариант, со сложной маневренной борьбой
+r1bqkb1r/pppp1ppp/2n2n2/1B2p3/4P3/2N2N2/PPPP1PPP/R1BQK2R b KQkq - 0 4 c6d4 # дебют четырёх коней/ см. Гамбит Рубинштейна.
+r1bqkb1r/pppp1ppp/2n2n2/1B2p3/4P3/2N2N2/PPPP1PPP/R1BQK2R b KQkq - 0 4 f8c5 # дебют четырёх коней/ старинный вариант.
+r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/2N2N2/PPPP1PPP/R1BQK2R b KQkq - 0 4 f8c5 # дебют четырёх коней/итальянский вариант/тихая игра (Giuoco Piano)
+r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/2N2N2/PPPP1PPP/R1BQK2R b KQkq - 0 4 f8b4 # дебют четырёх коней/итальянский вариант/классический вариант.
+r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/2N2N2/PPPP1PPP/R1BQK2R b KQkq - 0 4 f6e4 # дебют четырёх коней/итальянский вариант/вариант с временной жертвой фигуры.
+r1bqkb1r/pppp1ppp/2n2n2/4p3/3PP3/2N2N2/PPP2PPP/R1BQKB1R b KQkq d3 0 4 f8b4 # дебют четырёх коней/ шотландский вариант./вариант Морфи — Боголюбова.
+r1bqkb1r/pppp1ppp/2n2n2/4p3/3PP3/2N2N2/PPP2PPP/R1BQKB1R b KQkq d3 0 4 e5d4 # дебют четырёх коней/ шотландский вариант.
+r1bqkb1r/pppp1ppp/2n2n2/8/3NP3/2N5/PPP2PPP/R1BQKB1R b KQkq - 0 5 f8b4 # дебют четырёх коней/сводит игру к шотландской партии.
+r1bqk2r/pppp1ppp/2N2n2/8/1b2P3/2N5/PPP2PPP/R1BQKB1R b KQkq - 0 6 b7c6 # дебют четырёх коней/шотландская партия
+r1bqk2r/p1pp1ppp/2p2n2/8/1b2P3/2NB4/PPP2PPP/R1BQK2R b KQkq - 0 7 d7d5 # дебют четырёх коней/шотландская партия
+r1bqkb1r/pppp1ppp/2n2n2/3N4/3pP3/5N2/PPP2PPP/R1BQKB1R b KQkq - 0 5 f8b4 # дебют четырёх коней/см. Белградский гамбит.
+r1bqkb1r/pppp1ppp/2n2n2/3N4/3pP3/5N2/PPP2PPP/R1BQKB1R b KQkq - 0 5 f8c5 # дебют четырёх коней/см. Белградский гамбит.
+r1bqkb1r/pppp1ppp/2n2n2/3N4/3pP3/5N2/PPP2PPP/R1BQKB1R b KQkq - 0 5 h7h6 # дебют четырёх коней/см. Белградский гамбит.
+r1bqkb1r/pppp1ppp/2n2n2/3N4/3pP3/5N2/PPP2PPP/R1BQKB1R b KQkq - 0 5 f6d5 # дебют четырёх коней/см. Белградский гамбит.
+r1bqkb1r/pppp1ppp/2n2n2/3N4/3pP3/5N2/PPP2PPP/R1BQKB1R b KQkq - 0 5 c6b4 # дебют четырёх коней/см. Белградский гамбит.
+r1bqkb1r/pppp1ppp/2n2n2/3N4/3pP3/5N2/PPP2PPP/R1BQKB1R b KQkq - 0 5 f6e4 # дебют четырёх коней/см. Белградский гамбит.
+r1bqkb1r/pppp1ppp/2n2n2/3N4/3pP3/5N2/PPP2PPP/R1BQKB1R b KQkq - 0 5 d7d6 # дебют четырёх коней/см. Белградский гамбит.
+rnbqkbnr/pppp1ppp/8/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 0 2 g8f6 # русская партия
+rnbqkb1r/pppp1ppp/5n2/4p3/3PP3/5N2/PPP2PPP/RNBQKB1R b KQkq d3 0 3 e5d4 # русская партия/Система Стейница
+rnbqkb1r/pppp1ppp/5n2/4P3/3p4/5N2/PPP2PPP/RNBQKB1R b KQkq - 0 4 f6e4 # русская партия/Система Стейница
+rnbqkb1r/pppp1ppp/8/4P3/3Qn3/5N2/PPP2PPP/RNB1KB1R b KQkq - 0 5 d7d5 # русская партия/Система Стейница
+rnbqkb1r/ppp2ppp/3P4/8/3Qn3/5N2/PPP2PPP/RNB1KB1R b KQkq - 0 6 e4d6 # русская партия/Система Стейница
+rnbqkb1r/pppp1ppp/5n2/4p3/3PP3/5N2/PPP2PPP/RNBQKB1R b KQkq d3 0 3 f6e4 # русская партия/Система Стейница
+rnbqkb1r/pppp1ppp/5n2/4N3/4P3/8/PPPP1PPP/RNBQKB1R b KQkq - 0 3 d7d6  # русская партия/ основной вариант
+rnbqkb1r/ppp2Npp/3p1n2/8/4P3/8/PPPP1PPP/RNBQKB1R b KQkq - 0 4 e8f7 # русская партия/  Гамбит Кохрена.
+rnbq1b1r/ppp2kpp/3p1n2/8/2B1P3/8/PPPP1PPP/RNBQK2R b KQ - 0 5 d6d5 # русская партия/  Гамбит Кохрена. / Теперь во всех вариантах у чёрных преимущество
+rnbq1b1r/ppp2kpp/3p1n2/8/4P3/2N5/PPPP1PPP/R1BQKB1R b KQ - 0 5 d8e8 # русская партия/  Гамбит Кохрена.
+rnbq1b1r/ppp2kpp/3p1n2/8/3PP3/8/PPP2PPP/RNBQKB1R b KQ d3 0 5 f6e4 # русская партия/  Гамбит Кохрена. / у белых лучше позиция
+rnbq1b1r/ppp2kpp/3p1n2/8/3PP3/8/PPP2PPP/RNBQKB1R b KQ d3 0 5 d6d5 # русская партия/  Гамбит Кохрена. / у белых лучше позиция
+rnbq1b1r/ppp2kpp/5n2/3P4/2B5/8/PPPP1PPP/RNBQK2R b KQ - 0 6 f8d6 # русская партия/  Гамбит Кохрена. / Теперь во всех вариантах у чёрных преимущество
+rnbq1b1r/ppp2kpp/5n2/3p4/4P3/1B6/PPPP1PPP/RNBQK2R b KQ - 0 6 f6e4 # русская партия/  Гамбит Кохрена. 
+rnbq1b1r/ppp2kpp/5n2/3p4/4P3/1B6/PPPP1PPP/RNBQK2R b KQ - 0 6 c8g4 # русская партия/  Гамбит Кохрена.
+rnbq1b1r/ppp2kpp/5n2/3p4/4P3/1B6/PPPP1PPP/RNBQK2R b KQ - 0 6 c8e6 # русская партия/  Гамбит Кохрена.
+rnb1qb1r/ppp2kpp/3p1n2/8/2B1P3/2N5/PPPP1PPP/R1BQK2R b KQ - 0 6 c8e6 # русская партия/  Гамбит Кохрена.
+rn2qb1r/ppp2kpp/3pBn2/8/4P3/2N5/PPPP1PPP/R1BQK2R b KQ - 0 7 e8e6 # русская партия/  Гамбит Кохрена.
+rn3b1r/ppp2kpp/3pqn2/8/4P3/2N5/PPPP1PPP/R1BQ1RK1 b  - 0 8 c7c5 # русская партия/  Гамбит Кохрена.
+rnbqkb1r/ppp2ppp/3p1n2/8/2N1P3/8/PPPP1PPP/RNBQKB1R b KQkq - 0 4 f6e4 # русская партия/  атака Паульсена.
+rnbqkb1r/ppp2ppp/3p1n2/8/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 0 4 f6e4 # русская партия/ основной вариант.
+rnbqkb1r/ppp2ppp/3p4/8/3Pn3/5N2/PPP2PPP/RNBQKB1R b KQkq d3 0 5 d6d5 # русская партия/ основной вариант.
+rnbqkb1r/ppp2ppp/3p4/8/4n3/5N2/PPPPQPPP/RNB1KB1R b KQkq - 0 5 d8e7 # русская партия/ основной вариант./массовые размены/ вариант применяли Эмануил Ласкер и Капабланка 
+rnb1kb1r/ppp1qppp/3p4/8/4n3/3P1N2/PPP1QPPP/RNB1KB1R b KQkq - 0 6 e4f6 # русская партия/ основной вариант./массовые размены/ вариант применяли Эмануил Ласкер и Капабланка
+rnb1kb1r/ppp1qppp/3p1n2/6B1/8/3P1N2/PPP1QPPP/RN2KB1R b KQkq - 0 7 e7e2 # русская партия/ основной вариант./массовые размены/ вариант применяли Эмануил Ласкер и Капабланка
+rnb1kb1r/ppp2ppp/3p1n2/6B1/8/3P1N2/PPP1BPPP/RN2K2R b KQkq - 0 8 f8e7 # русская партия/ основной вариант./массовые размены/ вариант применяли Эмануил Ласкер и Капабланка
+rnb1k2r/ppp1bppp/3p1n2/6B1/8/2NP1N2/PPP1BPPP/R3K2R b KQkq - 0 9 c7c6 # русская партия/ основной вариант.
+rnb1k2r/pp2bppp/2pp1n2/6B1/8/2NP1N2/PPP1BPPP/R4RK1 b kq - 0 10 b8a6 # русская партия/ основной вариант.
+rnbqkbnr/pppp1ppp/8/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 0 3 f8c5 # итальянская партия
+rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1 d7d6 # Защи́та Пи́рца — Уфи́мцева
+rnbqkbnr/ppp1pppp/3p4/8/3PP3/8/PPP2PPP/RNBQKBNR b KQkq - 0 2 g8f6 # Защи́та Пи́рца — Уфи́мцева
+rnbqkb1r/ppp1pppp/3p1n2/8/3PP3/2N5/PPP2PPP/R1BQKBNR b KQkq - 0 3 g7g6 # Защи́та Пи́рца — Уфи́мцева
+rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1 d7d5 # Скандина́вская защи́та/Центральный контр-гамбит
+rnbqkbnr/ppp1pppp/8/3P4/8/8/PPPP1PPP/RNBQKBNR b KQkq - 0 2 d8d5 # Скандина́вская защи́та
+rnb1kbnr/ppp1pppp/8/3q4/8/2N5/PPPP1PPP/R1BQKBNR b KQkq - 0 3 d5d6 # Скандина́вская защи́та
+rnb1kbnr/ppp1pppp/8/3q4/8/2N5/PPPP1PPP/R1BQKBNR b KQkq - 0 3 d5d8 # Скандина́вская защи́та
+rnb1kbnr/ppp1pppp/8/3q4/8/2N5/PPPP1PPP/R1BQKBNR b KQkq - 0 3 d5a5 # Скандина́вская защи́та
+rnb1kbnr/ppp1pppp/3q4/8/3P4/2N5/PPP2PPP/R1BQKBNR b KQkq d3 0 4 g8f6 # Скандина́вская защи́та
+rnbqkbnr/ppp1pppp/8/8/3P4/2N5/PPP2PPP/R1BQKBNR b KQkq d3 0 4 g8f6 # Скандина́вская защи́та
+rnb1kbnr/ppp1pppp/8/q7/3P4/2N5/PPP2PPP/R1BQKBNR b KQkq d3 0 4 g8f6 # Скандина́вская защи́та
+rnb1kb1r/ppp1pppp/3q1n2/8/3P4/2N2N2/PPP2PPP/R1BQKB1R b KQkq - 0 5 c8g4 # Скандина́вская защи́та
+rnbqkb1r/ppp1pppp/5n2/8/3P4/2N2N2/PPP2PPP/R1BQKB1R b KQkq - 0 5 c8g4 # Скандина́вская защи́та
+rnb1kb1r/ppp1pppp/5n2/q7/3P4/2N2N2/PPP2PPP/R1BQKB1R b KQkq - 0 5 c8g4 # Скандина́вская защи́та
+rnb1kb1r/ppp1pppp/3q1n2/8/3P4/2N2N2/PPP2PPP/R1BQKB1R b KQkq - 0 5 b8c6 # Скандина́вская защи́та
+rnbqkb1r/ppp1pppp/5n2/8/3P4/2N2N2/PPP2PPP/R1BQKB1R b KQkq - 0 5 b8c6 # Скандина́вская защи́та
+rnb1kb1r/ppp1pppp/5n2/q7/3P4/2N2N2/PPP2PPP/R1BQKB1R b KQkq - 0 5 b8c6 # Скандина́вская защи́та
+rn2kb1r/ppp1pppp/3q1n2/8/3P2b1/2N2N1P/PPP2PP1/R1BQKB1R b KQkq - 0 6 g4h5 # Скандина́вская защи́та
+rn2kb1r/ppp1pppp/3q1n2/7b/3P2P1/2N2N1P/PPP2P2/R1BQKB1R b KQkq g3 0 7 h5g6 # Скандина́вская защи́та
+rn2kb1r/ppp1pppp/3q1nb1/4N3/3P2P1/2N4P/PPP2P2/R1BQKB1R b KQkq - 0 8 b8d7 # Скандина́вская защи́та
+rn1qkb1r/ppp1pppp/5n2/8/3P2b1/2N2N1P/PPP2PP1/R1BQKB1R b KQkq - 0 6 g4h5 # Скандина́вская защи́та
+rn1qkb1r/ppp1pppp/5n2/7b/3P2P1/2N2N1P/PPP2P2/R1BQKB1R b KQkq g3 0 7 h5g6 # Скандина́вская защи́та
+rn1qkb1r/ppp1pppp/5nb1/4N3/3P2P1/2N4P/PPP2P2/R1BQKB1R b KQkq - 0 8 b8d7 # Скандина́вская защи́та
+rn2kb1r/ppp1pppp/5n2/q7/3P2b1/2N2N1P/PPP2PP1/R1BQKB1R b KQkq - 0 6 g4h5 # Скандина́вская защи́та
+rn2kb1r/ppp1pppp/5n2/q6b/3P2P1/2N2N1P/PPP2P2/R1BQKB1R b KQkq g3 0 7 h5g6 # Скандина́вская защи́та
+rn2kb1r/ppp1pppp/5nb1/q3N3/3P2P1/2N4P/PPP2P2/R1BQKB1R b KQkq - 0 8 b8d7 # Скандина́вская защи́та
+rnbqkbnr/ppp1pppp/8/3P4/8/8/PPPP1PPP/RNBQKBNR b KQkq - 0 2 g8f6 # Скандина́вская защи́та
+rnbqkb1r/ppp1pppp/5n2/3P4/2P5/8/PP1P1PPP/RNBQKBNR b KQkq - 0 3 c7c6 # Скандина́вская защи́та
+rnbqkb1r/pp2pppp/2P2n2/8/2P5/8/PP1P1PPP/RNBQKBNR b KQkq - 0 4 b8c6 # Скандина́вская защи́та/  с отличной контригрой за пешку.
+rnbqkb1r/pp2pppp/2p2n2/3P4/2PP4/8/PP3PPP/RNBQKBNR b KQkq - 0 4 c6d5 # Скандина́вская защи́та/  сводя игру к атаке Панова в защите Каро — Канн
+rnbqkb1r/ppp1pppp/5n2/3P4/3P4/8/PPP2PPP/RNBQKBNR b KQkq - 0 3 f6d5 # Скандина́вская защи́та
+rnbqkb1r/ppp1pppp/8/3n4/2PP4/8/PP3PPP/RNBQKBNR b KQkq c3 0 4 d5f6 # Скандина́вская защи́та
+rnbqkb1r/ppp1pppp/5n2/1B1P4/8/8/PPPP1PPP/RNBQK1NR b KQkq - 0 3 c8d7 # Скандина́вская защи́та 
+rn1qkb1r/pppbpppp/5n2/3P4/2B5/8/PPPP1PPP/RNBQK1NR b KQkq - 0 4 d7g4 # Скандина́вская защи́та
+rn1qkb1r/ppp1pppp/5n2/3P4/2B3b1/5P2/PPPP2PP/RNBQK1NR b KQkq - 0 5 g4f5 # Скандина́вская защи́та/ играя на удержание лишней пешки.
+rnbqkb1r/ppp1pppp/5n2/3P4/8/5N2/PPPP1PPP/RNBQKB1R b KQkq - 0 3 f6d5 # Скандина́вская защи́та
+rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1 e7e6 # Французская защита
+rnbqkbnr/pppp1ppp/4p3/8/3PP3/8/PPP2PPP/RNBQKBNR b KQkq d3 0 2 d7d5 # Французская защита
+rnbqkbnr/ppp2ppp/4p3/3pP3/3P4/8/PPP2PPP/RNBQKBNR b KQkq - 0 3 c7c5 # Французская защита. Вариант Маршалла
+rnbqkbnr/ppp2ppp/4p3/3p4/3PP3/2N5/PPP2PPP/R1BQKBNR b KQkq - 0 3 b8c6 # Французская защита
+rnbqkbnr/ppp2ppp/4p3/3p4/3PP3/2N5/PPP2PPP/R1BQKBNR b KQkq - 0 3 d5e4 # Французская защита. вариант Рубинштейна. 
+rnbqkbnr/ppp2ppp/4p3/3p4/3PP3/2N5/PPP2PPP/R1BQKBNR b KQkq - 0 3 f8b4 # Французская защита. вариант Винавера (Система Нимцовича — Ботвинника).
+rnbqkbnr/ppp2ppp/4p3/3P4/3P4/8/PPP2PPP/RNBQKBNR b KQkq - 0 3 e6d5 # Разменный вариант (французская защита)
+rnbqkbnr/ppp2ppp/8/3p4/3P4/2N5/PPP2PPP/R1BQKBNR b KQkq - 0 4 g8f6 # Разменный вариант (французская защита)
+rnbqkbnr/ppp2ppp/8/3p4/3P4/5N2/PPP2PPP/RNBQKB1R b KQkq - 0 4 f8g4 # Разменный вариант (французская защита)
+rnbqkbnr/ppp2ppp/8/3p4/3P4/5N2/PPP2PPP/RNBQKB1R b KQkq - 0 4 f8d6 # Разменный вариант (французская защита)
+rnbqkbnr/ppp2ppp/8/3p4/2PP4/8/PP3PPP/RNBQKBNR b KQkq c3 0 4 g8f6 # Разменный вариант (французская защита)
+rnbqkbnr/ppp2ppp/8/3p4/3P4/4B3/PPP2PPP/RN1QKBNR b KQkq - 0 4 g8f6 # Разменный вариант (французская защита)
+rnbqkbnr/ppp2ppp/8/3p4/3P4/3B4/PPP2PPP/RNBQK1NR b KQkq - 0 4 f8d6 # Разменный вариант (французская защита)
+rnbqkbnr/ppp2ppp/8/3p4/3P4/3B4/PPP2PPP/RNBQK1NR b KQkq - 0 4 b8c6 # Разменный вариант (французская защита)
+rnbqkbnr/ppp2ppp/4p3/3pP3/3P4/8/PPP2PPP/RNBQKBNR b KQkq - 0 3 c7c5 #  Система Нимцовича
+rnbqkbnr/ppp2ppp/4p3/3p4/3PP3/2N5/PPP2PPP/R1BQKBNR b KQkq - 0 3 g8f6 # Французская защита
+rnbqkb1r/ppp2ppp/4pn2/3p4/3PP3/2NB4/PPP2PPP/R1BQK1NR b KQkq - 0 4 c7c5 # Французская защита / швейцарский вариант
+rnbqkb1r/ppp2ppp/4pn2/3pP3/3P4/2N5/PPP2PPP/R1BQKBNR b KQkq - 0 4 f6d7 # Французская защита /  вариант Стейница
+rnbqkb1r/ppp2ppp/4pn2/3p2B1/3PP3/2N5/PPP2PPP/R2QKBNR b KQkq - 0 4 d5e4 # Французская защита /  вариант Бёрна
+rnbqkb1r/ppp2ppp/4pn2/3p2B1/3PP3/2N5/PPP2PPP/R2QKBNR b KQkq - 0 4 f8e7 # Французская защита / классическая система
+rnbqkb1r/ppp2ppp/4pn2/3p2B1/3PP3/2N5/PPP2PPP/R2QKBNR b KQkq - 0 4 f8b4 # Французская защита / контратака Мак-Кэтчона
+rnbqkbnr/ppp2ppp/4p3/3p4/3PP3/8/PPPN1PPP/R1BQKBNR b KQkq - 0 3 g8f6 # Французская защита / см. система Тарраша/  закрытый вариант
+rnbqkb1r/ppp2ppp/4pn2/3pP3/3P4/8/PPPN1PPP/R1BQKBNR b KQkq - 0 4 b8d7 # Французская защита / см. система Тарраша/  закрытый вариант
+r1bqkb1r/pppn1ppp/4pn2/3pP3/3P4/3B4/PPPN1PPP/R1BQK1NR b KQkq - 0 5 c7c5 # Французская защита / см. система Тарраша/  закрытый вариант
+r1bqkb1r/pp1n1ppp/4pn2/2ppP3/3P4/2PB4/PP1N1PPP/R1BQK1NR b KQkq - 0 6 f6g8 # Французская защита / см. система Тарраша/  закрытый вариант
+r1bqkb1r/pp1n1ppp/4pn2/2ppP3/3P4/2PB4/PP1N1PPP/R1BQK1NR b KQkq - 0 6 b7b6 # Французская защита / см. система Тарраша/  закрытый вариант
+rnbqkbnr/ppp2ppp/4p3/3p4/3PP3/8/PPPN1PPP/R1BQKBNR b KQkq - 0 3 c7c5 # Французская защита / см. система Тарраша/ открытый вариант
+rnbqkbnr/ppp2ppp/4p3/3p4/3PP3/8/PPPN1PPP/R1BQKBNR b KQkq - 0 3 b8c6 # Французская защита / см. система Тарраша/ вариант Гимара
+rnbqkbnr/ppp2ppp/4p3/3p4/3PP3/8/PPPN1PPP/R1BQKBNR b KQkq - 0 3 f8e7 # Французская защита / см. система Тарраша/ вариант Морозевича
+rnbqkbnr/ppp2ppp/4p3/3p4/3PP3/8/PPPN1PPP/R1BQKBNR b KQkq - 0 3 d5e4 # Французская защита / см. система Тарраша/ вариант Рубинштейна
+rnbqkbnr/ppp2ppp/4p3/3p4/3PP3/8/PPPN1PPP/R1BQKBNR b KQkq - 0 3 a7a6 # Французская защита / см. система Тарраша
+rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1 c7c5 # Сицилиа́нская защи́та
+rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 0 2 g7g6 # Венгерский вариант. Сицилиа́нская защи́та. Похож на ранний дракон. 
+rnbqkbnr/pp1ppp1p/6p1/2p5/3PP3/5N2/PPP2PPP/RNBQKB1R b KQkq d3 0 3 c5d4 # Венгерский вариант. Сицилиа́нская защи́та. Похож на ранний дракон.
+rnbqkbnr/pp1ppp1p/6p1/2p5/3PP3/5N2/PPP2PPP/RNBQKB1R b KQkq d3 0 3 f8g7 # Сицилиа́нская защи́та. Вариант дракона.
+rnbqk1nr/pp1pppbp/6p1/2p5/3PP3/2N2N2/PPP2PPP/R1BQKB1R b KQkq - 0 4 c5d4 # Сицилиа́нская защи́та. Вариант дракона.
+rnbqk1nr/pp1pppbp/6p1/8/3NP3/2N5/PPP2PPP/R1BQKB1R b KQkq - 0 5 b8c6 # Сицилиа́нская защи́та. Вариант дракона.
+r1bqk2r/pp1pppbp/2n2np1/8/4P3/1NN5/PPP1BPPP/R1BQK2R b KQkq - 0 6 e1g1 # Сицилиа́нская защи́та. Вариант дракона.
+r1bq1rk1/pp1pppbp/2n2np1/8/4P3/1NN5/PPP1BPPP/R1BQ1RK1 b - - 0 7 d7d6 # Сицилиа́нская защи́та. Вариант дракона.
+r1bq1rk1/pp2ppbp/2np1np1/8/4P3/1NN1B3/PPP1BPPP/R2Q1RK1 b - - 0 8 c8e6 # Сицилиа́нская защи́та. Вариант дракона.
+r2q1rk1/pp2ppbp/2npbnp1/8/4PP2/1NN1B3/PPP1B1PP/R2Q1RK1 b - - 0 9 a8c8 # Сицилиа́нская защи́та. Вариант дракона.
+rnbqkbnr/pp1ppp1p/6p1/8/3NP3/8/PPP2PPP/RNBQKB1R b KQkq - 0 4 f8g7 # Сицилиа́нская защи́та. Вариант дракона.
+rnbqkbnr/pp1ppppp/8/2p5/4P3/2P5/PP1P1PPP/RNBQKBNR b KQkq - 0 2 g8f6 # Сицилиа́нская защи́та / см. вариант Алапина.
+rnbqkb1r/pp1ppppp/5n2/2p1P3/8/2P5/PP1P1PPP/RNBQKBNR b KQkq - 0 3 f6d5 # Сицилиа́нская защи́та / см. вариант Алапина.
+rnbqkb1r/pp1ppppp/8/2pnP3/8/2P2N2/PP1P1PPP/RNBQKB1R b KQkq - 0 4 b8c6 # Сицилиа́нская защи́та / см. вариант Алапина.
+rnbqkbnr/pp1ppppp/8/2p5/1P2P3/8/P1PP1PPP/RNBQKBNR b KQkq b3 0 2 c5b4 # Сицилиа́нская защи́та / см. сицилианский гамбит.
+rnbqkbnr/pp1ppppp/8/8/1pP1P3/8/P2P1PPP/RNBQKBNR b KQkq c3 0 3 e7e5 # Сицилиа́нская защи́та / см. сицилианский гамбит./вариант Сантасьера.
+rnbqkbnr/pp1ppppp/8/8/1p2P3/P7/2PP1PPP/RNBQKBNR b KQkq - 0 3 e7e5 # Сицилиа́нская защи́та / см. сицилианский гамбит./вариант Маршалла.
+rnbqkbnr/pp1ppppp/8/2p5/3PP3/8/PPP2PPP/RNBQKBNR b KQkq d3 0 2 c5d4 # Сицилиа́нская защи́та / см. гамбит Морра (Смита — Морра).
+rnbqkbnr/pp1ppppp/8/8/3pP3/2P5/PP3PPP/RNBQKBNR b KQkq - 0 3 d7d5 # Сицилиа́нская защи́та / см. гамбит Морра (Смита — Морра)./отказанный гамбит Морра.
+rnbqkbnr/pp1ppppp/8/8/3pP3/2P5/PP3PPP/RNBQKBNR b KQkq - 0 3 d4d3 # Сицилиа́нская защи́та / см. гамбит Морра (Смита — Морра)./отказанный гамбит Морра.
+rnbqkbnr/pp1ppppp/8/8/3pP3/2P5/PP3PPP/RNBQKBNR b KQkq - 0 3 g8f6 # Сицилиа́нская защи́та / см. гамбит Морра (Смита — Морра)./отказанный гамбит Морра.
+rnbqkbnr/pp1ppppp/8/8/3pP3/2P5/PP3PPP/RNBQKBNR b KQkq - 0 3 d4c3 # Сицилиа́нская защи́та / см. гамбит Морра (Смита — Морра)./принятый гамбит Морра
+rnbqkbnr/pp1ppppp/8/8/4P3/2N5/PP3PPP/R1BQKBNR b KQkq - 0 4 b8c6 # Сицилиа́нская защи́та / см. гамбит Морра (Смита — Морра)./принятый гамбит Морра
+r1bqkbnr/pp1ppppp/2n5/8/4P3/2N2N2/PP3PPP/R1BQKB1R b KQkq - 0 5 d7d6 # Сицилиа́нская защи́та / см. гамбит Морра (Смита — Морра)./принятый гамбит Морра
+rnbqkbnr/pp1ppppp/8/2p5/4PP2/8/PPPP2PP/RNBQKBNR b KQkq f3 0 2 d7d5 # Сицилиа́нская защи́та / гамбит Таля.
+rnbqkbnr/pp2pppp/8/2pP4/5P2/8/PPPP2PP/RNBQKBNR b KQkq - 0 3 g8f6 # Сицилиа́нская защи́та / гамбит Таля.
+rnbqkbnr/pp1ppppp/8/2p5/4P3/2N5/PPPP1PPP/R1BQKBNR b KQkq - 0 2 e7e6 # Сицилиа́нская защи́та / закрытый вариант (чигоринская система)./вариант Корчного.
+rnbqkbnr/pp1p1ppp/4p3/2p5/4P3/2N3P1/PPPP1P1P/R1BQKBNR b KQkq - 0 2 d7d5 # Сицилиа́нская защи́та / закрытый вариант (чигоринская система)./вариант Корчного.
+rnbqkbnr/pp1ppppp/8/2p5/4P3/2N5/PPPP1PPP/R1BQKBNR b KQkq - 0 2 b8c6 # Сицилиа́нская защи́та / закрытый вариант (чигоринская система).
+r1bqkbnr/pp1ppppp/2n5/2p5/4P3/2N3P1/PPPP1P1P/R1BQKBNR b KQkq - 0 3  g7g6 # Сицилиа́нская защи́та / закрытый вариант (чигоринская система).
+r1bqkbnr/pp1ppp1p/2n3p1/2p5/4P3/2N3P1/PPPP1PBP/R1BQK1NR b KQkq - 0 4 f8g7 # Сицилиа́нская защи́та / закрытый вариант (чигоринская система).
+r1bqk1nr/pp1pppbp/2n3p1/2p5/4P3/2NP2P1/PPP2PBP/R1BQK1NR b KQkq - 0 5 e7e6 # Сицилиа́нская защи́та / закрытый вариант (чигоринская система).
+r1bqk1nr/pp1pppbp/2n3p1/2p5/4P3/2NP2P1/PPP2PBP/R1BQK1NR b KQkq - 0 5 d7d6 # Сицилиа́нская защи́та / закрытый вариант (чигоринская система).
+rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 0 2 d8a5 # Сицилиа́нская защи́та / вариант «Стилет».
+rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 0 2 d8c7 # Сицилиа́нская защи́та / вариант Кинтероса.
+rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 0 2 b7b6 # Сицилиа́нская защи́та / вариант Каталымова.
+rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 0 2 a7a6 # Сицилиа́нская защи́та / вариант О’Келли.
+rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 0 2 g8f6 # Сицилиа́нская защи́та /  вариант Рубинштейна.
+rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 0 2 b8c6 # Сицилиа́нская защи́та / Основные варианты 1
+rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 0 2 d7d6 # Сицилиа́нская защи́та / Основные варианты 2
+rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 0 2 e7e6 # Сицилиа́нская защи́та / Основные варианты 3
+rnbqkbnr/pp1ppppp/8/2p5/4P3/5N2/PPPP1PPP/RNBQKB1R b KQkq - 0 2 d7d5 # Сицилиа́нская защи́та / вариант Маршалла.
+r1bqkbnr/pp1ppppp/2n5/2p5/3PP3/5N2/PPP2PPP/RNBQKB1R b KQkq d3 0 3 c5d4 # Сицилиа́нская защи́та / Основной вариант 1
+r1bqkbnr/pp1ppppp/2n5/8/3NP3/8/PPP2PPP/RNBQKB1R b KQkq - 0 4 g8f6 # Сицилиа́нская защи́та / Основной вариант 1
+r1bqkbnr/pp1ppppp/2n5/8/3NP3/8/PPP2PPP/RNBQKB1R b KQkq - 0 4 g7g6 # Сицилиа́нская защи́та / Основной вариант 1/ранний (ускоренный) «дракон»
+r1bqkbnr/pp1ppp1p/2n3p1/8/2PNP3/8/PP3PPP/RNBQKB1R b KQkq c3 0 5 f8g7 # Сицилиа́нская защи́та / Основной вариант 1/ранний (ускоренный) «дракон»/вариант Мароци
+r1bqk1nr/pp1pppbp/2n3p1/8/2PNP3/4B3/PP3PPP/RN1QKB1R b KQkq - 0 6 g8f6 # Сицилиа́нская защи́та / Основной вариант 1/ранний (ускоренный) «дракон»
+r1bqk1nr/pp1pppbp/2n3p1/8/2P1P3/8/PPN2PPP/RNBQKB1R b KQkq - 0 6 d7d6 # Сицилиа́нская защи́та / Основной вариант 1/ранний (ускоренный) «дракон»
+r1bqk1nr/pp2ppbp/2np2p1/8/2P1P3/8/PPN1BPPP/RNBQK2R b KQkq - 0 7 g8h6 # Сицилиа́нская защи́та / Основной вариант 1/ранний (ускоренный) «дракон»
+r1bqkbnr/pp1ppp1p/2n3p1/8/3NP3/2N5/PPP2PPP/R1BQKB1R b KQkq - 0 5 f8g7 # Сицилиа́нская защи́та / Основной вариант 1/ранний (ускоренный) «дракон»
+r1bqk1nr/pp1pppbp/2n3p1/8/3NP3/2N1B3/PPP2PPP/R2QKB1R b KQkq - 0 6 g8f6 # Сицилиа́нская защи́та / Основной вариант 1/ранний (ускоренный) «дракон»
+r1bqkb1r/pp1ppppp/2n2n2/8/3NP3/2N5/PPP2PPP/R1BQKB1R b KQkq - 0 5 e7e5 # Сицилиа́нская защи́та / Основной вариант 1
+r1bqkb1r/pp1ppppp/2n2n2/8/3NP3/2N5/PPP2PPP/R1BQKB1R b KQkq - 0 5 d7d6 # Сицилиа́нская защи́та / Основной вариант 1
+r1bqkb1r/pp2pppp/2np1n2/8/3NP3/2N5/PPP1BPPP/R1BQK2R b KQkq - 0 6 e7e5 # Сицилиа́нская защи́та / Основной вариант 1/классический вариант/ система Болеславского
+r1bqkb1r/pp3ppp/2Np1n2/4p3/4P3/2N5/PPP1BPPP/R1BQK2R b KQkq - 0 7 b7c6 # Сицилиа́нская защи́та / Основной вариант 1/классический вариант/ вариант Лоумы.
+r1bqkb1r/pp1p1ppp/2n2n2/1N2p3/4P3/2N5/PPP2PPP/R1BQKB1R b KQkq - 0 6 d7d6 # Сицилиа́нская защи́та / Основной вариант 1/вариант Бёрда.
+r1bqkb1r/pp3ppp/2np1n2/1N2p1B1/4P3/2N5/PPP2PPP/R2QKB1R b KQkq - 0 7 a7a6 # Сицилиа́нская защи́та / Основной вариант 1/вариант Бёрда.
+r1bqkb1r/1p3ppp/p1np1n2/4p1B1/4P3/N1N5/PPP2PPP/R2QKB1R b KQkq - 0 8 c8e6 # Сицилиа́нская защи́та / Основной вариант 1/вариант Бёрда.
+r1bqkbnr/pp1ppppp/2n5/1Bp5/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 0 3 g7g6 # Сицилиа́нская защи́та / Основной вариант 1 /атака Россолимо/атака Нимцовича — Россолимо
+r1bqkbnr/pp1ppp1p/2n3p1/1Bp5/4P3/5N2/PPPP1PPP/RNBQ1RK1 b kq - 0 4 f8g7 # Сицилиа́нская защи́та / Основной вариант 1 /атака Россолимо/атака Нимцовича — Россолимо
+r1bqk1nr/pp1pppbp/2n3p1/1Bp5/4P3/5N2/PPPP1PPP/RNBQR1K1 b kq - 0 5 e7e5 # Сицилиа́нская защи́та / Основной вариант 1 /атака Россолимо/атака Нимцовича — Россолимо
+r1bqk1nr/pp1p1pbp/2n3p1/1Bp1p3/1P2P3/5N2/P1PP1PPP/RNBQR1K1 b kq b3 0 6 c6b4 # Сицилиа́нская защи́та / Основной вариант 1 /атака Россолимо/атака Нимцовича — Россолимо/вариант Гургенидзе
+rnbqkbnr/pp2pppp/3p4/2p5/3PP3/5N2/PPP2PPP/RNBQKB1R b KQkq d3 0 3 c5d4 # Сицилиа́нская защи́та / Основной вариант 2
+rnbqkbnr/pp2pppp/3p4/8/3NP3/8/PPP2PPP/RNBQKB1R b KQkq - 0 4 d8c7 # Сицилиа́нская защи́та / Основной вариант 2/вариант Флора.
+rnbqkbnr/pp2pppp/3p4/8/3NP3/8/PPP2PPP/RNBQKB1R b KQkq - 0 4 d7d5 # Сицилиа́нская защи́та / Основной вариант 2/ вариант Нимцовича.
+rnbqkbnr/pp2pppp/3p4/8/3NP3/8/PPP2PPP/RNBQKB1R b KQkq - 0 4 e7e5 # Сицилиа́нская защи́та / Основной вариант 2/ вариант Лабурдонне.
+rnbqkbnr/pp2pppp/3p4/8/3NP3/8/PPP2PPP/RNBQKB1R b KQkq - 0 4 g8f6 # Сицилиа́нская защи́та / Основной вариант 2/вариант Принса./вариант Созина
+rnbqkbnr/pp1p1ppp/4p3/2p5/3PP3/5N2/PPP2PPP/RNBQKB1R b KQkq d3 0 3 c5d4  # Сицилиа́нская защи́та / Основной вариант 3
+rnbqkbnr/pp1p1ppp/4p3/8/3NP3/8/PPP2PPP/RNBQKB1R b KQkq - 0 4 b8c6 # Сицилиа́нская защи́та / Основной вариант 3
+rnbqkbnr/pp1p1ppp/4p3/8/3NP3/8/PPP2PPP/RNBQKB1R b KQkq - 0 4 a7a6 # Сицилиа́нская защи́та / Основной вариант 3/ вариант Паульсена (Кана)
+rnbqkbnr/1p1p1ppp/p3p3/2p5/3PP3/3B1N2/PPP2PPP/RNBQK2R b KQkq - 0 5 g8f6 # Сицилиа́нская защи́та / Основной вариант 3/ вариант Паульсена (Кана)/вариант Гипслиса.
+rnbqkbnr/1p1p1ppp/p3p3/2p5/3PP3/3B1N2/PPP2PPP/RNBQK2R b KQkq - 0 5 f8c5 # Сицилиа́нская защи́та / Основной вариант 3/ вариант Паульсена (Кана)/вариант Полугаевского.
+rnbqkbnr/1p1p1ppp/p3p3/2p5/3PP3/3B1N2/PPP2PPP/RNBQK2R b KQkq - 0 5 g7g6 # Сицилиа́нская защи́та / Основной вариант 3/ вариант Паульсена (Кана)
+rnbqkbnr/1p1p1ppp/p3p3/2p5/2PPP3/5N2/PP3PPP/RNBQKB1R b KQkq c3 0 5 g8f6 # Сицилиа́нская защи́та / Основной вариант 3/ вариант Паульсена (Кана)/вариант Бронштейна.
+rnbqkbnr/pp1p1ppp/4p3/8/3NP3/8/PPP2PPP/RNBQKB1R b KQkq - 0 4 g8f6 # Сицилиа́нская защи́та / Основной вариант 3/вариант Андерсена.
+rnbqkb1r/pp1p1ppp/4pn2/8/3NP3/2N5/PPP2PPP/R1BQKB1R b KQkq - 0 5 f8b4 # Сицилиа́нская защи́та / Основной вариант 3/сицилианская контратака.
+rnbqk2r/pp1p1ppp/4pn2/8/1b1NP3/2NB4/PPP2PPP/R1BQK2R b KQkq - 0 6 e6e5 # Сицилиа́нская защи́та / Основной вариант 3/сицилианская контратака./вариант Яффе.
+rnbqk2r/pp1p1ppp/4pn2/4P3/1b1N4/2N5/PPP2PPP/R1BQKB1R b KQkq - 0 6 f6d5 # Сицилиа́нская защи́та / Основной вариант 3/сицилианская контратака./ вариант Коха.
+rnbqkb1r/pp1p1ppp/4pn2/8/3NP3/2N5/PPP2PPP/R1BQKB1R b KQkq - 0 5 d8c7 # Сицилиа́нская защи́та / Основной вариант 3/вариант Тайманова.
+rnb1kb1r/ppqp1ppp/4pn2/8/3NP3/2N1B3/PPP2PPP/R2QKB1R b KQkq - 0 6 a7a6 # Сицилиа́нская защи́та / Основной вариант 3/вариант Тайманова.
+rnbqkbnr/pp1p1ppp/4p3/8/3NP3/8/PPP2PPP/RNBQKB1R b KQkq - 0 4 b8c6 # Сицилиа́нская защи́та / Основной вариант 3/вариант Тайманова.
+rnbqkb1r/pppppppp/5n2/6B1/3P4/8/PPP1PPPP/RN1QKBNR b KQkq - 0 2 f6e4 # Атака Тромповского /Полузакрытые дебюты /чёрные стремятся уклониться от сдваивания пешек и атакуют белого слона
+rnbqkb1r/pppppppp/5n2/6B1/3P4/8/PPP1PPPP/RN1QKBNR b KQkq - 0 2 e7e6 # Атака Тромповского /Полузакрытые дебюты /чёрные избегают сдваивания пешек, однако связывают своего коня.
+rnbqkb1r/pppppppp/5n2/6B1/3P4/8/PPP1PPPP/RN1QKBNR b KQkq - 0 2 d7d5 # Атака Тромповского /Полузакрытые дебюты /чёрные игнорируют угрозу образования сдвоенных пешек
+rnbqkb1r/pppppppp/5n2/6B1/3P4/8/PPP1PPPP/RN1QKBNR b KQkq - 0 2 g7g6 # Атака Тромповского /Полузакрытые дебюты /ведёт к игре в духе Староиндийской защиты.
+rnbqkb1r/pppppppp/5n2/6B1/3P4/8/PPP1PPPP/RN1QKBNR b KQkq - 0 2 c7c5 # Атака Тромповского /Полузакрытые дебюты /чёрные атакуют центр и готовят возможный ход Фd8-b6.
+rnbqkb1r/pppppppp/5n2/6B1/3P4/8/PPP1PPPP/RN1QKBNR b KQkq - 0 2 c7c6 # Атака Тромповского /Полузакрытые дебюты /
+rnbqkb1r/pppppppp/8/6B1/3Pn2P/8/PPP1PPP1/RN1QKBNR b KQkq h3 0 3 e4g5 # Атака Тромповского /Полузакрытые дебюты /
+rnbqkb1r/pppppppp/8/6B1/3Pn2P/8/PPP1PPP1/RN1QKBNR b KQkq h3 0 3 c7c5 # Атака Тромповского /Полузакрытые дебюты /
+rnbqkb1r/pppppppp/8/6B1/3Pn2P/8/PPP1PPP1/RN1QKBNR b KQkq h3 0 3 d7d5 # Атака Тромповского /Полузакрытые дебюты /
+rnbqkb1r/pppppppp/8/6B1/3Pn2P/8/PPP1PPP1/RN1QKBNR b KQkq h3 0 3 h7h6 # Атака Тромповского /Полузакрытые дебюты /
+rnbqkbnr/pppppppp/8/8/3P4/8/PPP1PPPP/RNBQKBNR b KQkq d3 0 1 f7f5 # Голландская защита/Полузакрытые дебюты 
+rnbqkbnr/pppppppp/8/8/3P4/8/PPP1PPPP/RNBQKBNR b KQkq d3 0 1 g8f6 # Защита Нимцовича/Полузакрытые дебюты 
+rnbqkb1r/pppppppp/5n2/8/2PP4/8/PP2PPPP/RNBQKBNR b KQkq c3 0 2 e7e6 # Защита Нимцовича
+rnbqkb1r/pppp1ppp/4pn2/8/2PP4/2N5/PP2PPPP/R1BQKBNR b KQkq - 0 3 f8b4 # Защита Нимцовича
+rnbqk2r/pppp1ppp/4pn2/6B1/1bPP4/2N5/PP2PPPP/R2QKBNR b KQkq - 0 4 h7h6 # Защита Нимцовича
+rnbqk2r/pppp1ppp/4pn2/8/1bPP4/P1N5/1P2PPPP/R1BQKBNR b KQkq - 0 4 b4c3  # Защита Нимцовича
+rnbqk2r/pppp1ppp/4pn2/8/1bPP4/1QN5/PP2PPPP/R1B1KBNR b KQkq - 0 4 c7c5  # Защита Нимцовича
+rnbqk2r/pppp1ppp/4pn2/8/1bPP4/2N5/PPQ1PPPP/R1B1KBNR b KQkq - 0 4 c7c5  # Защита Нимцовича
+rnbqk2r/pppp1ppp/4pn2/8/1bPP4/2N5/PPQ1PPPP/R1B1KBNR b KQkq - 0 4 d7d5  # Защита Нимцовича
+rnbqk2r/pppp1ppp/4pn2/8/1bPP4/2N5/PPQ1PPPP/R1B1KBNR b KQkq - 0 4 b8c6  # Защита Нимцовича
+rnbqk2r/pppp1ppp/4pn2/8/1bPP4/2N1P3/PP3PPP/R1BQKBNR b KQkq - 0 4 c7c5  # Защита Нимцовича
+rnbqk2r/pppp1ppp/4pn2/8/1bPP4/2N1P3/PP3PPP/R1BQKBNR b KQkq - 0 4 b8c6  # Защита Нимцовича
+rnbqk2r/pppp1ppp/4pn2/8/1bPP4/2N1P3/PP3PPP/R1BQKBNR b KQkq - 0 4 b7b6  # Защита Нимцовича
