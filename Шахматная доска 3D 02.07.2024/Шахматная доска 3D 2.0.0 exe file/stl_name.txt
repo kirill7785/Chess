@@ -1,0 +1,7 @@
+bishop.stl
+castle.stl
+king.stl
+knight.stl
+pawn.stl
+queen.stl
+knight.stl
