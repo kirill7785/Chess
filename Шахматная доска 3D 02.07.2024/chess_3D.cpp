@@ -28457,7 +28457,7 @@ void mouseClick(int button, int state, int x, int y) {
              new_board.WHITE_O_O, new_board.WHITE_O_O_O, new_board.BLACK_O_O, new_board.BLACK_O_O_O, true);
 
             for (__int8 k = 0; k < m.n; ++k) {
-                // Поля куда ходить королём нельзя потому что атакует один из вражеских слонов.
+                // Поля куда пешкой ходить  можно.
 
                 if ((i_select_cell==m.moves[k].x)&&(7-j_select_cell==m.moves[k].y)) {
                   b_OK_moves=true;
@@ -28518,10 +28518,16 @@ void mouseClick(int button, int state, int x, int y) {
 
                   if (bFigureCheck0) {
                     // Король ходил и значит рокировка невозможна.
-                    GL_WHITE_O_O=true;
-                    GL_WHITE_O_O_O=true;
-                    GL_BLACK_O_O=true;
-                    GL_BLACK_O_O_O=true;
+                      if (king.color == Color::WHITE)
+                      {
+                          GL_WHITE_O_O = true;
+                          GL_WHITE_O_O_O = true;
+                      }
+                      if (king.color == Color::BLACK)
+                      {
+                          GL_BLACK_O_O = true;
+                          GL_BLACK_O_O_O = true;
+                      }
                   }
                 }
             }

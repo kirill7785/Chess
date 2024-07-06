@@ -28503,10 +28503,16 @@ void mouseClick(int button, int state, int x, int y) {
 
                   if (bFigureCheck0) {
                     // Король ходил и значит рокировка невозможна.
-                    GL_WHITE_O_O=true;
-                    GL_WHITE_O_O_O=true;
-                    GL_BLACK_O_O=true;
-                    GL_BLACK_O_O_O=true;
+                      if (king.color == Color::WHITE)
+                      {
+                          GL_WHITE_O_O = true;
+                          GL_WHITE_O_O_O = true;
+                      }
+                      if (king.color == Color::BLACK)
+                      {
+                          GL_BLACK_O_O = true;
+                          GL_BLACK_O_O_O = true;
+                      }
                   }
                 }
             }
